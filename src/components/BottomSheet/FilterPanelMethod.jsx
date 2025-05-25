@@ -11,7 +11,7 @@ import { useFilterQuery } from "@/lib/api/api-bottomfilter";
 import { IoClose } from "react-icons/io5";
 import { RiResetLeftFill } from "react-icons/ri";
 
-// 🔧 filters 프롭 추가: 기본값은 모든 필터
+
 export default function BottomSheet({ onClose, filters = ["grade", "genre", "sale", "method"] }) {
   const [selectedTab, setSelectedTab] = useState(filters[0] || "grade");
   const [selectedGrades, setSelectedGrades] = useState([]);
@@ -125,7 +125,7 @@ export default function BottomSheet({ onClose, filters = ["grade", "genre", "sal
           </button>
         </div>
 
-        {/* 🔧 선택된 필터 탭만 전달 */}
+        
         <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
 
         {selectedTab === "grade" && filters.includes("grade") && (

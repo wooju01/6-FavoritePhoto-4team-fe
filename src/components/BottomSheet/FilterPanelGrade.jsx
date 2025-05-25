@@ -1,33 +1,46 @@
-import GradeTag from "../tag/GradeTag.jsx"; 
+import GradeTag from "../tag/GradeTag.jsx";
 
-const gradeOptions = ["COMMON", "RARE", "SUPER RARE", "LEGENDARY"];
+const gradeOptions = [
+  { label: "COMMON", value: 1 },
+  { label: "RARE", value: 2 },
+  { label: "SUPER RARE", value: 3 },
+  { label: "LEGENDARY", value: 4 },
+];
 
-export default function FilterPanelGrade({ grades = {}, selectedGrades = [], onSelectGrade }) {
-  // 중복 선택 토글 함수
-  const handleClick = (grade) => {
-    if (selectedGrades.includes(grade)) {
-      onSelectGrade(selectedGrades.filter((g) => g !== grade));
+export default function FilterPanelGrade({
+  grades = {},
+  selectedGrade = [],
+  onSelectGrade,
+}) {
+  // value로 label 찾는 헬퍼
+  const getLabelByValue = (value) => {
+    const option = gradeOptions.find((opt) => opt.value === Number(value));
+    return option ? option.label : "";
+  };
+
+  const handleClick = (value) => {
+    if (selectedGrade.includes(value)) {
+      onSelectGrade(selectedGrade.filter((v) => v !== value));
     } else {
-      onSelectGrade([...selectedGrades, grade]);
+      onSelectGrade([...selectedGrade, value]);
     }
   };
 
   return (
     <ul>
-      {gradeOptions.map((grade) => {
-        const count = grades[grade] || 0;
-        const isSelected = selectedGrades.includes(grade);
-
+      {gradeOptions.map(({ label, value }) => {
+        
+        const count = grades[getLabelByValue(value)] || 0;
+        const isSelected = selectedGrade.includes(value);
         return (
           <li
-            key={grade}
+            key={label}
             className={`flex justify-between py-2 cursor-pointer ${
               isSelected ? "bg-gray-500" : ""
             }`}
-            onClick={() => handleClick(grade)}
+            onClick={() => handleClick(value)}
           >
-            <GradeTag grade={grade} size="xs" />
-
+            <GradeTag grade={value} size="xs" />
             <span>{count}개</span>
           </li>
         );

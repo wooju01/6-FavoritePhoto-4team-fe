@@ -1,11 +1,5 @@
 "use client";
 
-/*
-사용방법
-
-<FilterDropdown visibleFilters={["grade", "genre", "method", "sale"]} />
-
-*/
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
@@ -59,6 +53,10 @@ const labels = {
 export default function FilterDropdown({
   iconSize = 35,
   visibleFilters = ["grade", "genre", "sale", "method"],
+  gradeCounts = [],
+  genreCounts = [],
+  saleCounts = [],
+  methodCounts = [],
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -105,16 +103,45 @@ export default function FilterDropdown({
     return value ? Number(value) : 0;
   };
 
-  // 선택된 id에 해당하는 label 가져오기
+  // id별 카운트 가져오는 헬퍼 함수
+  const getCount = (type, id) => {
+    if (id === 0) return 0; // "전체"는 카운트 표시 안함
+
+    let countData;
+    switch (type) {
+      case "grade":
+        countData = gradeCounts.find((c) => c.gradeId === id);
+        break;
+      case "genre":
+        countData = genreCounts.find((c) => c.genreId === id);
+        break;
+      case "sale":
+        countData = saleCounts.find((c) => c.saleId === id);
+        break;
+      case "method":
+        countData = methodCounts.find((c) => c.methodId === id);
+        break;
+      default:
+        return 0;
+    }
+    return countData ? countData.count : 0;
+  };
+
   const getLabelFromId = (type, id) => {
     const option = filterOptions[type].find((opt) => opt.id === id);
     const hasQueryParam = searchParams.has(type);
 
     if (!hasQueryParam && id === 0) {
-      return labels[type]; 
+      return labels[type];
     }
 
-    return option ? option.label : "전체";
+    if (!option) return "전체";
+
+    const count = getCount(type, id);
+    if (count > 0) {
+      return `${option.label}`;
+    }
+    return option.label;
   };
 
   const handleSelect = (filterType, value) => {
@@ -159,17 +186,20 @@ export default function FilterDropdown({
             {/* 드롭다운 목록 */}
             {openFilter === type && isSmOrLarger && (
               <ul className="absolute left-0 mt-2 bg-black border text-white w-[134px] z-10 max-h-60 overflow-auto">
-                {filterOptions[type].map((item) => (
-                  <li
-                    key={item.id}
-                    onClick={() => handleSelect(type, item.id)}
-                    className={`hover:bg-gray-700 px-4 py-2 cursor-pointer ${
-                      item.id === selectedId ? "bg-gray-700 font-bold" : ""
-                    }`}
-                  >
-                    {item.label}
-                  </li>
-                ))}
+                {filterOptions[type].map((item) => {
+                  const count = getCount(type, item.id);
+                  return (
+                    <li
+                      key={item.id}
+                      onClick={() => handleSelect(type, item.id)}
+                      className={`hover:bg-gray-700 px-4 py-2 cursor-pointer ${
+                        item.id === selectedId ? "bg-gray-700 font-bold" : ""
+                      }`}
+                    >
+                      {item.label}{" "}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -201,6 +231,12 @@ export default function FilterDropdown({
           <BottomSheet
             onClose={() => setIsBottomSheetOpen(false)}
             filters={visibleFilters}
+            counts={{
+              grade: gradeCounts,
+              genre: genreCounts,
+              sale: saleCounts,
+              method: methodCounts,
+            }}
           />
         </>
       )}
