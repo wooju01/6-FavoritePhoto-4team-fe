@@ -8,22 +8,26 @@ import DropdownNavi from "./DropdownNavi";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-
-// 임시 로그인 상태 (실제 구현시 props/context/hook 등으로 대체 필요)
-const isLoggedIn = false; // true로 바꾸면 로그인 상태 테스트 가능
-const user = {
-  point: 1540,
-  nickname: "유디",
-};
+import { useAuth } from "@/providers/AuthProvider";
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const { user, logout, isLoading } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // 필요하면 리다이렉트 또는 상태 업데이트
+    } catch (err) {
+      console.error("로그아웃 중 오류 발생:", err);
+    }
+  };
 
   useEffect(() => {
-    // update pathname
-  }, [pathname]);
+    if (user) {
+      console.log(user);
+    }
+  }, [pathname, isLoading, user]);
 
   return (
     <header className="sticky top-0 left-0 z-[7777] bg-my-black">
@@ -34,98 +38,53 @@ const Navbar = () => {
           ${pathname && pathname === "/" ? "mx-auto px-4 md:px-9 lg:px-0" : ""}
       `}
       >
-        {/* 왼쪽: 햄버거 메뉴 (sm=기본, md 이상에서 숨김) */}
-        <div className="flex items-center md:hidden">
-          <button type="button" onClick={() => setMenuOpen(true)}>
-            <Image
-              src={humbergerIconImg}
-              alt="메뉴"
-              className="w-[22px] h-[22px]"
-            />
+        <div className="w-full relative md:static flex items-center justify-between">
+          <button className="md:hidden">
+            <Image src={humbergerIconImg} alt="hamburger" />
           </button>
-        </div>
-        {/* 가운데: 로고 (sm에서는 가운데, md 이상에서는 왼쪽) */}
-        <div className="flex items-center justify-center flex-1 md:justify-start md:flex-none">
-          <Link href={"/"}>
+
+          <Link
+            href={"/"}
+            className="absolute md:static left-1/2 md:left-0 -translate-x-1/2 md:-translate-0 "
+          >
             <Image
               src={mainLogoImg}
               alt="main-logo"
-              className="w-[83px] h-[15px] md:w-28 md:h-5 lg:w-[138px] lg:h-6"
+              className="w-20 md:w-28 lg:w-[138px] h-4 md:h-5 lg:h-[26px]"
             />
           </Link>
-        </div>
-        {/* 오른쪽: 알림 또는 로그인 (sm에서만 보임) */}
-        <div className="flex items-center justify-end md:hidden">
-          {isLoggedIn ? (
-            <Image
-              src={alarmIconImg}
-              alt="알림"
-              className="w-[22px] h-[22px]"
-            />
+
+          {isLoading ? (
+            <span className="text-gray-400">확인 중...</span>
+          ) : user ? (
+            <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
+              {/* User정보가 있는 경우 */}
+              <span className="text-700-14 text-gray-200">1,540 P</span>
+              <button className="!block">
+                <Image src={alarmIconImg} alt="alarmIcon" className="md:w-6" />
+              </button>
+              <span className="text-700-14 text-gray-200">{user.nickname}</span>
+              <span className="w-[1px] h-4 bg-gray-400"></span>
+              <button
+                onClick={handleLogout}
+                className="text-400-14 text-gray-400"
+              >
+                로그아웃
+              </button>
+            </div>
           ) : (
-            <Link
-              href={"/login"}
-              className="text-400-14 text-gray-200 hover:text-gray-400"
-            >
-              로그인
-            </Link>
-          )}
-        </div>
-        {/* 데스크탑 네비게이션: md 이상에서만 보임 */}
-        <div className="hidden md:flex flex-1 justify-end items-center">
-          {isLoggedIn ? (
-            <ul className="flex items-center space-x-[30px] text-gray-200 text-[14px]">
-              <li className="text-700-14 text-gray-200">
-                {user.point.toLocaleString()} P
-              </li>
-              <li>
-                <Image
-                  src={alarmIconImg}
-                  alt="알림"
-                  className="w-6 h-6"
-                  style={{ width: 24, height: 24 }}
-                />
-              </li>
-              <li className="relative">
-                <button
-                  className="title-18 text-gray-200 focus:outline-none"
-                  onClick={() => setDropdownOpen((prev) => !prev)}
-                  style={{ marginBottom: 0, paddingBottom: 0 }}
-                >
-                  {user.nickname}
-                </button>
-                <DropdownNavi
-                  user={user}
-                  open={dropdownOpen}
-                  onClose={() => setDropdownOpen(false)}
-                />
-              </li>
-              <li>
-                <button className="border-l pl-[30px] text-gray-400 border-gray-400 hover:text-gray-400 h-4 flex items-center">
-                  로그아웃
-                </button>
-              </li>
-            </ul>
-          ) : (
-            <ul className="flex space-x-6 text-gray-200 text-[14px]">
-              <li>
-                <Link href={"/login"} className="hover:text-gray-400">
-                  로그인
-                </Link>
-              </li>
-              <li>
-                <Link href="/signup" className="hover:text-gray-400">
-                  회원가입
-                </Link>
-              </li>
-            </ul>
+            <div className="[&>a]:text-gray-200 flex items-center gap-7">
+              {/* User정보가 없는 경우 */}
+              <Link href={"/login"} className="text-400-14 ">
+                로그인
+              </Link>
+              <Link href={"/signup"} className="hidden md:flex md:text-400-14 ">
+                회원가입
+              </Link>
+            </div>
           )}
         </div>
       </nav>
-      {/* 커튼 메뉴 오버레이 */}
-      {menuOpen && (
-        <CurtainMenu user={user} onClose={() => setMenuOpen(false)} />
-      )}
     </header>
   );
 };
