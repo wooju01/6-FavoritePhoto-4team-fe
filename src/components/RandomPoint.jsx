@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 export default function RandomPoint({ onClose }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [active, setActive] = useState(false);
-  const [closed, setClosed] = useState(true);
   const [points, setPoints] = useState(null);
   const [lastClaimed, setLastClaimed] = useState(null);
   const [todayClaimCount, setTodayClaimCount] = useState(0);
@@ -30,7 +29,6 @@ export default function RandomPoint({ onClose }) {
 
   const handleClose = () => {
     if (onClose) onClose();
-    setClosed(false);
   };
 
   // AccessToken 가져오는 함수 (예시)
@@ -124,8 +122,6 @@ export default function RandomPoint({ onClose }) {
     }
   };
 
-  if (!closed) return null;
-
   return (
     <div
       className="
@@ -168,9 +164,6 @@ export default function RandomPoint({ onClose }) {
                 {result ? `${result.points}P` : "2P"}
               </span>{" "}
               획득!
-            </div>
-            <div className="text-gray-400 text-sm mt-2">
-              총 보유 포인트: {result ? result.totalPoints : points}
             </div>
           </div>
           <p
