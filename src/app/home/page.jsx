@@ -23,18 +23,12 @@ export default async function HomePage({ searchParams }) {
         </div>
         <div className="hidden md:block w-full h-0.5 bg-gray-100" />
       </div>
-<<<<<<< Updated upstream
-      <div>
-        <BaseCardsSection grade={grade} genre={genre} sale={sale} />
-      </div>
-=======
       <RandomPointHomeTrigger>
         <RandomPoint />
       </RandomPointHomeTrigger>
       <Suspense fallback={<SkeletonCardLayout />}>
         <BaseCardsSection grade={grade} genre={genre} sale={sale} />
       </Suspense>
->>>>>>> Stashed changes
     </div>
   );
 }
