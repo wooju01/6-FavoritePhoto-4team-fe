@@ -1,52 +1,38 @@
-const saleKeys = ["onSale", "soldOut"];
-const saleLabels = {
-  onSale: "판매 중",
-  soldOut: "판매 완료",
-};
+const saleOptions = [
+  { label: "판매중", value: true },
+  { label: "판매완료", value: false },
+];
 
 export default function FilterPanelSale({
   sales = {},
-  selectedSale,
+  selectedSale = [],
   onSelectSale,
 }) {
-  // 카운트 합산 함수
-  const getCount = (key) => {
-    if (key === "onSale") {
-      return (sales["onSale"] || 0) + (sales["판매중"] || 0);
+  const handleClick = (value) => {
+    if (selectedSale.includes(value)) {
+      onSelectSale(selectedSale.filter((v) => v !== value));
+    } else {
+      onSelectSale([...selectedSale, value]);
     }
-    if (key === "soldOut") {
-      return (sales["soldOut"] || 0) + (sales["판매완료"] || 0);
-    }
-    return sales[key] || 0;
   };
 
   return (
     <ul>
-      {saleKeys.map((key) => {
-        const count = getCount(key);
-        const label = saleLabels[key];
-        const isSelected = selectedSale === key || selectedSale === label;
-
+      {saleOptions.map(({ label, value }) => {
+        const count = sales[value] || 0;  
+        const isSelected = selectedSale.includes(value);
         return (
           <li
-            key={key}
+            key={label}
             className={`flex justify-between py-2 cursor-pointer ${
               isSelected ? "bg-gray-500" : ""
             }`}
-            onClick={() => onSelectSale(key)}
+            onClick={() => handleClick(value)}
           >
-            <span
-              className={
-                isSelected ? "text-white text-400-14" : "text-gray-300 text-400-14"
-              }
-            >
+            <span className={isSelected ? "text-white" : "text-gray-300"}>
               {label}
             </span>
-            <span
-              className={
-                isSelected ? "text-white text-400-14" : "text-gray-300 text-400-14"
-              }
-            >
+            <span className={isSelected ? "text-white" : "text-gray-300"}>
               {count}개
             </span>
           </li>

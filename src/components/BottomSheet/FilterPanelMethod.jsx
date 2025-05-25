@@ -27,7 +27,7 @@ export default function BottomSheet({ onClose, filters = ["grade", "genre", "sal
   });
   const [filteredCount, setFilteredCount] = useState(0);
 
-  
+  // 🔑 필터 상태 메모
   const currentFilter = useMemo(
     () => ({
       grade: selectedGrades.length > 0 ? selectedGrades : null,

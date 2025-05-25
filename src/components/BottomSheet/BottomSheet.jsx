@@ -18,6 +18,7 @@ export default function BottomSheet({
   loading = false,
   onClose,
 }) {
+  console.log("counts.genre:", counts.sale);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -25,18 +26,18 @@ export default function BottomSheet({
   const [selectedTab, setSelectedTab] = useState("grade");
 
   // 초기값을 쿼리에서 배열로 가져오기 (없으면 빈 배열)
-const getInitialValues = (key) => {
-  const val = searchParams.get(key);
-  if (!val) return [];
-  return val.split(",").map(Number);
-};
-
-
+  const getInitialValues = (key) => {
+    const val = searchParams.get(key);
+    if (!val) return [];
+    return val.split(",").map(Number);
+  };
 
   const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
   const [selectedGenre, setSelectedGenre] = useState(getInitialValues("genre"));
   const [selectedSale, setSelectedSale] = useState(getInitialValues("sale"));
-  const [selectedMethod, setSelectedMethod] = useState(getInitialValues("method"));
+  const [selectedMethod, setSelectedMethod] = useState(
+    getInitialValues("method")
+  );
 
   // 필터 활성 여부 (빈 배열이면 비활성)
   const isFilterActive =
@@ -85,6 +86,49 @@ const getInitialValues = (key) => {
     if (onClose) onClose();
   };
 
+  const gradeOptions = [
+    { label: "COMMON", value: 1 },
+    { label: "RARE", value: 2 },
+    { label: "SUPER RARE", value: 3 },
+    { label: "LEGENDARY", value: 4 },
+  ];
+
+  // counts.grade: 배열 → 객체로 변환
+  const normalizedGrades = Array.isArray(counts.grade)
+    ? counts.grade.reduce((acc, item) => {
+        const option = gradeOptions.find((opt) => opt.value === item.gradeId);
+        if (option) acc[option.label] = item.count;
+        return acc;
+      }, {})
+    : counts.grade;
+
+  const genreOptions = [
+    { label: "여행", value: 1 },
+    { label: "풍경", value: 2 },
+    { label: "인물", value: 3 },
+    { label: "사물", value: 4 },
+  ];
+
+  const normalizedGenres = Array.isArray(counts.genre)
+    ? counts.genre.reduce((acc, item) => {
+        const option = genreOptions.find((opt) => opt.value === item.genreId);
+        if (option) acc[option.label] = item.count;
+        return acc;
+      }, {})
+    : counts.genre;
+
+const saleOptions = [
+  { label: "판매중", value: true },
+  { label: "판매완료", value: false },
+];
+ 
+const normalizedSales = Array.isArray(counts.sale)
+  ? counts.sale.reduce((acc, item) => {
+      acc[item.isOnSale] = item.count; 
+      return acc;
+    }, {})
+  : counts.sale;
+
   return (
     <div className="fixed flex flex-col justify-between bottom-0 left-0 w-full h-120 bg-[#1B1B1B] text-white p-4 z-9000 border-t border-gray-700 rounded-t-2xl max-h-[70vh] overflow-auto">
       <div>
@@ -98,11 +142,15 @@ const getInitialValues = (key) => {
           </button>
         </div>
 
-        <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
+        <FilterTab
+          selected={selectedTab}
+          onChange={setSelectedTab}
+          filters={filters}
+        />
 
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
-            grades={counts.grade}
+            grades={normalizedGrades}
             selectedGrade={selectedGrade}
             onSelectGrade={setSelectedGrade}
           />
@@ -110,7 +158,7 @@ const getInitialValues = (key) => {
 
         {selectedTab === "genre" && filters.includes("genre") && (
           <FilterPanelGenre
-            counts={counts.genre}
+            counts={normalizedGenres}
             selectedGenres={selectedGenre}
             onSelectGenres={setSelectedGenre}
           />
@@ -118,7 +166,7 @@ const getInitialValues = (key) => {
 
         {selectedTab === "sale" && filters.includes("sale") && (
           <FilterPanelSale
-            sales={counts.sale}
+            sales={normalizedSales}
             selectedSale={selectedSale}
             onSelectSale={setSelectedSale}
           />
@@ -129,6 +177,7 @@ const getInitialValues = (key) => {
             counts={counts.method}
             selectedMethods={selectedMethod}
             onSelectMethods={setSelectedMethod}
+             saleOptions={saleOptions} 
           />
         )}
       </div>
