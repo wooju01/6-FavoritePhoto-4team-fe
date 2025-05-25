@@ -19,11 +19,14 @@ export default function RandomPointHomeTrigger({ children }) {
   const fetchMyPoints = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3002/api/points/me", {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const res = await fetch(
+        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
       if (!res.ok) throw new Error();
       const data = await res.json();
       setLastClaimed(data.lastClaimed);
