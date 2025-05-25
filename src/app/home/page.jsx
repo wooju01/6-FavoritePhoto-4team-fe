@@ -3,6 +3,8 @@ import SkeletonCardLayout from "@/components/skeletons/ResponsiveFallbackWrapper
 import SellButton from "@/components/ui/SellButton";
 import DelayedBaseCardsSection from "@/components/HompageComponents/DelayedBaseCardsSection";
 import BaseCardsSection from "@/components/HompageComponents/BaseCardsSection";
+import RandomPoint from "@/components/RandomPoint";
+import RandomPointHomeTrigger from "@/components/RandomPointHomeTrigger";
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
@@ -21,6 +23,9 @@ export default async function HomePage({ searchParams }) {
         </div>
         <div className="hidden md:block w-full h-0.5 bg-gray-100" />
       </div>
+      <RandomPointHomeTrigger>
+        <RandomPoint />
+      </RandomPointHomeTrigger>
       <div>
         <BaseCardsSection grade={grade} genre={genre} sale={sale} />
       </div>
