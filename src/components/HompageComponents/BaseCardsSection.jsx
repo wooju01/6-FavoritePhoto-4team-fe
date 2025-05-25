@@ -16,11 +16,36 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
   }
   const data = await res.json();
 
-  // 필터링 : grade, genre는 id 값으로 필터링 (문자면 숫자 변환 필요)
+  // 다중 선택 가능하도록 파싱 함수
+  function parseFilterValue(value) {
+    if (!value) return null;
+    if (value.includes(',')) {
+      return value.split(',').map(v => Number(v));
+    }
+    return [Number(value)];
+  }
+
+  const gradesArray = parseFilterValue(grade);
+  const genresArray = parseFilterValue(genre);
+
+
   const filtered = data.filter((card) => {
-    const matchGrade = !grade || card.gradeId === Number(grade);
-    const matchGenre = !genre || card.genreId === Number(genre);
-    const matchSale = !sale || (sale === "판매중" ? card.sale === "판매중" : card.sale === "판매완료");
+    const matchGrade =
+      !gradesArray || gradesArray.length === 0
+        ? true
+        : gradesArray.includes(card.gradeId);
+
+    const matchGenre =
+      !genresArray || genresArray.length === 0
+        ? true
+        : genresArray.includes(card.genreId);
+
+    const matchSale =
+      !sale
+        ? true
+        : sale === "판매중"
+        ? card.sale === "판매중"
+        : card.sale === "판매완료";
 
     return matchGrade && matchGenre && matchSale;
   });

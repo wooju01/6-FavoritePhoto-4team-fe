@@ -1,113 +1,88 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { IoClose } from "react-icons/io5";
+import { RiResetLeftFill } from "react-icons/ri";
+
 import FilterTab from "./FilterTab";
 import FilterPanelGrade from "./FilterPanelGrade";
 import FilterPanelGenre from "./FilterPanelGenre";
 import FilterPanelSale from "./FilterPanelSale";
 import FilterPanelMethod from "./FilterPanelMethod";
 
-import { useFilterQuery } from "@/lib/api/api-bottomfilter";
-import { IoClose } from "react-icons/io5";
-import { RiResetLeftFill } from "react-icons/ri";
+export default function BottomSheet({
+  filters = ["grade", "genre", "sale", "method"],
+  counts = { grade: {}, genre: {}, sale: {}, method: {} },
+  filteredCount = 0,
+  loading = false,
+  onClose,
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-export default function BottomSheet({ onClose, filters = ["grade", "genre", "sale", "method"] }) {
-  const [selectedTab, setSelectedTab] = useState(filters[0] || "grade");
-  const [selectedGrades, setSelectedGrades] = useState([]);
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [selectedSale, setSelectedSale] = useState(null);
-  const [selectedMethods, setSelectedMethods] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("grade");
 
-  const [loading, setLoading] = useState(false);
-  const [counts, setCounts] = useState({
-    grade: {},
-    genre: {},
-    sale: {},
-    method: {},
-  });
+  // 초기값을 쿼리에서 배열로 가져오기 (없으면 빈 배열)
+const getInitialValues = (key) => {
+  const val = searchParams.get(key);
+  if (!val) return [];
+  return val.split(",").map(Number);
+};
 
-  const [filteredCount, setFilteredCount] = useState(0);
 
-  const currentFilter = useMemo(
-    () => ({
-      grade: selectedGrades.length > 0 ? selectedGrades : null,
-      genre: selectedGenres.length > 0 ? selectedGenres : null,
-      sale: selectedSale ?? null,
-      method: selectedMethods.length > 0 ? selectedMethods : null,
-    }),
-    [selectedGrades, selectedGenres, selectedSale, selectedMethods]
-  );
 
-  const { refetch } = useFilterQuery(currentFilter);
+  const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
+  const [selectedGenre, setSelectedGenre] = useState(getInitialValues("genre"));
+  const [selectedSale, setSelectedSale] = useState(getInitialValues("sale"));
+  const [selectedMethod, setSelectedMethod] = useState(getInitialValues("method"));
 
-  useEffect(() => {
-    async function fetchAllAndCount() {
-      try {
-        setLoading(true);
-        const res = await fetch("/data/cards.json"); // 실제 데이터 경로에 맞게 수정하세요
-        const allData = await res.json();
+  // 필터 활성 여부 (빈 배열이면 비활성)
+  const isFilterActive =
+    selectedGrade.length > 0 ||
+    selectedGenre.length > 0 ||
+    selectedSale.length > 0 ||
+    selectedMethod.length > 0;
 
-        setCounts({
-          grade: countByKey(allData, "grade"),
-          genre: countByKey(allData, "genre"),
-          sale: countByKey(allData, "sale"),
-          method: countByKey(allData, "method"),
-        });
-      } catch (err) {
-        console.error("전체 데이터 요청 실패:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchAllAndCount();
-  }, []);
-
-  useEffect(() => {
-    async function fetchFiltered() {
-      try {
-        setLoading(true);
-        const { data } = await refetch();
-        setFilteredCount(data.length);
-      } catch (err) {
-        console.error("필터 사진 요청 실패:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchFiltered();
-  }, [currentFilter, refetch]);
-
-  const countByKey = (items, key) =>
-    items.reduce((acc, item) => {
-      acc[item[key]] = (acc[item[key]] || 0) + 1;
-      return acc;
-    }, {});
-
-  const handleApply = async () => {
-    try {
-      setLoading(true);
-      const { data } = await refetch();
-      console.log("필터 결과:", data);
-      onClose();
-    } catch (err) {
-      console.error("API 요청 실패:", err);
-    } finally {
-      setLoading(false);
-    }
+  // 리셋: 모두 빈 배열로 초기화
+  const handleReset = () => {
+    setSelectedGrade([]);
+    setSelectedGenre([]);
+    setSelectedSale([]);
+    setSelectedMethod([]);
   };
 
-  const isFilterActive =
-    selectedGrades.length > 0 ||
-    selectedGenres.length > 0 ||
-    selectedSale !== null ||
-    selectedMethods.length > 0;
+  // 적용: 쿼리스트링 업데이트
+  const handleApply = () => {
+    const params = new URLSearchParams(searchParams);
 
-  const handleReset = () => {
-    setSelectedGrades([]);
-    setSelectedGenres([]);
-    setSelectedSale(null);
-    setSelectedMethods([]);
-    setFilteredCount(0);
+    if (selectedGrade.length > 0) {
+      params.set("grade", selectedGrade.join(","));
+    } else {
+      params.delete("grade");
+    }
+
+    if (selectedGenre.length > 0) {
+      params.set("genre", selectedGenre.join(","));
+    } else {
+      params.delete("genre");
+    }
+
+    if (selectedSale.length > 0) {
+      params.set("sale", selectedSale.join(","));
+    } else {
+      params.delete("sale");
+    }
+
+    if (selectedMethod.length > 0) {
+      params.set("method", selectedMethod.join(","));
+    } else {
+      params.delete("method");
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+    if (onClose) onClose();
   };
 
   return (
@@ -128,16 +103,16 @@ export default function BottomSheet({ onClose, filters = ["grade", "genre", "sal
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
             grades={counts.grade}
-            selectedGrades={selectedGrades}
-            onSelectGrade={setSelectedGrades}
+            selectedGrade={selectedGrade}
+            onSelectGrade={setSelectedGrade}
           />
         )}
 
         {selectedTab === "genre" && filters.includes("genre") && (
           <FilterPanelGenre
             counts={counts.genre}
-            selectedGenres={selectedGenres}
-            onSelectGenres={setSelectedGenres}
+            selectedGenres={selectedGenre}
+            onSelectGenres={setSelectedGenre}
           />
         )}
 
@@ -152,8 +127,8 @@ export default function BottomSheet({ onClose, filters = ["grade", "genre", "sal
         {selectedTab === "method" && filters.includes("method") && (
           <FilterPanelMethod
             counts={counts.method}
-            selectedMethods={selectedMethods}
-            onSelectMethods={setSelectedMethods}
+            selectedMethods={selectedMethod}
+            onSelectMethods={setSelectedMethod}
           />
         )}
       </div>
