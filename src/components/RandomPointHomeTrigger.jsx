@@ -1,5 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  Children,
+  isValidElement,
+  cloneElement,
+} from "react";
 
 export default function RandomPointHomeTrigger({ children }) {
   const [show, setShow] = useState(false);
@@ -53,7 +59,9 @@ export default function RandomPointHomeTrigger({ children }) {
   if (!show || loading) return null;
   return (
     <div style={{ zIndex: 99999, position: "fixed", inset: 0 }}>
-      {children && children({ onClose: () => setShow(false) })}
+      {isValidElement(children)
+        ? cloneElement(children, { onClose: () => setShow(false) })
+        : children}
     </div>
   );
 }

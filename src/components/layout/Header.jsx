@@ -13,6 +13,44 @@ import { useAuth } from "@/providers/AuthProvider";
 const Navbar = () => {
   const pathname = usePathname();
   const { user, logout, isLoading } = useAuth();
+  const [point, setPoint] = useState(null);
+  const [pointLoading, setPointLoading] = useState(false);
+  const [pointError, setPointError] = useState("");
+
+  // 포인트 조회 함수
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("accessToken");
+    }
+    return null;
+  };
+
+  const fetchMyPoints = async () => {
+    if (!user) return;
+    setPointLoading(true);
+    setPointError("");
+    try {
+      const res = await fetch(
+        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      if (!res.ok) throw new Error("포인트 정보를 불러오지 못했습니다.");
+      const data = await res.json();
+      setPoint(data.points);
+    } catch (e) {
+      setPointError(e.message);
+    } finally {
+      setPointLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) fetchMyPoints();
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -59,7 +97,15 @@ const Navbar = () => {
           ) : user ? (
             <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
-              <span className="text-700-14 text-gray-200">1,540 P</span>
+              <span className="text-700-14 text-gray-200">
+                {pointLoading
+                  ? "포인트..."
+                  : pointError
+                  ? "-"
+                  : point !== null
+                  ? `${point} P`
+                  : "-"}
+              </span>
               <button className="!block">
                 <Image src={alarmIconImg} alt="alarmIcon" className="md:w-6" />
               </button>
