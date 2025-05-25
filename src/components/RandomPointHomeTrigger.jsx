@@ -52,6 +52,8 @@ export default function RandomPointHomeTrigger({ children }) {
 
   if (!show || loading) return null;
   return (
-    <div style={{ zIndex: 99999, position: "fixed", inset: 0 }}>{children}</div>
+    <div style={{ zIndex: 99999, position: "fixed", inset: 0 }}>
+      {children && children({ onClose: () => setShow(false) })}
+    </div>
   );
 }
