@@ -26,9 +26,9 @@ export default async function HomePage({ searchParams }) {
       <RandomPointHomeTrigger>
         <RandomPoint />
       </RandomPointHomeTrigger>
-      <Suspense fallback={<SkeletonCardLayout />}>
+      <div>
         <BaseCardsSection grade={grade} genre={genre} sale={sale} />
-      </Suspense>
+      </div>
     </div>
   );
 }
