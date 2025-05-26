@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getSocket, disconnectSocket } from "@/lib/socket";
 
-function Notification({ className = "", userId }) {
+function Notification({ className = "" }) {
   const [open, setOpen] = React.useState(false);
   const [notifications, setNotifications] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -31,11 +31,17 @@ function Notification({ className = "", userId }) {
           },
         }
       );
-      if (!res.ok) throw new Error("알림을 불러오지 못했습니다.");
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("알림 API 응답:", text);
+        throw new Error("알림을 불러오지 못했습니다.");
+      }
       const data = await res.json();
-      setNotifications(data);
+      console.log("[알림 fetch] API 응답 데이터:", data);
+      setNotifications(Array.isArray(data) ? data : []);
     } catch (e) {
       setNotifications([]);
+      console.error("알림 fetch 에러:", e);
     } finally {
       setLoading(false);
     }
@@ -62,9 +68,15 @@ function Notification({ className = "", userId }) {
 
   // 웹소켓 알림 실시간 수신
   React.useEffect(() => {
-    if (!userId) return;
     const token = getToken();
     if (!token) return;
+    let userId = null;
+    // 토큰에서 userId 추출 (JWT decode)
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      userId = payload.userId || payload.user_id || payload.id || payload.sub;
+    } catch {}
+    if (!userId) return;
     const socket = getSocket(
       token,
       "https://six-favoritephoto-4team-be.onrender.com"
@@ -73,7 +85,6 @@ function Notification({ className = "", userId }) {
       socket.emit("join", userId);
     });
     socket.on("notification", (data) => {
-      // 새 알림이 오면 목록에 추가
       setNotifications((prev) => [data, ...prev]);
     });
     fetchNotifications();
@@ -81,7 +92,7 @@ function Notification({ className = "", userId }) {
       socket.off("notification");
       disconnectSocket();
     };
-  }, [userId]);
+  }, []);
 
   // 바깥 클릭 시 드롭다운 닫기
   React.useEffect(() => {
@@ -147,9 +158,12 @@ function Notification({ className = "", userId }) {
                   className={`w-full h-[107px] p-5 text-sm ${
                     n.read ? "bg-gray-500" : "bg-[#242424] text-white"
                   } cursor-pointer`}
-                  onClick={() => !n.read && handleNotificationClick(n.id)}
+                  onClick={() => {
+                    if (!n.read) handleNotificationClick(n.id);
+                    if (isMobile) router.push("/notification");
+                  }}
                 >
-                  <Link href="/notification" className="block h-full w-full">
+                  <div className="block h-full w-full">
                     <div className="flex flex-col justify-between h-full">
                       <span
                         className={`text-400-14 ${
@@ -162,7 +176,7 @@ function Notification({ className = "", userId }) {
                         {getTimeAgo(n.createdAt)}
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </li>
               ))
             )}
