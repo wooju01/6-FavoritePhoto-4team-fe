@@ -132,9 +132,9 @@ const Navbar = () => {
           {isLoading ? (
             <span className="text-gray-400">확인 중...</span>
           ) : user ? (
-            <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
+            <div className="flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
-              <span className="text-700-14 text-gray-200">
+              <span className="hidden md:block text-700-14 text-gray-200">
                 {pointLoading
                   ? "포인트..."
                   : pointError
@@ -143,12 +143,14 @@ const Navbar = () => {
                   ? `${point} P`
                   : "-"}
               </span>
-              <Notification userId={user.id} />
-              <span className="text-700-14 text-gray-200">{user.nickname}</span>
-              <span className="w-[1px] h-4 bg-gray-400"></span>
+              <Notification />
+              <span className="hidden md:block text-700-14 text-gray-200">
+                {user.nickname}
+              </span>
+              <span className="hidden md:block w-[1px] h-4 bg-gray-400"></span>
               <button
                 onClick={handleLogout}
-                className="text-400-14 text-gray-400"
+                className="hidden md:block text-400-14 text-gray-400"
               >
                 로그아웃
               </button>

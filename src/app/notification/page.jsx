@@ -3,52 +3,6 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-// Notification.jsx의 테스트 알림 데이터 복사
-const testNotifications = [
-  {
-    id: 1,
-    userId: 101,
-    message: "새로운 댓글이 달렸습니다.",
-    createdAt: "2025-05-19T09:00:00Z",
-    read: false,
-  },
-  {
-    id: 2,
-    userId: 102,
-    message: "포인트가 적립되었습니다.",
-    createdAt: "2025-05-18T15:30:00Z",
-    read: true,
-  },
-  {
-    id: 3,
-    userId: 101,
-    message: "이벤트에 당첨되셨습니다!",
-    createdAt: "2025-05-17T12:10:00Z",
-    read: false,
-  },
-  {
-    id: 4,
-    userId: 103,
-    message: "비밀번호가 변경되었습니다.",
-    createdAt: "2025-05-16T20:45:00Z",
-    read: true,
-  },
-  {
-    id: 5,
-    userId: 104,
-    message: "새로운 친구 요청이 도착했습니다.",
-    createdAt: "2025-05-15T08:25:00Z",
-    read: false,
-  },
-  {
-    id: 6,
-    userId: 104,
-    message: "새로운 친구 요청이 도착했습니다.",
-    createdAt: "2025-05-15T08:25:00Z",
-    read: false,
-  },
-];
-
 // 시간 표시 포맷 함수
 function getTimeAgo(dateString) {
   const now = new Date();
@@ -79,24 +33,79 @@ function getTimeAgo(dateString) {
 }
 
 export default function NotificationPage() {
-  //로그인 유저의 id를 context나 props 등에서 받아와야 함
-  const userId = 101; // 예시: 로그인된 유저 id
-  const [notifications, setNotifications] = React.useState(
-    testNotifications.filter((n) => n.userId === userId)
-  );
+  const [notifications, setNotifications] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
-  const handleNotificationClick = (id) => {
+  // 토큰 가져오기
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("accessToken");
+    }
+    return null;
+  };
+
+  // 알림 전체 조회
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "https://six-favoritephoto-4team-be.onrender.com/api/notifications",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("알림 API 응답:", text);
+        throw new Error("알림을 불러오지 못했습니다.");
+      }
+      const data = await res.json();
+      setNotifications(Array.isArray(data) ? data : []);
+    } catch (e) {
+      setNotifications([]);
+      console.error("알림 fetch 에러:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 알림 읽음 처리
+  const handleNotificationClick = async (id, read) => {
+    if (read) return;
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
+    try {
+      await fetch(
+        `https://six-favoritephoto-4team-be.onrender.com/api/notifications/${id}/read`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch {}
   };
 
+  React.useEffect(() => {
+    fetchNotifications();
+    // eslint-disable-next-line
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col px-0 max-w-[1480px] mx-auto">
+    <div className="min-h-screen bg-my-black text-white flex flex-col px-0 max-w-[1480px] mx-auto">
       {/* 알림 리스트 */}
       <ul className="flex-1 overflow-y-auto divide-y divide-gray-700">
-        {notifications.length === 0 ? (
+        {loading ? (
+          <li className="p-8 text-center text-gray-400">
+            알림을 불러오는 중...
+          </li>
+        ) : notifications.length === 0 ? (
           <li className="p-8 text-center text-gray-400">알림이 없습니다.</li>
         ) : (
           notifications.map((n) => (
@@ -105,7 +114,7 @@ export default function NotificationPage() {
               className={`h-[87px] p-5 text-sm cursor-pointer ${
                 n.read ? "bg-gray-500" : "bg-[#242424] text-white"
               }`}
-              onClick={() => !n.read && handleNotificationClick(n.id)}
+              onClick={() => handleNotificationClick(n.id, n.read)}
             >
               <div className="flex flex-col justify-center h-full">
                 <span className={n.read ? "opacity-70" : "font-semibold"}>
