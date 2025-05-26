@@ -9,7 +9,7 @@ let socket = null;
 
 export const getSocket = (token) => {
   if (!socket) {
-    socket = io("http://localhost:3002", {
+    socket = io("https://six-favoritephoto-4team-be.onrender.com", {
       auth: { token },
       transports: ["websocket"],
     });

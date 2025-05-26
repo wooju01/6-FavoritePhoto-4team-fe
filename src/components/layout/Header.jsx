@@ -30,11 +30,14 @@ const Navbar = () => {
     if (!user) return;
     setPointError("");
     try {
-      const res = await fetch("http://localhost:3002/api/points/me", {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const res = await fetch(
+        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
       if (!res.ok) throw new Error("포인트 정보를 불러오지 못했습니다.");
       const data = await res.json();
       setPoint(data.points);
@@ -62,7 +65,10 @@ const Navbar = () => {
     if (!user) return;
     const token = getToken();
     if (!token) return;
-    const socket = getSocket(token, "http://localhost:3002");
+    const socket = getSocket(
+      token,
+      "https://six-favoritephoto-4team-be.onrender.com"
+    );
 
     socket.on("connect", () => {
       console.log("[Socket] Connected", socket.id);
