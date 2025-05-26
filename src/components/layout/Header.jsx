@@ -17,7 +17,6 @@ const Navbar = () => {
   const [pointLoading, setPointLoading] = useState(false);
   const [pointError, setPointError] = useState("");
 
-  // 포인트 조회 함수
   const getToken = () => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("accessToken");
@@ -27,7 +26,6 @@ const Navbar = () => {
 
   const fetchMyPoints = async () => {
     if (!user) return;
-    setPointLoading(true);
     setPointError("");
     try {
       const res = await fetch(
@@ -43,13 +41,18 @@ const Navbar = () => {
       setPoint(data.points);
     } catch (e) {
       setPointError(e.message);
-    } finally {
-      setPointLoading(false);
     }
   };
 
+  // 최초 1회만 로딩 표시, 이후에는 silent fetch
   useEffect(() => {
-    if (user) fetchMyPoints();
+    if (!user) return;
+    setPointLoading(true);
+    fetchMyPoints().finally(() => setPointLoading(false));
+    const interval = setInterval(() => {
+      fetchMyPoints(); // silent fetch, loading 표시 안 함
+    }, 1000);
+    return () => clearInterval(interval);
   }, [user]);
 
   const handleLogout = async () => {
@@ -93,13 +96,13 @@ const Navbar = () => {
           </Link>
 
           {isLoading ? (
-            <span className="text-gray-400">사용자 정보 확인 중...</span>
+            <span className="text-gray-400">확인 중...</span>
           ) : user ? (
             <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
               <span className="text-700-14 text-gray-200">
                 {pointLoading
-                  ? "0 P..."
+                  ? "포인트..."
                   : pointError
                   ? "-"
                   : point !== null
