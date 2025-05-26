@@ -93,13 +93,13 @@ const Navbar = () => {
           </Link>
 
           {isLoading ? (
-            <span className="text-gray-400">확인 중...</span>
+            <span className="text-gray-400">사용자 정보 확인 중...</span>
           ) : user ? (
             <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
               <span className="text-700-14 text-gray-200">
                 {pointLoading
-                  ? "포인트..."
+                  ? "0 P..."
                   : pointError
                   ? "-"
                   : point !== null
