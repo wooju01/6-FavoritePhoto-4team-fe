@@ -1,5 +1,3 @@
-// 설명 부분 60자 글자수 제한 추가해야 함
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -25,12 +23,12 @@ export default function PostForm({ grades, genres, disabled }) {
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false); // 제출 여부(오류 검사 때문에 만듦)
-  const [touched, setTouched] = useState({
+  const [dirty, setDirty] = useState({
     name: false,
     price: false,
     volumn: false,
     description: false,
-  }); // 입력 여부(오류 검사 때문에 만듦22)
+  }); // 입력 여부(오류 검사 때문에 만듦22) - 관행적으로 "입력된 상태"를 "dirty"라고 함.
 
   const { openModal } = useStateModal(); // 모달 provider
 
@@ -49,7 +47,7 @@ export default function PostForm({ grades, genres, disabled }) {
   // 입력 상태 감지하는 함수
   const handleChange = (setter, field) => (e) => {
     setter(e.target.value);
-    setTouched((prev) => ({ ...prev, [field]: true }));
+    setDirty((prev) => ({ ...prev, [field]: true }));
   };
 
   // 유효성 검사
@@ -136,7 +134,7 @@ export default function PostForm({ grades, genres, disabled }) {
         placeholder="포토카드 이름을 입력해 주세요"
         value={name}
         onChange={handleChange(setName, "name")}
-        error={(isSubmitted || touched.name) && errors.name}
+        error={(isSubmitted || dirty.name) && errors.name}
       />
       <Select
         type="등급"
@@ -158,7 +156,7 @@ export default function PostForm({ grades, genres, disabled }) {
         placeholder="가격을 입력해 주세요"
         value={price}
         onChange={handleChange(setPrice, "price")}
-        error={(isSubmitted || touched.price) && errors.price}
+        error={(isSubmitted || dirty.price) && errors.price}
       />
       <Input
         label="총 발행량"
@@ -166,7 +164,7 @@ export default function PostForm({ grades, genres, disabled }) {
         placeholder="총 발행량을 입력해 주세요"
         value={volumn}
         onChange={handleChange(setVolumn, "volumn")}
-        error={(isSubmitted || touched.volumn) && errors.volumn}
+        error={(isSubmitted || dirty.volumn) && errors.volumn}
       />
       <File
         label="사진 업로드"
@@ -179,7 +177,7 @@ export default function PostForm({ grades, genres, disabled }) {
         placeholdrer="카드 설명을 입력해 주세요"
         value={description}
         onChange={handleChange(setDescription, "description")}
-        error={(isSubmitted || touched.description) && errors.description}
+        error={(isSubmitted || dirty.description) && errors.description}
       />
       <Button type="exchangeGreen" disabled={!isValid || disabled}>
         {isPending ? "생성 중..." : "생성하기"}
