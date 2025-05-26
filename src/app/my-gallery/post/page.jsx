@@ -23,7 +23,24 @@ export default function CardPostPage() {
     queryFn: getMonthlyCardCount,
   });
 
-  if (isPending) return <p>로딩 중입니다...</p>;
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>로딩 중입니다...</p>
+        <svg
+          className="ml-3 size-5 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          ></path>
+        </svg>
+      </div>
+    );
   if (isError) return <p>데이터를 불러오는 데 실패했습니다.</p>;
 
   return (
