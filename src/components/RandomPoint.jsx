@@ -7,9 +7,10 @@ import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-export default function RandomPoint({ onClose }) {
+export default function RandomPoint() {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [active, setActive] = useState(false);
+  const [closed, setClosed] = useState(true);
   const [points, setPoints] = useState(null);
   const [lastClaimed, setLastClaimed] = useState(null);
   const [todayClaimCount, setTodayClaimCount] = useState(0);
@@ -28,7 +29,7 @@ export default function RandomPoint({ onClose }) {
   };
 
   const handleClose = () => {
-    if (onClose) onClose();
+    setClosed(false);
   };
 
   // AccessToken 가져오는 함수 (예시)
@@ -44,14 +45,11 @@ export default function RandomPoint({ onClose }) {
     setLoading(true);
     setErrorMsg("");
     try {
-      const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await fetch("http://localhost:3002/api/points/me", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       if (!res.ok) throw new Error("포인트 정보를 불러오지 못했습니다.");
       const data = await res.json();
       setPoints(data.points);
@@ -97,16 +95,13 @@ export default function RandomPoint({ onClose }) {
     setLoading(true);
     setErrorMsg("");
     try {
-      const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/random-box",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch("http://localhost:3002/api/points/random-box", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          "Content-Type": "application/json",
+        },
+      });
       const data = await res.json();
       if (res.ok) {
         setResult(data);
@@ -121,6 +116,8 @@ export default function RandomPoint({ onClose }) {
       setLoading(false);
     }
   };
+
+  if (!closed) return null;
 
   return (
     <div
@@ -164,6 +161,9 @@ export default function RandomPoint({ onClose }) {
                 {result ? `${result.points}P` : "2P"}
               </span>{" "}
               획득!
+            </div>
+            <div className="text-gray-400 text-sm mt-2">
+              총 보유 포인트: {result ? result.totalPoints : points}
             </div>
           </div>
           <p
