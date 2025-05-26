@@ -7,19 +7,14 @@ import GradeTag from "../tag/GradeTag";
 import example from "@/assets/example.svg";
 import favicon from "@/assets/favicon.svg";
 
-const genreMap = {
-  1: "여행",
-  2: "풍경",
-  3: "인물",
-  4: "사물",
-};
+const baseUrl = "http://localhost:3002";
 
 export default function MyCard({
   name,
   image,
   gradeId,
-  genreId,
-  nickname, // 아직 서버에 없어서 일단 이렇게 썼습니다
+  genre,
+  nickname,
   totalQuantity,
   initialPrice,
 }) {
@@ -28,7 +23,7 @@ export default function MyCard({
       {/* 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
         <Image
-          src={image || example} // 일단 ui 확인을 위해 예시사진 적용
+          src={`${baseUrl}${image}` || example} // 일단 ui 확인을 위해 예시사진 적용
           alt={name}
           fill
           className="object-cover"
@@ -48,7 +43,7 @@ export default function MyCard({
             <GradeTag grade={gradeId} />
           </p>
           <span className="text-gray-400">|</span>
-          <span className="text-gray-300">{genreMap[genreId]}</span>
+          <span className="text-gray-300">{genre || "-"}</span>
         </div>
 
         {/* 오른쪽: 아티스트 */}

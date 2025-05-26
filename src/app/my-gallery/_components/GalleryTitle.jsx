@@ -11,12 +11,11 @@ export default function GalleryTitle({ creationNumber = 3, disabled = false }) {
 
   return (
     <>
-      <header className="flex items-center justify-between mb-3">
-        <h2 className="hidden md:block title-48 lg:title-62">마이갤러리</h2>
+      {/* pc, tablet용 */}
+      <header className="hidden md:flex items-center justify-between mb-3 w-full">
+        <h2 className="title-48 lg:title-62">마이갤러리</h2>
         <div className="flex items-end gap-3">
-          <span className="hidden md:inline text-400-14 text-gray-300">
-            {now}
-          </span>
+          <span className="text-400-14 text-gray-300">{now}</span>
 
           <button
             disabled={disabled}
@@ -34,7 +33,25 @@ export default function GalleryTitle({ creationNumber = 3, disabled = false }) {
           </button>
         </div>
       </header>
-      <hr className="hidden md:block w-full h-0.5 bg-gray-100" />
+      {/* mobile용 */}
+      <div className="fixed block md:hidden z-10 bottom-10 w-full left-0 px-4">
+        <div></div>
+        <button
+          disabled={disabled}
+          onClick={() => {
+            if (disabled) return;
+            router.push("/my-gallery/post");
+          }}
+          className={clsx(
+            "disabled:bg-gray-400 disabled:text-gray-300 disabled:!cursor-not-allowed",
+            "bg-main text-my-black cursor-pointer",
+            "flex justify-center items-center w-full h-[55px] rounded-xs text-700-16"
+          )}
+        >
+          포토카드 생성하기 ({creationNumber}/3)
+        </button>
+      </div>
+      <hr className="hidden md:block w-full h-0.5 bg-gray-100 mb-5" />
     </>
   );
 }
