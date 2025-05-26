@@ -26,3 +26,8 @@ export const userService = {
 export async function getMyCards() {
   return await cookieFetch("/api/users/gallery");
 }
+
+// GET: 카드 개수
+export async function getCardsCount() {
+  return await cookieFetch("/api/users/cards-count");
+}
