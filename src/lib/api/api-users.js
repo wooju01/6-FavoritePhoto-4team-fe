@@ -21,3 +21,8 @@ export async function postCard(formData) {
 export const userService = {
   getMe: () => cookieFetch("/api/users"),
 };
+
+// GET: 마이 갤러리
+export async function getMyCards() {
+  return await cookieFetch("/api/users/gallery");
+}
