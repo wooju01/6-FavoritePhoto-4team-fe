@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import mainLogoImg from "@/assets/main-logo.png";
-import alarmIconImg from "@/assets/icon-alarm.png";
 import humbergerIconImg from "@/assets/icon-humberger.png";
 import CurtainMenu from "./CurtainMenu";
 import DropdownNavi from "./DropdownNavi";
@@ -9,6 +8,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
+import Notification from "./Notification";
+import { getSocket, disconnectSocket } from "@/lib/socket";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [point, setPoint] = useState(null);
   const [pointLoading, setPointLoading] = useState(false);
   const [pointError, setPointError] = useState("");
+  const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
 
   // 포인트 조회 함수
   const getToken = () => {
@@ -30,14 +32,11 @@ const Navbar = () => {
     setPointLoading(true);
     setPointError("");
     try {
-      const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await fetch("http://localhost:3002/api/points/me", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       if (!res.ok) throw new Error("포인트 정보를 불러오지 못했습니다.");
       const data = await res.json();
       setPoint(data.points);
@@ -47,10 +46,6 @@ const Navbar = () => {
       setPointLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (user) fetchMyPoints();
-  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -67,6 +62,46 @@ const Navbar = () => {
     }
   }, [pathname, isLoading, user]);
 
+  useEffect(() => {
+    if (!user) return;
+    const token = getToken();
+    if (!token) return;
+    const socket = getSocket(token, "http://localhost:3002");
+
+    socket.on("connect", () => {
+      console.log("[Socket] Connected", socket.id);
+      // userId 방에 join
+      if (user.id) {
+        socket.emit("join", user.id);
+        console.log("[Socket] join room:", user.id);
+      }
+    });
+    socket.on("connect_error", (err) => {
+      console.error("[Socket] Connection error:", err);
+    });
+    socket.on("disconnect", (reason) => {
+      console.log("[Socket] Disconnected:", reason);
+    });
+
+    // 서버에서 'pointUpdate' 전달
+    const handlePointUpdate = (data) => {
+      console.log("[Socket] pointUpdate event received:", data);
+      // 누적 포인트(totalPoints)로 갱신
+      if (data && typeof data.totalPoints === "number") {
+        setPoint(data.totalPoints);
+      }
+    };
+    socket.on("pointUpdate", handlePointUpdate);
+
+    // 최초 진입 시 포인트 fetch
+    fetchMyPoints();
+
+    return () => {
+      socket.off("pointUpdate", handlePointUpdate);
+      disconnectSocket();
+    };
+  }, [user]);
+
   return (
     <header className="sticky top-0 left-0 z-[7777] bg-my-black">
       <nav
@@ -77,7 +112,7 @@ const Navbar = () => {
       `}
       >
         <div className="w-full relative md:static flex items-center justify-between">
-          <button className="md:hidden">
+          <button className="md:hidden" onClick={() => setIsCurtainOpen(true)}>
             <Image src={humbergerIconImg} alt="hamburger" />
           </button>
 
@@ -106,9 +141,7 @@ const Navbar = () => {
                   ? `${point} P`
                   : "-"}
               </span>
-              <button className="!block">
-                <Image src={alarmIconImg} alt="alarmIcon" className="md:w-6" />
-              </button>
+              <Notification userId={user.id} />
               <span className="text-700-14 text-gray-200">{user.nickname}</span>
               <span className="w-[1px] h-4 bg-gray-400"></span>
               <button
@@ -131,6 +164,12 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+      {isCurtainOpen && user && (
+        <CurtainMenu
+          user={{ ...user, point: point ?? 0 }}
+          onClose={() => setIsCurtainOpen(false)}
+        />
+      )}
     </header>
   );
 };
