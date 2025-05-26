@@ -7,7 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-export default function RandomPoint() {
+export default function RandomPoint({ onClose }) {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [active, setActive] = useState(false);
   const [closed, setClosed] = useState(true);
@@ -30,6 +30,7 @@ export default function RandomPoint() {
 
   const handleClose = () => {
     setClosed(false);
+    if (onClose) onClose();
   };
 
   // AccessToken 가져오는 함수 (예시)

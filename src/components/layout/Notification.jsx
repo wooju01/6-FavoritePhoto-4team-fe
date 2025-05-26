@@ -2,63 +2,86 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
-// 테스트용 알림 데이터
-const testNotifications = [
-  {
-    id: 1,
-    userId: 101,
-    message: "기며누님이 [RARE | 우리집 앞마당]을 1장 구매했습니다.",
-    createdAt: "2025-05-19T09:00:00Z",
-    read: false,
-  },
-  {
-    id: 2,
-    userId: 102,
-    message: "포인트가 적립되었습니다.",
-    createdAt: "2025-05-18T15:30:00Z",
-    read: true,
-  },
-  {
-    id: 3,
-    userId: 101,
-    message: "이벤트에 당첨되셨습니다!",
-    createdAt: "2025-05-17T12:10:00Z",
-    read: false,
-  },
-  {
-    id: 4,
-    userId: 103,
-    message: "비밀번호가 변경되었습니다.",
-    createdAt: "2025-05-16T20:45:00Z",
-    read: true,
-  },
-  {
-    id: 5,
-    userId: 104,
-    message: "새로운 친구 요청이 도착했습니다.",
-    createdAt: "2025-05-15T08:25:00Z",
-    read: false,
-  },
-  {
-    id: 6,
-    userId: 104,
-    message: "새로운 친구 요청이 도착했습니다.",
-    createdAt: "2025-05-15T08:25:00Z",
-    read: false,
-  },
-];
+import { getSocket, disconnectSocket } from "@/lib/socket";
 
 function Notification({ className = "", userId }) {
   const [open, setOpen] = React.useState(false);
-  // 로그인한 유저의 알림만 필터링
-  const [notifications, setNotifications] = React.useState(
-    userId
-      ? testNotifications.filter((n) => n.userId === userId)
-      : testNotifications
-  );
+  const [notifications, setNotifications] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   const hasUnread = notifications.some((n) => !n.read);
   const router = useRouter();
+
+  // 토큰 가져오기
+  const getToken = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("accessToken");
+    }
+    return null;
+  };
+
+  // 알림 전체 조회
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "https://six-favoritephoto-4team-be.onrender.com/api/notifications",
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      if (!res.ok) throw new Error("알림을 불러오지 못했습니다.");
+      const data = await res.json();
+      setNotifications(data);
+    } catch (e) {
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 알림 읽음 처리
+  const handleNotificationClick = async (id) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+    );
+    try {
+      await fetch(
+        `https://six-favoritephoto-4team-be.onrender.com/api/notifications/${id}/read`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch {}
+  };
+
+  // 웹소켓 알림 실시간 수신
+  React.useEffect(() => {
+    if (!userId) return;
+    const token = getToken();
+    if (!token) return;
+    const socket = getSocket(
+      token,
+      "https://six-favoritephoto-4team-be.onrender.com"
+    );
+    socket.on("connect", () => {
+      socket.emit("join", userId);
+    });
+    socket.on("notification", (data) => {
+      // 새 알림이 오면 목록에 추가
+      setNotifications((prev) => [data, ...prev]);
+    });
+    fetchNotifications();
+    return () => {
+      socket.off("notification");
+      disconnectSocket();
+    };
+  }, [userId]);
 
   // 바깥 클릭 시 드롭다운 닫기
   React.useEffect(() => {
@@ -71,12 +94,6 @@ function Notification({ className = "", userId }) {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
-
-  const handleNotificationClick = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
-  };
 
   // 모바일 환경 감지
   const isMobile = typeof window !== "undefined" && window.innerWidth < 744;
