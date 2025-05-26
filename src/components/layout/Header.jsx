@@ -19,7 +19,6 @@ const Navbar = () => {
   const [pointError, setPointError] = useState("");
   const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
 
-  // 포인트 조회 함수
   const getToken = () => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("accessToken");
@@ -29,7 +28,6 @@ const Navbar = () => {
 
   const fetchMyPoints = async () => {
     if (!user) return;
-    setPointLoading(true);
     setPointError("");
     try {
       const res = await fetch("http://localhost:3002/api/points/me", {
@@ -42,8 +40,6 @@ const Navbar = () => {
       setPoint(data.points);
     } catch (e) {
       setPointError(e.message);
-    } finally {
-      setPointLoading(false);
     }
   };
 
@@ -128,13 +124,13 @@ const Navbar = () => {
           </Link>
 
           {isLoading ? (
-            <span className="text-gray-400">사용자 정보 확인 중...</span>
+            <span className="text-gray-400">확인 중...</span>
           ) : user ? (
             <div className="[&>*]:hidden md:[&>*]:block flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
               <span className="text-700-14 text-gray-200">
                 {pointLoading
-                  ? "0 P..."
+                  ? "포인트..."
                   : pointError
                   ? "-"
                   : point !== null
