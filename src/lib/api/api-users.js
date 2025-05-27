@@ -41,3 +41,13 @@ export const userService = {
     );
   },
 };
+
+// GET: 마이 갤러리
+export async function getMyCards() {
+  return await cookieFetch("/api/users/gallery");
+}
+
+// GET: 카드 개수
+export async function getCardsCount() {
+  return await cookieFetch("/api/users/cards-count");
+}
