@@ -7,15 +7,7 @@ import HomeFallbackCount from "../skeletons/HomeFallbackCount";
 import NoResultMessage from "../ui/NoResultsMessage";
 
 export default async function BaseCardsSection({ grade, genre, sale }) {
-  const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
-
-  const res = await fetch(`${API_BASE_URL}/api/store`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) {
-    throw new Error("카드 데이터를 불러오는데 실패했습니다.");
-  }
-  const data = await res.json();
+  const data = await storeService.getAllStoreCards();
 
   // 다중 선택 가능하도록 파싱 함수
   function parseFilterValue(value) {

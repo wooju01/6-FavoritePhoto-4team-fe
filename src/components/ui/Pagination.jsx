@@ -24,6 +24,8 @@ const ChevronIcon = ({ direction = "right", isDisabled = false }) => {
 };
 
 const ELLIPSIS_STRING = "...";
+const MAX_VISIBLE_ITEMS_DEFAULT = 7; // 기본 화면에서 표시할 최대 페이지 아이템 수 (예: 1, 2, 3, ..., 8, 9, 10)
+const MAX_VISIBLE_ITEMS_S = 5; // 작은 화면(md 미만)에서 표시할 최대 페이지 아이템 수 (예: 1, 2, ..., 9, 10
 
 const Pagination = ({
   currentPage,
@@ -46,63 +48,34 @@ const Pagination = ({
   };
 
   const getDisplayedPageItems = (rawPageNumbers, isSmallBreakpoint) => {
-    const totalPagesInCurrentBlock = rawPageNumbers.length;
-    if (totalPagesInCurrentBlock === 0) return [];
+    const numRawPages = rawPageNumbers.length;
+    if (numRawPages === 0) return [];
 
-    let showEllipsis = false;
-    let leadingCount;
-    let firstHiddenIndex;
-    let lastHiddenIndex;
+    const maxVisible = isSmallBreakpoint
+      ? MAX_VISIBLE_ITEMS_S
+      : MAX_VISIBLE_ITEMS_DEFAULT;
 
-    if (isSmallBreakpoint) {
-      if (totalPagesInCurrentBlock >= 3) {
-        if (7 - 2 + 1 > 1) {
-          showEllipsis = true;
-          leadingCount = 2;
-          firstHiddenIndex = 2;
-          lastHiddenIndex = 7;
-        }
-      }
-    } else {
-      if (totalPagesInCurrentBlock >= 4) {
-        if (6 - 3 + 1 > 1) {
-          showEllipsis = true;
-          leadingCount = 3;
-          firstHiddenIndex = 3;
-          lastHiddenIndex = 6;
-        }
-      }
+    if (numRawPages <= maxVisible) {
+      return rawPageNumbers;
     }
 
-    if (showEllipsis) {
-      const items = [];
-      for (let i = 0; i < leadingCount; i++) {
-        if (rawPageNumbers[i] === undefined) {
-          return rawPageNumbers;
-        }
-        items.push(rawPageNumbers[i]);
-      }
+    // 말줄임표를 사용해야 하는 경우
+    // 작은 화면: 앞 2개, 뒤 2개 (총 4개 + 말줄임표 1개 = 5개)
+    // 기본 화면: 앞 3개, 뒤 3개 (총 6개 + 말줄임표 1개 = 7개)
+    const leadingCount = isSmallBreakpoint ? 2 : 3;
+    const trailingCount = isSmallBreakpoint ? 2 : 3;
 
-      if (firstHiddenIndex < totalPagesInCurrentBlock) {
-        items.push(ELLIPSIS_STRING);
-      } else {
-        return rawPageNumbers;
-      }
-
-      const actualLastHiddenIndex = Math.min(
-        lastHiddenIndex,
-        totalPagesInCurrentBlock - 1
-      );
-      for (
-        let i = actualLastHiddenIndex + 1;
-        i < totalPagesInCurrentBlock;
-        i++
-      ) {
-        items.push(rawPageNumbers[i]);
-      }
-      return items;
+    const items = [];
+    // 앞부분 페이지 추가
+    for (let i = 0; i < leadingCount; i++) {
+      items.push(rawPageNumbers[i]);
     }
-    return rawPageNumbers;
+    items.push(ELLIPSIS_STRING);
+    // 뒷부분 페이지 추가
+    for (let i = numRawPages - trailingCount; i < numRawPages; i++) {
+      items.push(rawPageNumbers[i]);
+    }
+    return items;
   };
 
   const rawPageNumbersInBlock = [];
@@ -112,11 +85,15 @@ const Pagination = ({
     }
   }
 
+  // isSmallBreakpoint 값에 따라 다른 최대 페이지 아이템 수를 적용
   const pageItemsForDefault = getDisplayedPageItems(
     [...rawPageNumbersInBlock],
-    false
+    false // isSmallBreakpoint = false
   );
-  const pageItemsForS = getDisplayedPageItems([...rawPageNumbersInBlock], true);
+  const pageItemsForS = getDisplayedPageItems(
+    [...rawPageNumbersInBlock],
+    true // isSmallBreakpoint = true
+  );
 
   const renderPageItem = (item, index) => {
     if (item === ELLIPSIS_STRING) {
@@ -125,8 +102,8 @@ const Pagination = ({
           key={`ellipsis-${index}`}
           className={clsx(
             "flex items-center justify-center text-white",
-            "w-[14px] h-[19px] text-400-16",
-            "h-[40px] md:h-[45px] lg:h-[50px]"
+            "w-[14px] h-[19px] text-400-16", // 기본 크기 유지 또는 반응형 조절
+            "h-[40px] md:h-[45px] lg:h-[50px]" // 높이는 버튼과 동일하게 유지
           )}
           aria-hidden="true"
         >
@@ -143,11 +120,11 @@ const Pagination = ({
         onClick={() => handlePageItemClick(pageNumber)}
         className={clsx(
           "flex items-center justify-center rounded-[2px] text-center text-700-16 transition-colors",
-          "py-[9px] px-[13px] md:py-[11px] md:px-[16px] lg:py-[13px] lg:px-[20px]",
-          "w-[40px] h-[40px] md:w-[45px] md:h-[45px] lg:w-[50px] lg:h-[50px]",
+          "py-[9px] px-[13px] md:py-[11px] md:px-[16px] lg:py-[13px] lg:px-[20px]", // 패딩
+          "w-[40px] h-[40px] md:w-[45px] md:h-[45px] lg:w-[50px] lg:h-[50px]", // 크기
           isActive
-            ? "bg-my-black border border-gray-200 text-white"
-            : "border-none text-white hover:bg-gray-700"
+            ? "bg-my-black border border-gray-200 text-white" // 활성 상태
+            : "border-none text-white hover:bg-gray-700" // 비활성 상태
         )}
         aria-current={isActive ? "page" : undefined}
         aria-label={`페이지 ${pageNumber}`}
@@ -164,7 +141,7 @@ const Pagination = ({
     <div
       className={clsx(
         "flex items-center",
-        "gap-[10px] md:gap-[15px] lg:gap-[20px]"
+        "gap-[10px] md:gap-[15px] lg:gap-[20px]" // 반응형 간격
       )}
     >
       <button
@@ -179,10 +156,12 @@ const Pagination = ({
         <ChevronIcon direction="left" isDisabled={isFirstPage} />
       </button>
 
+      {/* 기본 화면 (md 이상) */}
       <div className="hidden md:flex items-center gap-[10px] md:gap-[15px] lg:gap-[20px]">
         {pageItemsForDefault.map((item, index) => renderPageItem(item, index))}
       </div>
 
+      {/* 작은 화면 (md 미만) */}
       <div className="flex md:hidden items-center gap-[10px]">
         {pageItemsForS.map((item, index) => renderPageItem(item, index))}
       </div>
