@@ -24,10 +24,9 @@ export default function MyPage() {
   });
 
   const isDisabled = data?.count !== 0;
-  const { filteredData, gradeForFilter, genreForFilter } = useFilter(
-    data || []
-  );
-
+  // const { filteredData, gradeForFilter, genreForFilter } = useFilter(
+  //   data || []
+  // );
   return (
     <>
       <GalleryTitle creationNumber={data?.count ?? 0} disabled={isDisabled} />
@@ -38,17 +37,17 @@ export default function MyPage() {
       />
       <section>
         <div className="flex items-center">
-          <Search />
+          {/* <Search />
           <FilterDropdown
             visibleFilters={["grade", "genre"]}
             gradeCounts={gradeForFilter}
             genreCounts={genreForFilter}
-          />
+          /> */}
         </div>
-        {console.log(filteredData)}
         {/* 카드 렌더링 ↓ */}
-        {filteredData.length > 0 &&
-          filteredData?.map((card) => (
+        <div className="grid grid-cols-2 lg:grid-cols-3">
+          {/* {filteredData.length > 0 && */}
+          {data?.map((card) => (
             <MyCard
               key={card.id}
               name={card.photoCard.name}
@@ -60,6 +59,7 @@ export default function MyPage() {
               totalQuantity={card.photoCard.totalQuantity}
             />
           ))}
+        </div>
       </section>
     </>
   );
