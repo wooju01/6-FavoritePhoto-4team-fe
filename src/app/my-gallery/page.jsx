@@ -24,11 +24,9 @@ export default function MyPage() {
   });
 
   const isDisabled = data?.count !== 0;
-  const { filteredData, gradeForFilter, genreForFilter } = useFilter(
-    data || []
-  );
-
-  // 돼라!! push!!
+  // const { filteredData, gradeForFilter, genreForFilter } = useFilter(
+  //   data || []
+  // );
   return (
     <>
       <GalleryTitle creationNumber={data?.count ?? 0} disabled={isDisabled} />
@@ -39,29 +37,29 @@ export default function MyPage() {
       />
       <section>
         <div className="flex items-center">
-          <Search />
+          {/* <Search />
           <FilterDropdown
             visibleFilters={["grade", "genre"]}
             gradeCounts={gradeForFilter}
             genreCounts={genreForFilter}
-          />
+          /> */}
         </div>
         {console.log(filteredData)}
         {/* 카드 렌더링 ↓ */}
         <div className="grid grid-cols-2 lg:grid-cols-3">
-          {filteredData.length > 0 &&
-            filteredData?.map((card) => (
-              <MyCard
-                key={card.id}
-                name={card.photoCard.name}
-                image={card.photoCard.imageUrl}
-                nickname={card.owner?.nickname || "나"}
-                genre={card.photoCard?.genre?.name}
-                gradeId={card.photoCard?.gradeId}
-                initialPrice={card.price}
-                totalQuantity={card.photoCard.totalQuantity}
-              />
-            ))}
+          {/* {filteredData.length > 0 && */}
+          {data?.map((card) => (
+            <MyCard
+              key={card.id}
+              name={card.photoCard.name}
+              image={card.photoCard.imageUrl}
+              nickname={card.owner?.nickname || "나"}
+              genre={card.photoCard?.genre?.name}
+              gradeId={card.photoCard?.gradeId}
+              initialPrice={card.price}
+              totalQuantity={card.photoCard.totalQuantity}
+            />
+          ))}
         </div>
       </section>
     </>
