@@ -1,12 +1,10 @@
 "use client";
 
 import CardListPageEx from "@/components/FllterDropdown/CardListPageEx";
-import { Suspense, useEffect, useMemo, useState } from "react"; //useSearchParams를 사용해서 Suspense로 감싸야 안전하게 CSR 처리가 됩니다.
+import { Suspense } from "react"; //useSearchParams를 사용해서 Suspense로 감싸야 안전하게 CSR 처리가 됩니다.
 import Profile from "@/components/ui/Profile";
 import Link from "next/link";
 import React from "react";
-import Sort from "@/components/ui/Sort";
-import { useQuery } from "@tanstack/react-query";
 import { Title } from "@/components/ui/Title";
 import Button from "@/components/ui/Button";
 import StatusTag from "@/components/tag/StatusTag";
@@ -16,46 +14,12 @@ import NotiModal from "@/components/modal/NotiModal";
 import { useAlertModal } from "@/providers/AlertModalProvider";
 import StateModal from "@/components/modal/StateModal";
 import { useStateModal } from "@/providers/StateModalProvider";
-import { useSearchParams } from "next/navigation";
-
-const mockdata = [
-  // 가데이터 ↔ DB에 저장된 데이터 (안 씀)
-  { id: "1", name: "풍경화1", price: "1", createdAt: "4" },
-  { id: "2", name: "풍경화2", price: "4", createdAt: "3" },
-  { id: "3", name: "풍경화3", price: "3", createdAt: "2" },
-  { id: "4", name: "풍경화4", price: "2", createdAt: "1" },
-  { id: "5", name: "풍경화5", price: "5", createdAt: "5" },
-];
-
-const sortMockData = (data, orderBy) => {
-  // 가-api 함수 (BE에서 처리하므로 .sort 쓸 일은 없음 = 안 씀22)
-  return [...data].sort((a, b) => {
-    switch (orderBy) {
-      case "price_asc":
-        return Number(a.price) - Number(b.price);
-      case "price_desc":
-        return Number(b.price) - Number(a.price);
-      case "created_desc":
-        return Number(b.createdAt) - Number(a.createdAt);
-      default:
-        return 0;
-    }
-  });
-};
+import TempSort from "./TempSort";
 
 export default function CommonPage() {
-  const searchParams = useSearchParams();
-  const orderBy = searchParams.get("orderBy") ?? "price_asc";
-
-  const sortedData = useMemo(() => sortMockData(mockdata, orderBy), [orderBy]);
-
   const handleBuy = (qty) => {
     alert(`구매 수량: ${qty}`);
   };
-  const { data = [] } = useQuery({
-    queryKey: ["cards", orderBy], // 조건에 order 넣고
-    queryFn: () => sortMockData(mockdata, orderBy), // 함수 실행할 때도 조건 넣음
-  });
 
   const { openModal } = useAlertModal();
   const { openModal: openStateModal } = useStateModal();
@@ -90,10 +54,9 @@ export default function CommonPage() {
         <div>Input컴포넌트 확인용 페이지 클릭</div>
       </Link>
       배포 확인(배포에 문제가 있는 확인)
-      <Sort />
-      {sortedData?.map((data) => {
-        return <div key={data.id}>{data.name}</div>;
-      })}
+      <Suspense fallback={null}>
+        <TempSort />
+      </Suspense>
       <CardBuyer
         tier="COMMON"
         subLabel="동물"

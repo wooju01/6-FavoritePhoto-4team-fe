@@ -48,19 +48,21 @@ export default function MyPage() {
         </div>
         {console.log(filteredData)}
         {/* 카드 렌더링 ↓ */}
-        {filteredData.length > 0 &&
-          filteredData?.map((card) => (
-            <MyCard
-              key={card.id}
-              name={card.photoCard.name}
-              image={card.photoCard.imageUrl}
-              nickname={card.owner?.nickname || "나"}
-              genre={card.photoCard?.genre?.name}
-              gradeId={card.photoCard?.gradeId}
-              initialPrice={card.price}
-              totalQuantity={card.photoCard.totalQuantity}
-            />
-          ))}
+        <div className="grid grid-cols-2 lg:grid-cols-3">
+          {filteredData.length > 0 &&
+            filteredData?.map((card) => (
+              <MyCard
+                key={card.id}
+                name={card.photoCard.name}
+                image={card.photoCard.imageUrl}
+                nickname={card.owner?.nickname || "나"}
+                genre={card.photoCard?.genre?.name}
+                gradeId={card.photoCard?.gradeId}
+                initialPrice={card.price}
+                totalQuantity={card.photoCard.totalQuantity}
+              />
+            ))}
+        </div>
       </section>
     </>
   );
