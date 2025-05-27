@@ -73,6 +73,25 @@ export default function SignupPage() {
                 <Image src={loadingGif} alt="로딩중" width={20} height={20} />
               )}
             </button>
+
+            <button
+              type="button"
+              className="w-full"
+              onClick={() => {
+                window.location.href =
+                  process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL ||
+                  "https://six-favoritephoto-4team-be.onrender.com/api/auth/google";
+              }}
+            >
+              <div className="flex items-center justify-center gap-2 h-[55px] lg:h-[60px] rounded-xs bg-white">
+                <Image
+                  src={require("@/assets/google-logo.png")}
+                  alt="google"
+                  className="w-[22px] h-[22px]"
+                />
+                <span className="text-my-black">Google로 시작하기</span>
+              </div>
+            </button>
           </div>
 
           <div className="flex items-center justify-center gap-2 text-400-14 lg:text-400-16">
