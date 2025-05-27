@@ -6,7 +6,7 @@ import { authService } from "@/lib/api/api-auth";
 import { useAuth } from "@/providers/AuthProvider";
 
 export function useLoginForm() {
-  const { getUser } = useAuth();
+  const { login: authLogin } = useAuth();
   const [form, setForm] = useState({
     userEmail: "",
     userPassword: "",
@@ -57,10 +57,8 @@ export function useLoginForm() {
 
     setIsPending(true);
     try {
-      await authService.signIn(form.userEmail, form.userPassword);
-      await getUser(); // 로그인 후 사용자 정보 갱신
+      await authLogin(form.userEmail, form.userPassword);
       router.push("/home"); // 성공 시 이동
-     
     } catch (error) {
       console.error("Login failed in hook:", error);
       setLoginError(error.message || "이메일 또는 비밀번호가 잘못되었습니다.");
@@ -73,7 +71,6 @@ export function useLoginForm() {
     form,
     writeError,
     isPending,
-
     handleChange,
     handleSubmit,
   };
