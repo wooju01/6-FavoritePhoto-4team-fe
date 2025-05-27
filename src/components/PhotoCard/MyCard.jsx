@@ -1,4 +1,3 @@
-// 예시 페이지 : /my-cards
 "use client";
 
 import React from "react";
@@ -18,12 +17,18 @@ export default function MyCard({
   totalQuantity,
   initialPrice,
 }) {
+  const getImageUrl = (image) => {
+    if (!image) return example;
+    if (image.startsWith("http")) return image;
+    return `${baseUrl}${image}`;
+  };
+
   return (
     <div className="bg-my-black w-full px-2 py-2 md:px-4 md:py-4 lg:px-10 lg:py-10 border border-gray-800">
       {/* 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
         <Image
-          src={`${baseUrl}${image}` || example} // 일단 ui 확인을 위해 예시사진 적용
+          src={getImageUrl(image)}
           alt={name}
           fill
           className="object-cover"

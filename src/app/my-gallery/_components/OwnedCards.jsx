@@ -56,6 +56,7 @@ export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
           );
         })}
       </div>
+      <hr className="border-gray-400 my-5" />
     </section>
   );
 }

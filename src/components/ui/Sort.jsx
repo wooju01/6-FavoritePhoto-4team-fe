@@ -7,15 +7,8 @@ import useSort from "@/hooks/useSort";
 
 const options = ["낮은 가격순", "높은 가격순", "최신순"]; // 정렬 옵션
 
-export default function Sort({ onClick }) {
-  const { isOpen, order, sortRef, toggle, handleSelect, getSortParam } =
-    useSort(); // hooks에서 만든 함수들 가져옴
-
-  function handleOptionClick(option) {
-    handleSelect(option);
-    const linkedValue = getSortParam(option);
-    if (onClick) onClick(linkedValue);
-  }
+export default function Sort() {
+  const { isOpen, order, sortRef, toggle, handleSelect } = useSort(); // hooks에서 만든 함수들 가져옴
 
   return (
     <div ref={sortRef} className="relative z-20">
@@ -32,11 +25,11 @@ export default function Sort({ onClick }) {
       </button>
 
       {isOpen && (
-        <div className="rounded-[2px] w-full border-1 flex flex-col  bg-my-black200 gap-[15px] py-[15px] text-400-12 md:text-400-14 lg:text-400-16 absolute mt-2 bg-my-black">
+        <div className="rounded-[2px] w-32 md:w-[140px] lg:w-44 border-1 flex flex-col bg-my-black200 gap-[15px] py-[15px] text-400-12 md:text-400-14 lg:text-400-16 absolute left-0 mt-2 bg-my-black">
           {options.map((opt) => (
             <div
               key={opt}
-              onClick={() => handleOptionClick(opt)}
+              onClick={() => handleSelect(opt)}
               className="px-[20px] cursor-pointer"
             >
               {opt}
