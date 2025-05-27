@@ -59,7 +59,13 @@ export default function Page() {
               )}
             </button>
 
-            <button type="button" className="w-full">
+            <button
+              type="button"
+              className="w-full"
+              onClick={() => {
+                window.location.href = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL;
+              }}
+            >
               <div className="flex items-center justify-center gap-2 h-[55px] lg:h-[60px] rounded-xs bg-white">
                 <Image
                   src={googleLogoImg}
