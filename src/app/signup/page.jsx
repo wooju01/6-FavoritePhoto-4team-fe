@@ -78,7 +78,9 @@ export default function SignupPage() {
               type="button"
               className="w-full"
               onClick={() => {
-                window.location.href = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL;
+                window.location.href =
+                  process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL ||
+                  "https://six-favoritephoto-4team-be.onrender.com/api/auth/google";
               }}
             >
               <div className="flex items-center justify-center gap-2 h-[55px] lg:h-[60px] rounded-xs bg-white">
