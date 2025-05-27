@@ -28,6 +28,7 @@ export default function MyPage() {
     data || []
   );
 
+  // 돼라!! push!!
   return (
     <>
       <GalleryTitle creationNumber={data?.count ?? 0} disabled={isDisabled} />
