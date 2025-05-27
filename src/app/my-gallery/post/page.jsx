@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import PostForm from "./_component/PostForm";
-import PostTitle from "./_component/PostTitle";
+import PostForm from "./_components/PostForm";
+import PostTitle from "./_components/PostTitle";
 import StateModal from "@/components/modal/StateModal";
 import { useQuery } from "@tanstack/react-query";
 import { getCardMeta, getMonthlyCardCount } from "@/lib/api/api-users";
-import Noti from "./_component/Noti";
+import Noti from "./_components/Noti";
 
 export default function CardPostPage() {
   const {

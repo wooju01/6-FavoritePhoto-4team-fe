@@ -6,7 +6,7 @@ export default function PostTitle({ creationNumber }) {
 
   return (
     <div className="border-b border-gray-100 pb-5 mb-15 mt-10 md:flex md:justify-between md:items-end hidden">
-      <span className="title-48 lg:title-62">포토카드 생성</span>
+      <h2 className="title-48 lg:title-62">포토카드 생성</h2>
       <span>
         <span className="mr-1 title-40 text-main">
           {Math.max(0, 3 - (creationNumber ?? 0))}
