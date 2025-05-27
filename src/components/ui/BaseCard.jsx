@@ -15,7 +15,6 @@ const genreMap = {
 
 export default function BaseCard({
   id,
-  name,
   imageUrl,
   photoCard,
   price,
@@ -28,7 +27,7 @@ export default function BaseCard({
         <div className="flex flex-col gap-2.5 md:gap-5">
           <div>
             <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">
-              {name}
+              {photoCard.name}
             </h2>
             <div className="flex items-center justify-between gap-1 md:gap-0">
               <div className="flex items-center justify-between">

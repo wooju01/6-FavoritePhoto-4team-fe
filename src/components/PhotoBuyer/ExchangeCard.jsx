@@ -1,4 +1,3 @@
-// ExchangeCard.jsx (또는 tsx)
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 
