@@ -5,6 +5,7 @@ import Sort from "../ui/Sort";
 import { Suspense } from "react";
 import HomeFallbackCount from "../skeletons/HomeFallbackCount";
 import NoResultMessage from "../ui/NoResultsMessage";
+import { storeService } from "@/lib/api/api-store";
 
 export default async function BaseCardsSection({ grade, genre, sale }) {
   const data = await storeService.getAllStoreCards();
