@@ -5,6 +5,7 @@ import Image from "next/image";
 import CardBuyer from "../CardBuyer/CardBuyer";
 import { Title } from "../ui/Title";
 import example from "@/assets/example.svg";
+import ExchangeCard from "./ExchangeCard";
 
 const genreMap = {
   1: "여행",
@@ -21,16 +22,6 @@ const tierMap = {
 };
 
 export default function PhotoBuyerSection({ photo }) {
-  const [isMd, setIsMd] = useState(false);
-
-  useEffect(() => {
-    function onResize() {
-      setIsMd(window.innerWidth >= 744);
-    }
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
 
   const handleBuy = (quantity) => {
     alert(`${quantity}장 구매 요청`);
@@ -56,11 +47,7 @@ export default function PhotoBuyerSection({ photo }) {
           onBuy={handleBuy}
         />
       </div>
-      <Title
-        title="교환 희망 정보"
-        buttonText={isMd ? "포토카드 교환하기" : undefined}
-        font="titleLg_Noto"
-      />
+    
     </section>
   );
 }

@@ -17,8 +17,7 @@ export default function BaseCard({
   id,
   name,
   imageUrl,
-  cardGradeId,
-  cardGenreId,
+  photoCard,
   price,
   saleQuantity,
 }) {
@@ -36,11 +35,11 @@ export default function BaseCard({
                 <div className="flex [&_*]:flex ">
                   <div className="items-center justify-center gap-1 md:gap-2.5">
                     <p className="[&_*]:text-300-10 md:[&_*]:text-300-16">
-                      <GradeTag grade={cardGradeId} />
+                      <GradeTag grade={photoCard.gradeId} />
                     </p>
                     <span className="h-3 md:h-5 w-[1px] bg-gray-400 md:"></span>
                     <span className="text-nowrap text-400-10 md:text-400-16 text-gray-300">
-                      {genreMap[cardGenreId]}
+                      {genreMap[photoCard.genreId]}
                     </span>
                   </div>
                 </div>

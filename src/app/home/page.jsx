@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import SkeletonCardLayout from "@/components/skeletons/ResponsiveFallbackWrapper";
 import SellButton from "@/components/ui/SellButton";
-import DelayedBaseCardsSection from "@/components/HompageComponents/DelayedBaseCardsSection";
 import BaseCardsSection from "@/components/HompageComponents/BaseCardsSection";
 import RandomPoint from "@/components/RandomPoint";
 import RandomPointHomeTrigger from "@/components/RandomPointHomeTrigger";

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PhotoBuyerSection from "@/components/PhotoBuyer/PhotoBuyerSection";
 import { storeService } from "@/lib/api/api-store";
 import { useRouter } from "next/navigation";
+import ExchangeCard from "@/components/PhotoBuyer/ExchangeCard";
 
 async function fetchPhotoDetail(id) {
   try {
@@ -47,6 +48,7 @@ export default function PhotoDetailPage({ params }) {
   return (
     <section>
       <PhotoBuyerSection photo={photo.photoCard} />
+       <ExchangeCard desiredDescription={photo.desiredDescription} />
     </section>
   );
 }
