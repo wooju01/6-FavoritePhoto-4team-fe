@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import Image from "next/image";
 import favicon from "@/assets/favicon.svg";
@@ -15,15 +15,10 @@ const genreMap = {
 
 export default function BaseCard({
   id,
-  name,
   imageUrl,
-  gradeId,
-  genreId,
-  description,
-  totalQuantity,
-  initialPrice,
-  creatorId,
-  createdAt,
+  photoCard,
+  price,
+  saleQuantity,
 }) {
   return (
     <Link href={`/home/${id}`}>
@@ -31,41 +26,53 @@ export default function BaseCard({
         <Image src={example} alt="photo-img" className="w-full h-full" />
         <div className="flex flex-col gap-2.5 md:gap-5">
           <div>
-            <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">{name}</h2>
+            <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">
+              {photoCard.name}
+            </h2>
             <div className="flex items-center justify-between gap-1 md:gap-0">
               <div className="flex items-center justify-between">
                 <div className="flex [&_*]:flex ">
                   <div className="items-center justify-center gap-1 md:gap-2.5">
-                    <p className="[&_*]:text-300-10 md:[&_*]:text-300-16"><GradeTag grade={gradeId} /></p>
+                    <p className="[&_*]:text-300-10 md:[&_*]:text-300-16">
+                      <GradeTag grade={photoCard.gradeId} />
+                    </p>
                     <span className="h-3 md:h-5 w-[1px] bg-gray-400 md:"></span>
-                    <span className="text-nowrap text-400-10 md:text-400-16 text-gray-300">{genreMap[genreId]}</span>
+                    <span className="text-nowrap text-400-10 md:text-400-16 text-gray-300">
+                      {genreMap[photoCard.genreId]}
+                    </span>
                   </div>
                 </div>
               </div>
               <div>
                 {/* 닉네임 */}
-                <span className="text-400-10 md:text-400-16 underline line-clamp-1">우리들의 이야기</span>
+                <span className="text-400-10 md:text-400-16 underline line-clamp-1">
+                  우리들의 이야기
+                </span>
               </div>
             </div>
           </div>
           <div className="w-full h-[1px] bg-gray-400">{/* LINE */}</div>
-          <div className="
+          <div
+            className="
           flex flex-col gap-[5px] md:gap-2.5 [&>div]:flex [&>div]:justify-between
             [&_p]:text-300-10 md:[&_p]:text-300-16 [&_p]:text-gray-300
             [&_span]:text-400-10 md:[&_span]:text-400-16 
-          ">
+          "
+          >
             <div>
               <p>가격</p>
-              <span>{initialPrice} P</span>
+              <span>{price} P</span>
             </div>
             <div>
               <p>잔여</p>
-              <span>{totalQuantity} / <span className="text-gray-300">5</span></span>
+              <span>
+                {saleQuantity} / <span className="text-gray-300">5</span>
+              </span>
             </div>
           </div>
         </div>
         <div className="hidden md:flex justify-center">
-          <Image src={favicon} alt="logo" className="w-24 h-4"/>
+          <Image src={favicon} alt="logo" className="w-24 h-4" />
         </div>
       </div>
     </Link>
