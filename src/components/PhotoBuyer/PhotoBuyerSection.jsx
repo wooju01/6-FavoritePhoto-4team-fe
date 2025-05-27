@@ -21,7 +21,7 @@ const tierMap = {
 };
 
 export default function PhotoBuyerSection({ photo }) {
-     const [isMd, setIsMd] = useState(false);
+  const [isMd, setIsMd] = useState(false);
 
   useEffect(() => {
     function onResize() {
@@ -31,8 +31,6 @@ export default function PhotoBuyerSection({ photo }) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-
 
   const handleBuy = (quantity) => {
     alert(`${quantity}장 구매 요청`);
@@ -44,16 +42,11 @@ export default function PhotoBuyerSection({ photo }) {
 
       <div className="md:flex">
         <div className="w-full h-[260px]  lg:h-[720px] overflow-hidden rounded-md mb-4 relative">
-          <Image
-            src={example}
-            alt={photo.name}
-            fill
-            className="object-cover"
-          />
+          <Image src={example} alt={photo.name} fill className="object-cover" />
         </div>
 
         <CardBuyer
-          tier={tierMap[photo.gradeId] || "COMMON"}
+          tier={photo.gradeId}
           subLabel={genreMap[photo.genreId] || "풍경"}
           creator={photo.name}
           description={photo.description}

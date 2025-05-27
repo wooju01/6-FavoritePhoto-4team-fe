@@ -46,7 +46,7 @@ export default function PhotoDetailPage({ params }) {
 
   return (
     <section>
-      <PhotoBuyerSection photo={photo} />
+      <PhotoBuyerSection photo={photo.photoCard} />
     </section>
   );
 }

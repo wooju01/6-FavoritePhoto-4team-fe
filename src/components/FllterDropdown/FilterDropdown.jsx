@@ -57,6 +57,8 @@ export default function FilterDropdown({
   genreCounts = [],
   saleCounts = [],
   methodCounts = [],
+  filteredCount,  
+  loading,        
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -97,13 +99,11 @@ export default function FilterDropdown({
     };
   }, [openFilter]);
 
-  // 쿼리에서 해당 필터 타입 값 가져오기 (id, 숫자 또는 null)
   const getFilterValue = (type) => {
     const value = searchParams.get(type);
     return value ? Number(value) : 0;
   };
 
-  // id별 카운트 가져오는 헬퍼 함수
   const getCount = (type, id) => {
     if (id === 0) return 0; // "전체"는 카운트 표시 안함
 
@@ -148,7 +148,6 @@ export default function FilterDropdown({
     const params = new URLSearchParams(searchParams);
 
     if (value === 0) {
-      // 전체 선택 시 필터 삭제
       params.delete(filterType);
     } else {
       params.set(filterType, value);
@@ -237,6 +236,8 @@ export default function FilterDropdown({
               sale: saleCounts,
               method: methodCounts,
             }}
+            filteredCount={filteredCount}  
+            loading={loading}             
           />
         </>
       )}

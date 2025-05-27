@@ -7,8 +7,8 @@ import HomeFallbackCount from "../skeletons/HomeFallbackCount";
 import NoResultMessage from "../ui/NoResultsMessage";
 
 export default async function BaseCardsSection({ grade, genre, sale }) {
-  const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
-
+  const API_BASE_URL = "http://localhost:3002";
+  
   const res = await fetch(`${API_BASE_URL}/api/store`, {
     next: { revalidate: 60 },
   });
@@ -16,10 +16,10 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
     throw new Error("카드 데이터를 불러오는데 실패했습니다.");
   }
   const data = await res.json();
-
-  // 다중 선택 가능하도록 파싱 함수
+  console.log(data)
+  // 다중 선택 가능하도록 파싱 함수 (빈 배열 반환)
   function parseFilterValue(value) {
-    if (!value) return null;
+    if (!value) return [];
     if (value.includes(",")) {
       return value.split(",").map((v) => Number(v));
     }
@@ -29,25 +29,26 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
   const gradesArray = parseFilterValue(grade);
   const genresArray = parseFilterValue(genre);
 
-  // 응답 객체에서 배열 꺼내기 (예: data.cards)
-  const cardsArray = data.cards || [];
+  // 응답 객체에서 배열 꺼내기
+  const cardsArray = Array.isArray(data.sales) ? data.sales : [];
+
+  // 필터 카운트들
+  const gradeCounts = data.counts?.grade || [];
+  const genreCounts = data.counts?.genre || [];
+  const saleCounts = data.counts?.sale || [];
 
   const filtered = cardsArray.filter((card) => {
     const matchGrade =
-      !gradesArray || gradesArray.length === 0
-        ? true
-        : gradesArray.includes(card.gradeId);
+      !gradesArray.length || gradesArray.includes(card.cardGrade?.id);
 
     const matchGenre =
-      !genresArray || genresArray.length === 0
-        ? true
-        : genresArray.includes(card.genreId);
+      !genresArray.length || genresArray.includes(card.cardGenre?.id);
 
     const matchSale = !sale
       ? true
       : sale === "판매중"
-      ? card.sale === "판매중"
-      : card.sale === "판매완료";
+      ? card.status === "AVAILABLE"
+      : card.status !== "AVAILABLE";
 
     return matchGrade && matchGenre && matchSale;
   });
@@ -67,9 +68,10 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
           </div>
           <FilterDropdown
             visibleFilters={["grade", "genre", "sale"]}
-            gradeCounts={data.gradeCounts}
-            genreCounts={data.genreCounts}
-            saleCounts={data.saleCounts}
+            filteredCount={filtered.length}
+            gradeCounts={gradeCounts}
+            genreCounts={genreCounts}
+            saleCounts={saleCounts}
           />
           <Sort />
         </div>
@@ -78,7 +80,7 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
         <NoResultMessage message={"필터링 결과가 존재하지 않습니다."} />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-20">
-          <Suspense key={filtered} fallback={<HomeFallbackCount count={12} />}>
+          <Suspense fallback={<HomeFallbackCount count={12} />}>
             <BaseCardList cards={filtered} />
           </Suspense>
         </div>
