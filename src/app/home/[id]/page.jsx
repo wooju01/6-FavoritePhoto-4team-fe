@@ -41,7 +41,6 @@ export default function PhotoDetailPage({ params }) {
   }
 
   if (!photo) {
-    r;
     return null;
   }
 
