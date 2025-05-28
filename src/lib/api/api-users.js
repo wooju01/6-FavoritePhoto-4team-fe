@@ -43,7 +43,7 @@ export const userService = {
 };
 
 // GET: 마이 갤러리
-export async function getMyCards() {
+export async function getMyCards({ page, size }) {
   return await cookieFetch("/api/users/gallery");
 }
 

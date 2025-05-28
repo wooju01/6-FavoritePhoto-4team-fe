@@ -14,7 +14,7 @@ import Pagination from "@/components/ui/Pagination";
 export default function MyPage() {
   // 카드 데이터 불러오기
   const { data, isPending, isError } = useQuery({
-    queryKey: ["myGalleryCards_v3"],
+    queryKey: ["myGalleryCards_v"],
     queryFn: getMyCards,
   });
 
@@ -24,14 +24,12 @@ export default function MyPage() {
     queryFn: getCardsCount,
   });
 
-  console.log(data);
-  const isDisabled = data?.count !== 0;
   // const { filteredData, gradeForFilter, genreForFilter } = useFilter(
   //   data || []
   // );
   return (
     <>
-      <GalleryTitle creationNumber={data?.count ?? 0} disabled={isDisabled} />
+      <GalleryTitle />
       <OwnedCards
         name={data?.owner?.nickname}
         totalCards={count?.active.total}
