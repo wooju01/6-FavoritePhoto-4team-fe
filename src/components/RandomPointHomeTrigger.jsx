@@ -13,10 +13,11 @@ export default function RandomPointHomeTrigger({ children }) {
   const [lastClaimed, setLastClaimed] = useState(null);
   const [todayClaimCount, setTodayClaimCount] = useState(0);
 
-  // AccessToken 가져오는 함수
+  // AccessToken 가져오는 함수 (쿠키에서)
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken");
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )accessToken=([^;]*)/);
+      return match ? decodeURIComponent(match[1]) : null;
     }
     return null;
   };
