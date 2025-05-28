@@ -8,4 +8,10 @@ export const storeService = {
   getStoreCardDetail: (id) => cookieFetch(`/api/store/cards/${id}`),
 
    getTradeRequests: (id) => cookieFetch(`/api/store/cards/${id}/exchange`),
+   
+ cancelTradeRequest: (listedCardId, tradeRequestId) => 
+    cookieFetch(`/api/store/cards/${listedCardId}/exchange/${tradeRequestId}/cancel`, {
+      method: "PATCH",
+    }),
+
 };
