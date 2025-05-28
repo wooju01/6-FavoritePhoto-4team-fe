@@ -43,8 +43,19 @@ export const userService = {
 };
 
 // GET: 마이 갤러리
-export async function getMyCards({ page, size }) {
-  return await cookieFetch("/api/users/gallery");
+export async function getMyCards({ grade, genre, search, page, size }) {
+  const queryParams = new URLSearchParams();
+
+  if (grade) queryParams.append("grade", grade.toString());
+  if (genre) queryParams.append("genre", genre.toString());
+  if (search) queryParams.append("search", search);
+  if (page) queryParams.append("page", page.toString());
+  if (size) queryParams.append("size", size.toString());
+
+  const queryString = queryParams.toString();
+  return await cookieFetch(
+    `/api/users/gallery${queryString && `?${queryString}`}`
+  );
 }
 
 // GET: 카드 개수
