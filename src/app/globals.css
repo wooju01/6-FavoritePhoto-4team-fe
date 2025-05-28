@@ -78,8 +78,9 @@ body {
   font-family: "noto", "Baskin", serif;
 }
 
-* a , * button {
-  cursor : pointer;
+* a,
+* button {
+  cursor: pointer;
 }
 
 /* 모달 슬라이드 애니메이션 */
@@ -156,6 +157,11 @@ body {
 
 @utility title-24 {
   font: 700 1.5rem "baskin", serif;
+  letter-spacing: -0.03rem;
+}
+
+@utility title-20 {
+  font: 700 1.25rem "baskin", serif;
   letter-spacing: -0.03rem;
 }
 
