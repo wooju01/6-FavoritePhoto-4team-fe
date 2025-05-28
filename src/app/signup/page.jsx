@@ -16,10 +16,14 @@ export default function SignupPage() {
 
   return (
     <div className="fixed left-0 top-0 px-4 md:px-0 w-full h-full overflow-y-auto bg-my-black z-[8888]">
-      <div className="md:max-w-[440px] lg:max-w-[520px] md:w-full md:absolute md:left-1/2 md:top-1/2 md:-translate-1/2">
+      <div className="w-full max-w-[345px] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:max-w-[440px] lg:max-w-[520px]">
         <h2 className="flex justify-center mt-20 md:mt-0 lg:mt-0">
           <Link href={"/"} className="">
-            <Image src={mainLogoImg} alt="main-logo" className="w-48 h-9" />
+            <Image
+              src={mainLogoImg}
+              alt="main-logo"
+              className="w-[189px] h-[35px] md:w-[330.82px] md:h-[60px]"
+            />
           </Link>
         </h2>
         <form
@@ -79,7 +83,7 @@ export default function SignupPage() {
           </div>
 
           <div className="flex items-center justify-center gap-2 text-400-14 lg:text-400-16">
-            <span>이미 계정이 있으신가요?</span>
+            <span>이미 최애의 포토 회원이신가요?</span>
             <Link href={"/login"}>
               <span className="text-main underline">로그인하기</span>
             </Link>
