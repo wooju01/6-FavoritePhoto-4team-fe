@@ -9,6 +9,7 @@ import OwnedCards from "./_components/OwnedCards";
 import Search from "@/components/ui/Search";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import useFilter from "@/hooks/useFilter";
+import Pagination from "@/components/ui/Pagination";
 
 export default function MyPage() {
   // 카드 데이터 불러오기
@@ -23,6 +24,7 @@ export default function MyPage() {
     queryFn: getCardsCount,
   });
 
+  console.log(data);
   const isDisabled = data?.count !== 0;
   // const { filteredData, gradeForFilter, genreForFilter } = useFilter(
   //   data || []
@@ -47,7 +49,7 @@ export default function MyPage() {
         {/* 카드 렌더링 ↓ */}
         <div className="grid grid-cols-2 lg:grid-cols-3">
           {/* {filteredData.length > 0 && */}
-          {data?.map((card) => (
+          {data?.items.map((card) => (
             <MyCard
               key={card.id}
               name={card.photoCard.name}
@@ -61,6 +63,7 @@ export default function MyPage() {
           ))}
         </div>
       </section>
+      <Pagination />
     </>
   );
 }
