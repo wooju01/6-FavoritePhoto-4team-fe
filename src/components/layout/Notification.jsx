@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { getSocket, disconnectSocket } from "@/lib/socket";
 
@@ -10,6 +10,7 @@ function Notification({ className = "" }) {
   const [loading, setLoading] = React.useState(false);
   const hasUnread = notifications.some((n) => !n.read);
   const router = useRouter();
+  const pathname = usePathname();
 
   // 토큰 가져오기
   const getToken = () => {
@@ -71,28 +72,43 @@ function Notification({ className = "" }) {
     const token = getToken();
     if (!token) return;
     let userId = null;
+    let socket;
+    let reconnectTimeout;
     // 토큰에서 userId 추출 (JWT decode)
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       userId = payload.userId || payload.user_id || payload.id || payload.sub;
     } catch {}
     if (!userId) return;
-    const socket = getSocket(
-      token,
-      "https://six-favoritephoto-4team-be.onrender.com"
-    );
-    socket.on("connect", () => {
-      socket.emit("join", userId);
-    });
-    socket.on("notification", (data) => {
-      setNotifications((prev) => [data, ...prev]);
-    });
+    const connectSocket = () => {
+      socket = getSocket(
+        token,
+        "https://six-favoritephoto-4team-be.onrender.com"
+      );
+      socket.on("connect", () => {
+        socket.emit("join", userId);
+      });
+      socket.on("notification", (data) => {
+        setNotifications((prev) => [data, ...prev]);
+      });
+      socket.on("disconnect", () => {
+        reconnectTimeout = setTimeout(() => {
+          connectSocket();
+        }, 1000);
+      });
+    };
+    connectSocket();
     fetchNotifications();
     return () => {
-      socket.off("notification");
-      disconnectSocket();
+      if (socket) {
+        socket.off("notification");
+        socket.off("disconnect");
+        socket.off("connect");
+        disconnectSocket();
+      }
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
     };
-  }, []);
+  }, [pathname]);
 
   // 바깥 클릭 시 드롭다운 닫기
   React.useEffect(() => {
