@@ -1,69 +1,89 @@
 "use client";
 
 import React from "react";
-import exchangeIcon from "@/assets/exchange.svg";
 import Image from "next/image";
+import exchangeIcon from "@/assets/exchange.svg";
 import Button from "./Button";
+import GradeTag from "../tag/GradeTag";
 
-export default function CardSeller() {
+const genreMap = {
+  1: "여행",
+  2: "풍경",
+  3: "인물",
+  4: "사물",
+};
+
+export default function CardSeller({
+  gradeId,
+  genreId,
+  nickname,
+  description,
+  price,
+  remaining,
+  total,
+  desiredGrade,
+  desiredGenreId,
+  desiredDescription,
+  onEdit,
+  onSellDown,
+}) {
   return (
-    <div className="lg:w-[340px] w-[280px] bg-my-black text-white p-4 lg:p-5 flex flex-col justify-between lg:min-h-[550px] min-h-[500px] text-sm lg:text-base">
+    <div className="w-full bg-my-black text-white lg:p-5 flex flex-col justify-between text-sm lg:text-base">
       {/* 상단 정보 */}
       <div className="flex items-center font-bold gap-2 mb-2 text-sm lg:text-[15px]">
-        <span className="text-my-pink">LEGENDARY</span>
-        <span className="text-gray-400">|</span>
-        <span className="text-gray-400">풍경</span>
-        <div className="ml-auto text-white underline">미쓰손</div>
+        <GradeTag grade={gradeId} />
+        <span className="text-gray-400 text-700-18">|</span>
+        <span className="text-gray-300 text-700-18">{genreMap[genreId]}</span>
+        <div className="ml-auto text-700-18 underline">{nickname}</div>
       </div>
 
-      <div className="border-t border-gray-600 w-full mb-4" />
+      <div className="w-full h-[1.5px] bg-gray-400 my-5" />
 
       {/* 설명 */}
-      <p className="text-gray-200 mb-6 leading-relaxed text-xs lg:text-sm">
-        우리집 앞마당 포토카드입니다. 우리집 앞마당 포토카드입니다. 우리집
-        앞마당 포토카드입니다.
-      </p>
+      <p className="leading-relaxed text-400-16 lg:text-sm">{description}</p>
 
-      <div className="border-t border-gray-600 w-full mb-4" />
+      <div className="w-full h-[2px] bg-gray-400 my-5" />
 
       {/* 가격/잔여 */}
-      <div className="flex flex-col gap-1 mb-5 text-sm lg:text-base">
+      <div className="flex flex-col gap-2 mb-18">
         <div className="flex justify-between">
-          <span className="text-gray-300 text-xs">가격</span>
-          <span className="font-bold">4 P</span>
+          <span className="text-gray-300 text-400-18">가격</span>
+          <span className="text-700-20">{price} P</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-300 text-xs">잔여</span>
-          <span className="font-bold">2 / 5</span>
+          <span className="text-gray-300 text-400-18">잔여</span>
+          <span className="text-700-20">
+            {remaining} / {total}
+          </span>
         </div>
       </div>
 
       {/* 교환 희망 정보 */}
-      <div className="mb-5">
-        <div className="flex items-center gap-2 mb-2">
-          <Image src={exchangeIcon} alt="교환" width={18} height={18} />
-          <span className="font-bold text-sm lg:text-base">교환 희망 정보</span>
-        </div>
-        <div className="border-t border-gray-200 w-full" />
+      <div className="flex items-center gap-2 mb-1">
+        <Image src={exchangeIcon} alt="교환" width={20} height={20} />
+        <span className="text-700-22">교환 희망 정보</span>
       </div>
+      <div className="w-full h-[1.5px] bg-gray-100" />
 
       {/* 희망 카테고리 */}
-      <div className="flex items-center font-bold gap-2 mb-3 text-sm lg:text-base">
-        <span className="text-my-blue">RARE</span>
-        <span className="text-gray-400">|</span>
-        <span className="text-gray-400">풍경</span>
+      <div className="flex items-center font-bold gap-2 my-6.5 text-sm lg:text-base">
+        <GradeTag grade={desiredGrade} />
+        <span className="text-gray-400 text-700-18">|</span>
+        <span className="text-gray-300 text-700-18">
+          {genreMap[desiredGenreId]}
+        </span>
       </div>
 
-      <div className="border-t border-gray-600 w-full mb-5" />
+      <div className="w-full h-[1.5px] bg-gray-400 mb-6" />
 
-      <p className="text-gray-200 mb-6 text-xs lg:text-sm">
-        푸릇푸릇한 여름 풍경, 눈 많이 내린 겨울 풍경 사진에 관심이 많습니다.
-      </p>
+      <p className="text-gray-200 mb-12 text-400-16">{desiredDescription}</p>
 
       {/* 버튼 영역 */}
       <div className="flex flex-col gap-3">
-        <Button type="edit" />
-        <Button type="sellDown" />
+        <Button type="purchase" onClick={onEdit}>
+          수정하기
+        </Button>
+        <Button type="sellDown" onClick={onSellDown} />
       </div>
     </div>
   );

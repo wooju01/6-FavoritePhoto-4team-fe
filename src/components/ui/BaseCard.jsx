@@ -13,17 +13,15 @@ const genreMap = {
   4: "사물",
 };
 
-export default function BaseCard({
-  id,
-  imageUrl,
-  photoCard,
-  price,
-  saleQuantity,
-}) {
+export default function BaseCard({ id, photoCard, price, saleQuantity }) {
   return (
     <Link href={`/home/${id}`}>
       <div className="flex flex-col gap-2.5 md:gap-5 p-[15px] md:p-5 lg:p-10 border-1 border-white/10 rounded-xs bg-gray-500">
-        <Image src={example} alt="photo-img" className="w-full h-full" />
+        <img
+          src={`https://six-favoritephoto-4team-be.onrender.com${photoCard.imageUrl}`}
+          alt="photo-img"
+          className="w-full h-full"
+        />
         <div className="flex flex-col gap-2.5 md:gap-5">
           <div>
             <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 
@@ -47,13 +47,13 @@ const DropdownNavi = ({ user, open, onClose }) => {
           마켓플레이스
         </Link>
         <Link
-          href="/mygallery"
+          href="/my-gallery"
           className="text-700-14 text-white hover:text-main"
         >
           마이갤러리
         </Link>
         <Link
-          href="/selling"
+          href="/for-sale"
           className="text-700-14 text-white hover:text-main"
         >
           판매 중인 포토카드
