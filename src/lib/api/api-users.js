@@ -20,6 +20,26 @@ export async function postCard(formData) {
 
 export const userService = {
   getMe: () => cookieFetch("/api/users"),
+
+  getMyGallery: async ({ page, size, genreId, search } = {}) => {
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append("page", page.toString());
+    if (size) queryParams.append("size", size.toString());
+    if (genreId) queryParams.append("genreId", genreId.toString());
+    if (search) queryParams.append("search", search);
+    const queryString = queryParams.toString();
+    return await cookieFetch(
+      `/api/users/gallery${queryString ? `?${queryString}` : ""}`
+    );
+  },
+
+  getMyCardsOnSale: async (params = {}) => {
+    const queryParams = new URLSearchParams(params);
+    const queryString = queryParams.toString();
+    return await cookieFetch(
+      `/api/users/cards-on-sale${queryString ? `?${queryString}` : ""}`
+    );
+  },
 };
 
 // GET: 마이 갤러리

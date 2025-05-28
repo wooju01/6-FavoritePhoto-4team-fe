@@ -4,9 +4,9 @@
 //  AuthProvider 실시간 인증 상태 관리 사용법
 //  import { useAuth } from "@/providers/AuthProvider"; 이후에
 //  const { user, isLoading } = useAuth(); 하고 if (user) 면 로그인 상태 if (!user)면 로그아웃 상태
+import { parseBackendError } from "../utils/error-parser";
 
-const API_BASE_URL = "http://localhost:3002";
-//"https://six-favoritephoto-4team-be.onrender.com";
+const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
 
 export const authUtils = {
   setAccessToken: (accessToken) => {
@@ -42,24 +42,24 @@ export const authUtils = {
       });
 
       if (!response.ok) {
-        throw new Error("토큰 갱신 API 호출 실패");
+        throw new Error(parseBackendError(response.status, responseText));
       }
 
       const responseText = await response.text();
       if (!responseText) {
-        throw new Error("토큰 갱신 응답 비어있음");
+        throw new Error("토큰 갱신 응답이 비어있습니다.");
       }
 
       const refreshData = JSON.parse(responseText);
       if (!refreshData || !refreshData.accessToken) {
-        throw new Error("갱신 응답에 accessToken 없음");
+        throw new Error("갱신된 응답에 accessToken이 없습니다.");
       }
 
       authUtils.setAccessToken(refreshData.accessToken);
       return refreshData.accessToken;
     } catch (error) {
       authUtils.clearAccessToken();
-      throw new Error(`토큰 갱신 중 오류: ${error.message}`);
+      throw new Error(`토큰 갱신 중 오류가 발생하였습니다다: ${error.message}`);
     }
   },
 };
@@ -99,11 +99,7 @@ export const defaultFetch = async (endpoint, options = {}) => {
   const responseText = await response.text();
 
   if (!response.ok) {
-    throw new Error(
-      `API 오류 ${response.status}${
-        responseText ? `: ${responseText.substring(0, 100)}` : ""
-      }`
-    );
+    throw new Error(parseBackendError(response.status, responseText));
   }
 
   if (!responseText) {
@@ -175,11 +171,7 @@ export const cookieFetch = async (endpoint, options = {}) => {
   const responseText = await response.text();
 
   if (!response.ok) {
-    throw new Error(
-      `API 오류 ${response.status}${
-        responseText ? `: ${responseText.substring(0, 100)}` : ""
-      }`
-    );
+    throw new Error(parseBackendError(response.status, responseText));
   }
 
   if (!responseText) {

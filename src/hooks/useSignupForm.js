@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/lib/api/api-auth";
+import { useAuth } from "@/providers/AuthProvider";
 
 export function useSignupForm() {
+  const { register: authRegister } = useAuth();
   const [form, setForm] = useState({
     userEmail: "",
     userNickname: "",
@@ -73,7 +74,7 @@ export function useSignupForm() {
 
     setIsPending(true);
     try {
-      await authService.signUp(
+      await authRegister(
         form.userNickname,
         form.userEmail,
         form.userPassword,

@@ -14,7 +14,6 @@ export default function MyCardDetail() {
     if (count < 3) setCount(count + 1);
   };
 
-  // 장당가격 - 숫자만 입력하도록
   const handlePriceChange = (e) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -23,58 +22,58 @@ export default function MyCardDetail() {
   };
 
   return (
-    <div className="lg:w-[430px] lg:min-h-[215px] w-[340px] min-h-[190px] bg-gray-500 text-white px-4 py-3 lg:px-6 lg:py-4 flex flex-col justify-between border-none text-sm lg:text-base">
+    <div className="w-full bg-my-black text-white py-1 border-none text-sm lg:text-base">
       {/* 상단 정보 */}
-      <div className="flex items-center font-bold gap-2 text-sm lg:text-[16px]">
-        <span className="text-my-pink">LEGENDARY</span>
+      <div className="flex items-center gap-2 text-sm lg:text-[16px] mb-3">
+        <span className="text-my-pink text-700-18">LEGENDARY</span>
         <span className="text-gray-400">|</span>
-        <span className="text-gray-300">풍경</span>
-        <div className="ml-auto text-white underline">유디</div>
+        <span className="text-gray-300 text-700-18">풍경</span>
+        <div className="ml-auto text-700-18 underline">유디</div>
       </div>
 
-      <div className="border-t border-gray-600 my-3" />
+      <div className="w-full h-[1px] bg-gray-400 my-6" />
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
         {/* 총 판매 수량 */}
-        <div className="flex items-start gap-6">
-          <span className="w-[100px] leading-[45px] font-light text-xs lg:text-lg">
-            총 판매 수량
-          </span>
-          <div className="flex items-start gap-4">
-            <div className="flex items-center border border-white w-[160px] lg:w-[180px] h-[45px] lg:h-[52px] justify-between px-4 lg:px-6">
-              <button onClick={handleDecrease} className="text-xl lg:text-2xl">
+        <div className="flex items-center gap-12.5">
+          {/* 라벨 */}
+          <span className="text-400-18 lg:text-base">총 판매 수량</span>
+
+          {/* 컨트롤 */}
+          <div className="flex items-center gap-4.5 flex-1">
+            <div className="flex items-center justify-between w-full max-w-[144px] h-[45px] border border-white px-4">
+              <button onClick={handleDecrease} className="text-xl">
                 -
               </button>
-              <span className="text-lg lg:text-xl">{count}</span>
-              <button onClick={handleIncrease} className="text-xl lg:text-2xl">
+              <span className="text-lg">{count}</span>
+              <button onClick={handleIncrease} className="text-xl">
                 +
               </button>
             </div>
-            <div className="flex flex-col items-start gap-1">
-              <div className="text-lg lg:text-xl font-bold">/ 3</div>
-              <div className="text-[10px] lg:text-sm text-gray-300 whitespace-nowrap leading-none pl-[1px]">
-                최대 3장
+            <div className="flex flex-col justify-center text-[10px] lg:text-sm text-gray-300 leading-tight pt-[3px]">
+              <div className="text-white text-base lg:text-lg font-bold">
+                / 3
               </div>
+              <div className="pl-[1px]">최대 3장</div>
             </div>
           </div>
         </div>
 
         {/* 장당 가격 */}
-        <div className="flex items-center gap-6 relative">
-          <span className="w-[100px] font-light text-xs lg:text-lg">
-            장당 가격
-          </span>
-          <div className="border border-white w-[290px] lg:w-[260px] h-[45px] flex items-center px-4 lg:px-6">
+        <div className="flex items-center gap-18">
+          {/* 라벨 */}
+          <span className="text-400-18 lg:text-base">장당 가격</span>
+
+          {/* 입력 박스 */}
+          <div className="relative flex-1  w-full max-w-[200px] h-[45px] border border-white flex items-center px-4">
             <input
               type="text"
               placeholder="숫자만 입력"
               value={price}
               onChange={handlePriceChange}
-              className="bg-transparent text-white outline-none placeholder-gray-400 text-sm lg:text-base w-full pr-5 lg:pr-6"
+              className="w-full bg-transparent text-white outline-none placeholder:text-gray-400 pr-6"
             />
-            <span className="absolute right-5 font-bold text-sm lg:text-base">
-              P
-            </span>
+            <span className="absolute right-4 font-bold">P</span>
           </div>
         </div>
       </div>
