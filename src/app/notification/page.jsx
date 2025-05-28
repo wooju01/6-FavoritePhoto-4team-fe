@@ -37,10 +37,11 @@ export default function NotificationPage() {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
-  // 토큰 가져오기
+  // 토큰 가져오기 (쿠키에서)
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken");
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )accessToken=([^;]*)/);
+      return match ? decodeURIComponent(match[1]) : null;
     }
     return null;
   };

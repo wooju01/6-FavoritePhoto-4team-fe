@@ -16,10 +16,7 @@ const CurtainMenu = ({ user, onClose }) => (
       </div>
       <hr className="border-gray-400 mb-4 w-full" />
       <nav className="flex flex-col gap-4 ml-5">
-        <Link
-          href="/marketplace"
-          className="text-700-14 text-white hover:text-main"
-        >
+        <Link href="/home" className="text-700-14 text-white hover:text-main">
           마켓플레이스
         </Link>
         <Link

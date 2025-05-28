@@ -20,9 +20,11 @@ const Navbar = () => {
   const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 닉네임 드롭다운 상태
 
+  // 토큰 가져오기 (쿠키에서)
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken");
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )accessToken=([^;]*)/);
+      return match ? decodeURIComponent(match[1]) : null;
     }
     return null;
   };

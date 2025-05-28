@@ -12,10 +12,11 @@ function Notification({ className = "" }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // 토큰 가져오기
+  // 토큰 가져오기 (쿠키에서)
   const getToken = () => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken");
+    if (typeof document !== "undefined") {
+      const match = document.cookie.match(/(?:^|; )accessToken=([^;]*)/);
+      return match ? decodeURIComponent(match[1]) : null;
     }
     return null;
   };
@@ -155,7 +156,19 @@ function Notification({ className = "" }) {
 
       {/* 드롭다운: md 이상에서만 보임 */}
       {open && (
-        <div className="hidden md:block absolute top-full right-0 mt-0 w-[300px] h-[535px] rounded-xs z-20 bg-black text-white ">
+        <div
+          className="hidden md:block absolute top-full right-0 mt-0 w-[300px] rounded-xs z-20 bg-black text-white"
+          style={{
+            minHeight: notifications.length === 0 ? 107 : undefined,
+            maxHeight: 535,
+            height:
+              notifications.length === 0
+                ? 107
+                : notifications.length * 107 > 535
+                ? 535
+                : notifications.length * 107,
+          }}
+        >
           <ul
             className="h-full max-h-full overflow-y-auto divide-y divide-gray-600"
             style={{
