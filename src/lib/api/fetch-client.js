@@ -6,7 +6,11 @@
 //  const { user, isLoading } = useAuth(); 하고 if (user) 면 로그인 상태 if (!user)면 로그아웃 상태
 import { parseBackendError } from "../utils/error-parser";
 
+<<<<<<< HEAD
 const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com"; // "http://localhost:3002";
+=======
+const API_BASE_URL = "http://localhost:3002";
+>>>>>>> 4ff2d39 (pull 최신화)
 
 export const authUtils = {
   setAccessToken: (accessToken) => {
