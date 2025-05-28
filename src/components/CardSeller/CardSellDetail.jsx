@@ -8,18 +8,22 @@ import example from "@/assets/example.svg";
 import MyCardDetail from "../ui/MyCardDetail";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 
-const grades = ["COMMON", "RARE", "SUPER RARE", "LEGENDARY"];
-const genres = ["여행", "풍경", "인물", "사물"];
-
-export default function CardSellDetail({ onClose }) {
-  const [selectedGrade, setSelectedGrade] = useState(grades[0].id);
+export default function CardSellDetail({ card, onClose }) {
+  const [selectedGrade, setSelectedGrade] = useState(
+    card?.photoCard?.grade?.name || ""
+  );
   const [gradeOpen, setGradeOpen] = useState(false);
 
-  const [selectedGenre, setSelectedGenre] = useState(genres[0].id);
+  const [selectedGenre, setSelectedGenre] = useState(
+    card?.photoCard?.genre?.name || ""
+  );
   const [genreOpen, setGenreOpen] = useState(false);
 
   const gradeRef = useRef(null);
   const genreRef = useRef(null);
+
+  const grades = ["COMMON", "RARE", "SUPER RARE", "LEGENDARY"];
+  const genres = ["여행", "풍경", "인물", "사물"];
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -34,6 +38,10 @@ export default function CardSellDetail({ onClose }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const imageUrl = card?.photoCard?.imageUrl?.startsWith("http")
+    ? card.photoCard.imageUrl
+    : `https://six-favoritephoto-4team-be.onrender.com${card?.photoCard?.imageUrl}`;
+
   return (
     <div className="fixed inset-0 z-50 bg-my-black text-white overflow-y-auto px-4 pt-4 pb-8">
       {/* 헤더 */}
@@ -47,16 +55,24 @@ export default function CardSellDetail({ onClose }) {
       </div>
 
       {/* 카드 제목 */}
-      <div className="text-700-24 font-bold mb-3">우리집 앞마당</div>
+      <div className="text-700-24 font-bold mb-3">
+        {card?.photoCard?.name || "카드 이름"}
+      </div>
 
       <div className="w-full h-[2px] bg-gray-200 mb-4" />
 
-      {/* 상단 이미지 + 정보 */}
+      {/* 카드 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-4">
-        <Image src={example} alt="카드 이미지" fill className="object-cover" />
+        <Image
+          src={imageUrl || example}
+          alt="카드 이미지"
+          fill
+          className="object-cover"
+        />
       </div>
 
-      <MyCardDetail />
+      {/* 카드 상세 설명 등 (예: 가격, 수량 등은 MyCardDetail로 표현) */}
+      <MyCardDetail card={card} />
 
       {/* 교환 희망 정보 */}
       <div className="mt-25">
@@ -72,11 +88,7 @@ export default function CardSellDetail({ onClose }) {
             onClick={() => setGradeOpen(!gradeOpen)}
             className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
           >
-            <span
-              className={
-                selectedGrade ? "text-white" : "text-gray-400 text-300-14"
-              }
-            >
+            <span className={selectedGrade ? "text-white" : "text-gray-400"}>
               {selectedGrade || "등급을 선택해 주세요"}
             </span>
             {gradeOpen ? <GoTriangleUp /> : <GoTriangleDown />}
@@ -106,11 +118,7 @@ export default function CardSellDetail({ onClose }) {
             onClick={() => setGenreOpen(!genreOpen)}
             className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
           >
-            <span
-              className={
-                selectedGenre ? "text-white" : "text-gray-400 text-300-14"
-              }
-            >
+            <span className={selectedGenre ? "text-white" : "text-gray-400"}>
               {selectedGenre || "장르를 선택해 주세요"}
             </span>
             {genreOpen ? <GoTriangleUp /> : <GoTriangleDown />}
@@ -146,7 +154,7 @@ export default function CardSellDetail({ onClose }) {
         </div>
       </div>
 
-      {/* 버튼 영역 */}
+      {/* 버튼 */}
       <div className="flex gap-3 mt-8">
         <Button type="reject" className="w-full h-[55px]">
           취소하기

@@ -41,14 +41,13 @@ export default function PhotoDetailPage({ params }) {
   }
 
   if (!photo) {
-    router.push("/login");
     return null;
   }
 
   return (
     <section>
       <PhotoBuyerSection photo={photo.photoCard} />
-       <ExchangeCard desiredDescription={photo.desiredDescription} />
+      <ExchangeCard desiredDescription={photo.desiredDescription} />
     </section>
   );
 }

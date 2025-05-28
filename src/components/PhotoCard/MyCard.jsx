@@ -6,7 +6,15 @@ import GradeTag from "../tag/GradeTag";
 import example from "@/assets/example.svg";
 import favicon from "@/assets/favicon.svg";
 
-const baseUrl = "https://six-favoritephoto-4team-be.onrender.com"; // "http://localhost:3002";
+const baseUrls = {
+  local: "http://localhost:3002",
+  production: "https://six-favoritephoto-4team-be.onrender.com",
+};
+
+const baseUrl =
+  typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? baseUrls.local
+    : baseUrls.production;
 
 export default function MyCard({
   name,

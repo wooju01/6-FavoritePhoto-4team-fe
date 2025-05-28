@@ -12,14 +12,20 @@ export const authUtils = {
   setAccessToken: (accessToken) => {
     if (typeof window !== "undefined") {
       try {
-        localStorage.setItem("accessToken", accessToken);
+        const tokenData = JSON.parse(atob(accessToken.split(".")[1]));
+        const expiresIn = tokenData.exp - Math.floor(Date.now() / 1000);
+        document.cookie = `accessToken=${accessToken}; path=/; max-age=${expiresIn}; SameSite=Strict`;
       } catch (e) {}
     }
   },
   getAccessToken: () => {
     if (typeof window !== "undefined") {
       try {
-        return localStorage.getItem("accessToken");
+        const cookies = document.cookie.split("; ");
+        const tokenCookie = cookies.find((row) =>
+          row.startsWith("accessToken=")
+        );
+        return tokenCookie ? tokenCookie.split("=")[1] : null;
       } catch (e) {
         return null;
       }
@@ -29,7 +35,7 @@ export const authUtils = {
   clearAccessToken: () => {
     if (typeof window !== "undefined") {
       try {
-        localStorage.removeItem("accessToken");
+        document.cookie = "accessToken=; path=/; max-age=0; SameSite=Strict";
       } catch (e) {}
     }
   },
@@ -41,11 +47,11 @@ export const authUtils = {
         headers: {},
       });
 
+      const responseText = await response.text();
       if (!response.ok) {
         throw new Error(parseBackendError(response.status, responseText));
       }
 
-      const responseText = await response.text();
       if (!responseText) {
         throw new Error("토큰 갱신 응답이 비어있습니다.");
       }
@@ -59,7 +65,7 @@ export const authUtils = {
       return refreshData.accessToken;
     } catch (error) {
       authUtils.clearAccessToken();
-      throw new Error(`토큰 갱신 중 오류가 발생하였습니다다: ${error.message}`);
+      throw new Error(`토큰 갱신 중 오류가 발생하였습니다: ${error.message}`);
     }
   },
 };

@@ -7,7 +7,8 @@ import Image from "next/image";
 import FilterDropdown from "../FllterDropdown/FilterDropdown";
 import CardSellDetail from "./CardSellDetail";
 import MyCard from "../PhotoCard/MyCard";
-import example from "@/assets/example.svg";
+import { useQuery } from "@tanstack/react-query";
+import { getMyCards } from "@/lib/api/api-users";
 
 export default function MyCardModal({ isOpen, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,8 +16,15 @@ export default function MyCardModal({ isOpen, onClose }) {
   const [isDesktop, setIsDesktop] = useState(false);
 
   const [showDetail, setShowDetail] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const startY = useRef(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["myGalleryForModal"],
+    queryFn: getMyCards,
+    enabled: isOpen,
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -107,8 +115,14 @@ export default function MyCardModal({ isOpen, onClose }) {
           />
         )}
 
-        {showDetail ? (
-          <CardSellDetail onClose={() => setShowDetail(false)} />
+        {showDetail && selectedCard ? (
+          <CardSellDetail
+            card={selectedCard}
+            onClose={() => {
+              setSelectedCard(null);
+              setShowDetail(false);
+            }}
+          />
         ) : (
           <>
             <div className="text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">
@@ -146,20 +160,29 @@ export default function MyCardModal({ isOpen, onClose }) {
                 isDesktop ? "overflow-y-auto" : "overflow-y-auto h-[75%]"
               } pb-10 flex-1`}
             >
-              {Array.from({ length: 10 }).map((_, idx) => (
-                <div key={idx} onClick={() => setShowDetail(true)}>
-                  <MyCard
-                    key={idx}
-                    name="우리집 앞마당"
-                    image={example}
-                    gradeId={1}
-                    genreId={2}
-                    nickname="미쓰손"
-                    totalQuantity={1}
-                    initialPrice={4}
-                  />
-                </div>
-              ))}
+              {isLoading ? (
+                <div className="text-white">로딩 중...</div>
+              ) : (
+                data?.items?.map((card) => (
+                  <div
+                    key={card.id}
+                    onClick={() => {
+                      setSelectedCard(card);
+                      setShowDetail(true);
+                    }}
+                  >
+                    <MyCard
+                      name={card.photoCard.name}
+                      image={card.photoCard.imageUrl}
+                      gradeId={card.photoCard.gradeId}
+                      genre={card.photoCard.genre.name}
+                      nickname={card.owner?.nickname || "나"}
+                      totalQuantity={card.photoCard.totalQuantity}
+                      initialPrice={card.price}
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </>
         )}
