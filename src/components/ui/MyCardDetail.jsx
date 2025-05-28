@@ -1,17 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import GradeTag from "../tag/GradeTag";
 
-export default function MyCardDetail() {
+export default function MyCardDetail({ card }) {
   const [count, setCount] = useState(1);
   const [price, setPrice] = useState("");
+
+  const maxQuantity = card?.photoCard?.totalQuantity || 1;
+  const defaultPrice = card?.price || 0;
 
   const handleDecrease = () => {
     if (count > 1) setCount(count - 1);
   };
 
   const handleIncrease = () => {
-    if (count < 3) setCount(count + 1);
+    if (count < maxQuantity) setCount(count + 1);
   };
 
   const handlePriceChange = (e) => {
@@ -21,14 +25,25 @@ export default function MyCardDetail() {
     }
   };
 
+  // 초기값 설정
+  useEffect(() => {
+    if (card?.price) setPrice(card.price.toString());
+  }, [card]);
+
   return (
     <div className="w-full bg-my-black text-white py-1 border-none text-sm lg:text-base">
       {/* 상단 정보 */}
-      <div className="flex items-center gap-2 text-sm lg:text-[16px] mb-3">
-        <span className="text-my-pink text-700-18">LEGENDARY</span>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="[&_*]:text-700-18">
+          <GradeTag grade={card?.photoCard?.gradeId} />
+        </span>
         <span className="text-gray-400">|</span>
-        <span className="text-gray-300 text-700-18">풍경</span>
-        <div className="ml-auto text-700-18 underline">유디</div>
+        <span className="text-gray-300 text-700-18">
+          {card?.photoCard?.genre?.name || "-"}
+        </span>
+        <div className="ml-auto text-700-18 underline">
+          {card?.owner?.nickname || "나"}
+        </div>
       </div>
 
       <div className="w-full h-[1px] bg-gray-400 my-6" />
@@ -36,10 +51,8 @@ export default function MyCardDetail() {
       <div className="flex flex-col gap-5">
         {/* 총 판매 수량 */}
         <div className="flex items-center gap-12.5">
-          {/* 라벨 */}
           <span className="text-400-18 lg:text-base">총 판매 수량</span>
 
-          {/* 컨트롤 */}
           <div className="flex items-center gap-4.5 flex-1">
             <div className="flex items-center justify-between w-full max-w-[144px] h-[45px] border border-white px-4">
               <button onClick={handleDecrease} className="text-xl">
@@ -52,20 +65,18 @@ export default function MyCardDetail() {
             </div>
             <div className="flex flex-col justify-center text-[10px] lg:text-sm text-gray-300 leading-tight pt-[3px]">
               <div className="text-white text-base lg:text-lg font-bold">
-                / 3
+                / {maxQuantity}
               </div>
-              <div className="pl-[1px]">최대 3장</div>
+              <div className="pl-[1px]">최대 {maxQuantity}장</div>
             </div>
           </div>
         </div>
 
         {/* 장당 가격 */}
         <div className="flex items-center gap-18">
-          {/* 라벨 */}
           <span className="text-400-18 lg:text-base">장당 가격</span>
 
-          {/* 입력 박스 */}
-          <div className="relative flex-1  w-full max-w-[200px] h-[45px] border border-white flex items-center px-4">
+          <div className="relative flex-1 w-full max-w-[200px] h-[45px] border border-white flex items-center px-4">
             <input
               type="text"
               placeholder="숫자만 입력"
