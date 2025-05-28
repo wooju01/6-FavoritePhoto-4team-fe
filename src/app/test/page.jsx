@@ -147,22 +147,8 @@ import MyCardModal from "@/components/CardSeller/MyCardModal";
 //   );
 // }
 
-export default function MarketPage() {
-  const [open, setOpen] = useState(false);
+import SellerPage from "@/components/CardSeller/SellerPage";
 
-  return (
-    <div className="min-h-screen bg-my-black text-white p-4">
-      {/* 임시 버튼 */}
-      <Button
-        type="purchase"
-        onClick={() => setOpen(true)}
-        className="w-full max-w-xs mx-auto"
-      >
-        나의 포토카드 판매하기
-      </Button>
-
-      {/* 모달 */}
-      <MyCardModal isOpen={open} onClose={() => setOpen(false)} />
-    </div>
-  );
+export default function page() {
+  return <SellerPage />;
 }
