@@ -37,14 +37,28 @@ export default function RandomPointHomeTrigger({ children }) {
       const data = await res.json();
       setLastClaimed(data.lastClaimed);
       setTodayClaimCount(data.todayClaimCount);
-      // 1시간 지났거나 오늘 3회 미만이면 show
-      if (
-        (!data.lastClaimed ||
-          new Date() - new Date(data.lastClaimed) >= 60 * 60 * 1000) &&
-        data.todayClaimCount < 3
-      ) {
-        setShow(true);
+      let showFlag = false;
+      if (!data.lastClaimed) {
+        // 기록이 없으면 무조건 show
+        showFlag = true;
+      } else {
+        const last = new Date(data.lastClaimed);
+        const now = new Date();
+        const isSameDay =
+          last.getFullYear() === now.getFullYear() &&
+          last.getMonth() === now.getMonth() &&
+          last.getDate() === now.getDate();
+        if (!isSameDay) {
+          // 날짜가 바뀌었으면 무조건 show
+          showFlag = true;
+        } else {
+          // 오늘이면 3회 미만일 때만 show
+          if (data.todayClaimCount < 3) {
+            showFlag = true;
+          }
+        }
       }
+      setShow(showFlag);
     } catch {
       setShow(false);
     } finally {
