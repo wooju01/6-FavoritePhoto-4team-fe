@@ -18,7 +18,7 @@ const Navbar = () => {
   const [pointLoading, setPointLoading] = useState(false);
   const [pointError, setPointError] = useState("");
   const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 닉네임 드롭다운 상태
 
   const getToken = () => {
     if (typeof window !== "undefined") {
@@ -64,46 +64,57 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!user) return;
-    const token = getToken();
-    if (!token) return;
-    const socket = getSocket(
-      token,
-      "https://six-favoritephoto-4team-be.onrender.com"
-    );
+    let socket;
+    let reconnectTimeout;
 
-    socket.on("connect", () => {
-      console.log("[Socket] Connected", socket.id);
-      // userId 방에 join
-      if (user.id) {
-        socket.emit("join", user.id);
-        console.log("[Socket] join room:", user.id);
-      }
-    });
-    socket.on("connect_error", (err) => {
-      console.error("[Socket] Connection error:", err);
-    });
-    socket.on("disconnect", (reason) => {
-      console.log("[Socket] Disconnected:", reason);
-    });
-
-    // 서버에서 'pointUpdate' 전달
-    const handlePointUpdate = (data) => {
-      console.log("[Socket] pointUpdate event received:", data);
-      // 누적 포인트(totalPoints)로 갱신
-      if (data && typeof data.totalPoints === "number") {
-        setPoint(data.totalPoints);
-      }
+    const connectSocket = () => {
+      const token = getToken();
+      if (!token) return;
+      socket = getSocket(
+        token,
+        "https://six-favoritephoto-4team-be.onrender.com"
+      );
+      socket.on("connect", () => {
+        console.log("[Socket] Connected", socket.id);
+        if (user.id) {
+          socket.emit("join", user.id);
+          console.log("[Socket] join room:", user.id);
+        }
+      });
+      socket.on("connect_error", (err) => {
+        console.error("[Socket] Connection error:", err);
+      });
+      socket.on("disconnect", (reason) => {
+        console.log("[Socket] Disconnected:", reason);
+        // 페이지 이동 등으로 소켓이 끊기면 1초 후 재연결
+        reconnectTimeout = setTimeout(() => {
+          connectSocket();
+        }, 1000);
+      });
+      // 서버에서 'pointUpdate' 전달
+      const handlePointUpdate = (data) => {
+        console.log("[Socket] pointUpdate event received:", data);
+        if (data && typeof data.totalPoints === "number") {
+          setPoint(data.totalPoints);
+        }
+      };
+      socket.on("pointUpdate", handlePointUpdate);
     };
-    socket.on("pointUpdate", handlePointUpdate);
 
-    // 최초 진입 시 포인트 fetch
+    connectSocket();
     fetchMyPoints();
 
     return () => {
-      socket.off("pointUpdate", handlePointUpdate);
-      disconnectSocket();
+      if (socket) {
+        socket.off("pointUpdate");
+        socket.off("disconnect");
+        socket.off("connect");
+        socket.off("connect_error");
+        disconnectSocket();
+      }
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
     };
-  }, [user]);
+  }, [user, pathname]);
 
   return (
     <header className="sticky top-0 left-0 z-[7777] bg-my-black">
@@ -146,10 +157,15 @@ const Navbar = () => {
               </span>
               <Notification />
               <span
-                className="hidden md:block text-700-14 text-gray-200 cursor-pointer"
+                className="hidden md:block text-700-14 text-gray-200 cursor-pointer relative"
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
               >
                 {user.nickname}
+                <DropdownNavi
+                  user={{ ...user, point: point ?? 0 }}
+                  open={isDropdownOpen}
+                  onClose={() => setIsDropdownOpen(false)}
+                />
               </span>
               <span className="hidden md:block w-[1px] h-4 bg-gray-400"></span>
               <button
@@ -177,13 +193,6 @@ const Navbar = () => {
           user={{ ...user, point: point ?? 0 }}
           onClose={() => setIsCurtainOpen(false)}
         />
-      )}
-      {isDropdownOpen && (
-        <div
-          style={{ position: "absolute", top: "100%", right: 0, zIndex: 10000 }}
-        >
-          <DropdownNavi onClose={() => setIsDropdownOpen(false)} />
-        </div>
       )}
     </header>
   );

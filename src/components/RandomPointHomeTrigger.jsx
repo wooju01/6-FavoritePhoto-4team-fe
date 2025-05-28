@@ -48,12 +48,13 @@ export default function RandomPointHomeTrigger({ children }) {
           last.getFullYear() === now.getFullYear() &&
           last.getMonth() === now.getMonth() &&
           last.getDate() === now.getDate();
+        const is1HourPassed = now - last >= 60 * 60 * 1000;
         if (!isSameDay) {
-          // 날짜가 바뀌었으면 무조건 show
-          showFlag = true;
+          // 날짜가 바뀌었으면 1시간이 지났을 때만 show
+          showFlag = is1HourPassed;
         } else {
-          // 오늘이면 3회 미만일 때만 show
-          if (data.todayClaimCount < 3) {
+          // 오늘이면 3회 미만이고 1시간이 지났을 때만 show
+          if (data.todayClaimCount < 3 && is1HourPassed) {
             showFlag = true;
           }
         }
