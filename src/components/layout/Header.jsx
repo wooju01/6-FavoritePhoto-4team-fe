@@ -18,6 +18,7 @@ const Navbar = () => {
   const [pointLoading, setPointLoading] = useState(false);
   const [pointError, setPointError] = useState("");
   const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const getToken = () => {
     if (typeof window !== "undefined") {
@@ -144,7 +145,10 @@ const Navbar = () => {
                   : "-"}
               </span>
               <Notification />
-              <span className="hidden md:block text-700-14 text-gray-200">
+              <span
+                className="hidden md:block text-700-14 text-gray-200 cursor-pointer"
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+              >
                 {user.nickname}
               </span>
               <span className="hidden md:block w-[1px] h-4 bg-gray-400"></span>
@@ -173,6 +177,13 @@ const Navbar = () => {
           user={{ ...user, point: point ?? 0 }}
           onClose={() => setIsCurtainOpen(false)}
         />
+      )}
+      {isDropdownOpen && (
+        <div
+          style={{ position: "absolute", top: "100%", right: 0, zIndex: 10000 }}
+        >
+          <DropdownNavi onClose={() => setIsDropdownOpen(false)} />
+        </div>
       )}
     </header>
   );
