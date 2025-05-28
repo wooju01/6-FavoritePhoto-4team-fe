@@ -17,7 +17,7 @@ export default function CardBuyer({
   total,
   onBuy,
 }) {
-  const [quantity, setQuantity] = useState(2);
+  const [quantity, setQuantity] = useState(1);
   const [isLargeScreen, setIsLargeScreen] = useState(null); 
 
   const safeSubLabel = FIXED_LABELS.includes(subLabel) ? subLabel : "풍경";

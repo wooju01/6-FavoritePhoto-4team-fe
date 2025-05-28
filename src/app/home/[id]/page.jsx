@@ -4,6 +4,7 @@ import PhotoBuyerSection from "@/components/PhotoBuyer/PhotoBuyerSection";
 import ExchangeCard from "@/components/PhotoBuyer/ExchangeCard";
 import { storeService } from "@/lib/api/api-store";
 import { useRouter } from "next/navigation";
+import Exchange from "@/components/PhotoCard/Exchange";
 
 async function fetchPhotoDetail(id) {
   try {
@@ -31,7 +32,7 @@ export default function PhotoDetailPage({ params }) {
   const [tradeRequests, setTradeRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-console.log("tradeRequests:", tradeRequests);
+  console.log("tradeRequests:", tradeRequests);
   useEffect(() => {
     if (!params.id) {
       setPhoto(null);
@@ -62,28 +63,30 @@ console.log("tradeRequests:", tradeRequests);
 
   return (
     <section>
-      <PhotoBuyerSection photo={photo.photoCard} />
+      <PhotoBuyerSection photo={photo} />
       {/* 원하는 설명 전달 */}
       <ExchangeCard desiredDescription={photo.desiredDescription} />
       {/* 거래 요청 목록을 표시하는 컴포넌트, 예시: */}
-      <div>
-        <h3>내 거래 요청 내역</h3>
-        {tradeRequests.length === 0 && <p>거래 요청이 없습니다.</p>}
-        {tradeRequests.map((req) => (
-          <div key={req.id}>
-            <p>요청 상태: {req.tradeStatus}</p>
-            <p>제공 카드들:</p>
-            <ul>
-              {req.tradeRequestUserCards.map(({ userCard }) => (
-                <li key={userCard.id}>
-                  {userCard.photoCard?.name ??
-                    `포토카드 ID: ${userCard.photoCardId}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      {tradeRequests.length === 0 ? (
+        <p>거래 요청이 없습니다.</p>
+      ) : (
+        tradeRequests.map((req) =>
+          req.tradeRequestUserCards.map(({ userCard }) => (
+            <Exchange
+              key={userCard.id}
+              name={userCard.photoCard?.name || "제목 없음"}
+              image={userCard.photoCard?.imageUrl}
+              gradeId={userCard.photoCard?.gradeId}
+              genreId={userCard.photoCard?.genreId}
+              nickname={userCard.user?.nickname || "익명"}
+              price={userCard.price}
+              description={userCard.photoCard?.description || ""}
+              onApprove={() => console.log("승인", userCard.id)}
+              onReject={() => console.log("거절", userCard.id)}
+            />
+          ))
+        )
+      )}
     </section>
   );
 }
