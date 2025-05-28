@@ -8,6 +8,7 @@ import Image from "next/image";
 import mainLogoImg from "@/assets/main-logo.png";
 import loadingGif from "@/assets/loading.gif";
 import { useSignupForm } from "@/hooks/useSignupForm"; // 커스텀 훅 임포트
+import GoogleAuthButton from "@/components/ui/GoogleAuthButton";
 
 export default function SignupPage() {
   const { form, writeError, isPending, handleChange, handleSubmit } =
@@ -74,24 +75,7 @@ export default function SignupPage() {
               )}
             </button>
 
-            <button
-              type="button"
-              className="w-full"
-              onClick={() => {
-                window.location.href =
-                  process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL ||
-                  "https://six-favoritephoto-4team-be.onrender.com/api/auth/google";
-              }}
-            >
-              <div className="flex items-center justify-center gap-2 h-[55px] lg:h-[60px] rounded-xs bg-white">
-                <Image
-                  src={require("@/assets/google-logo.png")}
-                  alt="google"
-                  className="w-[22px] h-[22px]"
-                />
-                <span className="text-my-black">Google로 시작하기</span>
-              </div>
-            </button>
+            <GoogleAuthButton buttonText="Google로 시작하기" />
           </div>
 
           <div className="flex items-center justify-center gap-2 text-400-14 lg:text-400-16">
