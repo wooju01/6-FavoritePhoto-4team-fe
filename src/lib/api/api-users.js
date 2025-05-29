@@ -43,11 +43,13 @@ export const userService = {
 };
 
 // GET: 마이 갤러리
-export async function getMyCards({ grade, genre, search, page, size }) {
+export async function getMyCards({ gradeId, genreId, search, page, size }) {
   const queryParams = new URLSearchParams();
 
-  if (grade) queryParams.append("grade", grade.toString());
-  if (genre) queryParams.append("genre", genre.toString());
+  if (gradeId && gradeId !== 0)
+    queryParams.append("gradeId", gradeId.toString());
+  if (genreId && genreId !== 0)
+    queryParams.append("genreId", genreId.toString());
   if (search) queryParams.append("search", search);
   if (page) queryParams.append("page", page.toString());
   if (size) queryParams.append("size", size.toString());
