@@ -13,5 +13,10 @@ export const storeService = {
     cookieFetch(`/api/store/cards/${listedCardId}/exchange/${tradeRequestId}/cancel`, {
       method: "PATCH",
     }),
-
+  purchaseCard: (id, quantity) => 
+    cookieFetch(`/api/store/cards/${id}/purchase`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity }),
+    }),
 };

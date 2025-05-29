@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import example from "@/assets/example.svg";
 import CardBuyer from "../CardBuyer/CardBuyer";
 import { Title } from "../ui/Title";
+import { storeService } from "@/lib/api/api-store";
+
 
 export default function PhotoBuyerSection({ photo }) {
   const genreMap = {
@@ -12,9 +14,26 @@ export default function PhotoBuyerSection({ photo }) {
     3: "인물",
     4: "사물",
   };
+  const [isLoading, setIsLoading] = useState(false);
+  const handleBuy = async (quantity) => {
+    if (quantity <= 0) {
+      alert("구매 수량을 선택해주세요.");
+      return;
+    }
 
-  const handleBuy = (quantity) => {
-    alert(`${quantity}장 구매 요청`);
+    setIsLoading(true);
+
+    try {
+      const purchaseResult = await storeService.purchaseCard(
+        photo.id,
+        quantity
+      );
+      alert(`구매 성공! ${purchaseResult.purchasedQuantity}장 구매되었습니다.`);
+    } catch (error) {
+      alert(`구매 실패: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const imageUrl = photo?.photoCard?.imageUrl || example;
@@ -42,6 +61,7 @@ export default function PhotoBuyerSection({ photo }) {
           remaining={photo?.saleQuantity}
           total={photo?.photoCard?.totalQuantity}
           onBuy={handleBuy}
+           isLoading={isLoading}
         />
       </div>
     </section>

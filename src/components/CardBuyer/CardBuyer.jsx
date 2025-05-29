@@ -16,6 +16,7 @@ export default function CardBuyer({
   remaining,
   total,
   onBuy,
+  isLoading = false,
 }) {
   const [quantity, setQuantity] = useState("");
   const [isLargeScreen, setIsLargeScreen] = useState(null); 
@@ -64,7 +65,7 @@ export default function CardBuyer({
           <span className="text-gray-300">잔여</span>
           <span className="font-semibold">
             {remaining}
-            <span className="text-gray-300"> / {total}</span>
+            <span className="text-gray-300"> / 10</span>
           </span>
         </div>
       </div>
@@ -101,12 +102,16 @@ export default function CardBuyer({
         </div>
       </div>
 
-      <Button
+       <Button
         onClick={() => onBuy(quantity)}
-        disabled={remaining === 0}
+        disabled={remaining === 0 || isLoading} 
         className="h-[75px]  lg:h-[80px]"
       >
-        {remaining === 0 ? "품절되었습니다" : "포토카드 구매하기"}
+        {remaining === 0
+          ? "품절되었습니다"
+          : isLoading
+          ? "구매 중..."
+          : "포토카드 구매하기"}
       </Button>
     </div>
   );

@@ -70,7 +70,7 @@ export default function MyPage() {
                 nickname={card.creator?.nickname || "나"}
                 genre={card.genre?.name}
                 gradeId={card.gradeId}
-                initialPrice={card.userCards[0]?.price}
+                initialPrice={card.userCards?.[0]?.price}
                 totalQuantity={card.totalQuantity}
               />
             );

@@ -32,7 +32,6 @@ export default function ExchangeCancel({
         <img
           src={`https://six-favoritephoto-4team-be.onrender.com${image}`}
           alt={name}
-          fill
           className="object-cover"
         />
       </div>
