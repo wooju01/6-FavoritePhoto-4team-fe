@@ -1,53 +1,69 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
+import example from "@/assets/example.svg";
 import CardBuyer from "../CardBuyer/CardBuyer";
 import { Title } from "../ui/Title";
-import example from "@/assets/example.svg";
-import ExchangeCard from "./ExchangeCard";
+import { storeService } from "@/lib/api/api-store";
 
-const genreMap = {
-  1: "여행",
-  2: "풍경",
-  3: "인물",
-  4: "사물",
-};
-
-const tierMap = {
-  1: "COMMON",
-  2: "RARE",
-  3: "SUPER RARE",
-  4: "LEGENDARY",
-};
 
 export default function PhotoBuyerSection({ photo }) {
+  const genreMap = {
+    1: "여행",
+    2: "풍경",
+    3: "인물",
+    4: "사물",
+  };
+  const [isLoading, setIsLoading] = useState(false);
+  const handleBuy = async (quantity) => {
+    if (quantity <= 0) {
+      alert("구매 수량을 선택해주세요.");
+      return;
+    }
 
-  const handleBuy = (quantity) => {
-    alert(`${quantity}장 구매 요청`);
+    setIsLoading(true);
+
+    try {
+      const purchaseResult = await storeService.purchaseCard(
+        photo.id,
+        quantity
+      );
+      alert(`구매 성공! ${purchaseResult.purchasedQuantity}장 구매되었습니다.`);
+    } catch (error) {
+      alert(`구매 실패: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  const imageUrl = photo?.photoCard?.imageUrl || example;
+  const name = photo?.photoCard?.name || "제목 없음";
   return (
     <section className="w-full">
-      <Title title={photo.name} font="titleLg_Noto" />
+      <Title title={name} font="titleLg_Noto" />
 
       <div className="md:flex">
-        <div className="w-full h-[260px]  lg:h-[720px] overflow-hidden rounded-md mb-4 relative">
-          <Image src={example} alt={photo.name} fill className="object-cover" />
+        <div className="w-full h-[260px] lg:h-[720px] overflow-hidden rounded-md mb-4 relative">
+          <img
+            src={`https://six-favoritephoto-4team-be.onrender.com${imageUrl}`}
+            alt={name}
+            className="object-cover w-full h-full"
+            style={{ objectFit: "cover" }}
+          />
         </div>
 
         <CardBuyer
-          tier={photo.gradeId}
-          subLabel={genreMap[photo.genreId] || "풍경"}
-          creator={photo.name}
-          description={photo.description}
-          pricePerCard={photo.initialPrice}
-          remaining={photo.totalQuantity}
-          total={photo.totalQuantity}
+          tier={photo?.photoCard?.gradeId}
+          subLabel={genreMap[photo?.photoCard?.genreId]}
+          creator={photo?.photoCard?.creator?.nickname || "익명"}
+          description={photo?.photoCard?.description}
+          pricePerCard={photo?.price}
+          remaining={photo?.saleQuantity}
+          total={photo?.photoCard?.totalQuantity}
           onBuy={handleBuy}
+           isLoading={isLoading}
         />
       </div>
-    
     </section>
   );
 }

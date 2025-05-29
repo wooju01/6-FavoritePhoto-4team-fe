@@ -37,7 +37,7 @@ export default function MyCard({
       <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
         <Image
           src={getImageUrl(image)}
-          alt={name}
+          alt=""
           fill
           className="object-cover"
         />

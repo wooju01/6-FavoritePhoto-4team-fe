@@ -8,9 +8,14 @@ import NoResultMessage from "../ui/NoResultsMessage";
 import { storeService } from "@/lib/api/api-store";
 
 export default async function BaseCardsSection({ grade, genre, sale }) {
-  const data = await storeService.getAllStoreCards();
+let data;
+try {
+  data = await storeService.getAllStoreCards(); 
+} catch (error) {
+  throw new Error("카드 데이터를 불러오는데 실패했습니다.");
+}
 
-  // 다중 선택 가능하도록 파싱 함수
+
   function parseFilterValue(value) {
     if (!value) return [];
     if (value.includes(",")) {
@@ -22,10 +27,8 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
   const gradesArray = parseFilterValue(grade);
   const genresArray = parseFilterValue(genre);
 
-  // 응답 객체에서 배열 꺼내기
   const cardsArray = Array.isArray(data.sales) ? data.sales : [];
 
-  // 필터 카운트들
   const gradeCounts = data.counts?.grade || [];
   const genreCounts = data.counts?.genre || [];
   const saleCounts = data.counts?.sale || [];
@@ -33,10 +36,8 @@ export default async function BaseCardsSection({ grade, genre, sale }) {
   const filtered = cardsArray.filter((card) => {
     const matchGrade =
       !gradesArray.length || gradesArray.includes(card.cardGrade?.id);
-
     const matchGenre =
       !genresArray.length || genresArray.includes(card.cardGenre?.id);
-
     const matchSale = !sale
       ? true
       : sale === "판매중"

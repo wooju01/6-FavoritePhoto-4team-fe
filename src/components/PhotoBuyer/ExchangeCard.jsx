@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
+import GradeTag from "../tag/GradeTag";
 
-function ExchangeCard({ desiredDescription }) {
+function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
   const [isMd, setIsMd] = useState(false);
 
   useEffect(() => {
@@ -13,6 +14,15 @@ function ExchangeCard({ desiredDescription }) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // 장르 ID → 장르명 매핑
+  const genreMap = {
+    1: "여행",
+    2: "풍경",
+    3: "인물",
+    4: "사물",
+  };
+  const genreText = genreMap[cardGenreId] || "알 수 없음";
+
   return (
     <div>
       <Title
@@ -21,8 +31,13 @@ function ExchangeCard({ desiredDescription }) {
         font="titleLg_Noto"
       />
       <p className="mt-2 text-sm text-gray-700">{desiredDescription}</p>
+      <p className="mt-1 text-sm text-gray-500">
+        카드 등급: <GradeTag grade={cardGradeId} />
+      </p>
+      <p className="mt-1 text-sm text-gray-500">카드 장르: {genreText}</p>
     </div>
   );
 }
 
 export default ExchangeCard;
+
