@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import GalleryTitle from "./_components/GalleryTitle";
 import MyCard from "@/components/PhotoCard/MyCard";
-import OwnedCards from "./_components/OwnedCards";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import Pagination from "@/components/ui/Pagination";
 import Search from "@/components/ui/Search";
 import { useQuery } from "@tanstack/react-query";
 import { getCardsCount, getMyCards } from "@/lib/api/api-users";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import GalleryTitle from "./GalleryTitle";
+import OwnedCards from "./OwnedCards";
 
 export default function MyPage() {
   // 쿼리 문자열 처리
