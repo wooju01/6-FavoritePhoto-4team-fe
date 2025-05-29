@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GradeTag from "../tag/GradeTag";
+import { useMutation } from "@tanstack/react-query";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import Button from "../ui/Button.jsx";
+import GradeTag from "../tag/GradeTag";
+import { storeService } from "@/lib/api/api-store";
 
 const FIXED_LABELS = ["여행", "풍경", "인물", "사물"];
 
 export default function CardBuyer({
+  cardId,
   tier,
   subLabel = "",
   creator,
@@ -15,35 +18,43 @@ export default function CardBuyer({
   pricePerCard,
   remaining,
   total,
-  onBuy,
-  isLoading = false,
+  onSuccess,
 }) {
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [localRemaining, setLocalRemaining] = useState(remaining);
   const [isLargeScreen, setIsLargeScreen] = useState(null);
 
   const safeSubLabel = FIXED_LABELS.includes(subLabel) ? subLabel : "풍경";
 
-  const handleQuantity = (amount) => {
-    const next = Math.max(1, Math.min(quantity + amount, remaining));
-    setQuantity(next);
-  };
-
   const totalPrice = pricePerCard * quantity;
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 1480);
-    };
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => storeService.purchaseCard(cardId, quantity),
+    onSuccess: (data) => {
+      setLocalRemaining((prev) => prev - quantity);
+      if (onSuccess) onSuccess(data);
+    },
+    onError: (err) => {
+      alert(err.message || "구매 실패");
+    },
+  });
 
+  useEffect(() => {
+    const checkScreenSize = () => setIsLargeScreen(window.innerWidth >= 1480);
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  const handleQuantity = (amount) => {
+    const next = Math.max(1, Math.min(quantity + amount, localRemaining));
+    setQuantity(next);
+  };
+
   const gradeSize = isLargeScreen ? "xl" : "lg";
 
   return (
-    <div className=" p-4 flex flex-col gap-4  text-white w-full h-[529px] lg:h-[612px]">
+    <div className="p-4 flex flex-col gap-4 text-white w-full h-[529px] lg:h-[612px]">
       <div className="flex items-center gap-2 text-sm">
         {isLargeScreen !== null && <GradeTag grade={tier} size={gradeSize} />}
         <span className="text-700-18 text-gray-300 lg:text-700-24">
@@ -56,9 +67,10 @@ export default function CardBuyer({
 
       <hr className="border-gray-400" />
 
-      <p className="text-400-16 h-[46px] leading-snug  lg:text-400-18">
+      <p className="text-400-16 h-[46px] leading-snug lg:text-400-18">
         {description}
       </p>
+
       <hr className="border-gray-400" />
 
       <div className="flex flex-col h-[68px] gap-[10px] text-400-18 lg:text-400-20">
@@ -69,11 +81,12 @@ export default function CardBuyer({
         <div className="flex justify-between">
           <span className="text-gray-300">잔여</span>
           <span className="font-semibold">
-            {remaining}
+            {localRemaining}
             <span className="text-gray-300"> / 10</span>
           </span>
         </div>
       </div>
+
       <hr className="border-gray-400" />
 
       <div className="flex items-center justify-between">
@@ -90,7 +103,7 @@ export default function CardBuyer({
             <span>{quantity}</span>
             <button
               onClick={() => handleQuantity(1)}
-              disabled={quantity >= remaining}
+              disabled={quantity >= localRemaining}
               className="px-2 disabled:opacity-50"
             >
               <FaPlus />
@@ -108,14 +121,13 @@ export default function CardBuyer({
       </div>
 
       <Button
-        type="purchase"
-        onClick={() => onBuy(quantity)}
-        disabled={remaining === 0 || isLoading}
-        className="h-[75px]  lg:h-[80px]"
+        onClick={() => mutate()}
+        disabled={localRemaining === 0 || isPending}
+        className="h-[75px] lg:h-[80px]"
       >
-        {remaining === 0
+        {localRemaining === 0
           ? "품절되었습니다"
-          : isLoading
+          : isPending
           ? "구매 중..."
           : "포토카드 구매하기"}
       </Button>

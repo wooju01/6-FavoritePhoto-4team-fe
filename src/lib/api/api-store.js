@@ -15,7 +15,6 @@ export const storeService = {
   },
 
 
-  //스토어의 특정 카드 데이터를 가져옵니다.
   getStoreCardDetail: (id) => cookieFetch(`/api/store/cards/${id}`),
 
   getTradeRequests: (id) => cookieFetch(`/api/store/cards/${id}/exchange`),
@@ -31,3 +30,4 @@ export const storeService = {
       body: JSON.stringify({ quantity }),
     }),
 };
+
