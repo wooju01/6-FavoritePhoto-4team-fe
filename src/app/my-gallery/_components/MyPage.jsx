@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MyCard from "@/components/PhotoCard/MyCard";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import Pagination from "@/components/ui/Pagination";
@@ -10,6 +10,7 @@ import { getCardsCount, getMyCards } from "@/lib/api/api-users";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import GalleryTitle from "./GalleryTitle";
 import OwnedCards from "./OwnedCards";
+import { useGalleryFilter } from "@/hooks/useFilter";
 
 export default function MyPage() {
   // 쿼리 문자열 처리
@@ -17,45 +18,28 @@ export default function MyPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [filters, setFilters] = useState({
-    gradeId: 0, // 전체
-    genreId: 0, // 전체22
-    keyword: "",
-    page: 1,
-    size: "md",
-  });
+  const { isOpen, toggle, close, filterOptions } = useGalleryFilter();
 
-  useEffect(() => {
-    const newFilters = {
-      gradeId: Number(searchParams.get("gradeId")) || 0,
-      genreId: Number(searchParams.get("genreId")) || 0,
-      keyword: searchParams.get("keyword") || "",
-      page: Number(searchParams.get("page") || 1),
-      size: searchParams.get("size") || "md",
-    };
-
-    setFilters(newFilters);
-    console.log("Current filters:", newFilters); // 디버깅용
-  }, [searchParams]);
+  const grade = Number(searchParams.get("grade")) || 0;
+  const genre = Number(searchParams.get("genre")) || 0;
+  const keyword = searchParams.get("keyword") || "";
+  const page = Number(searchParams.get("page") || 1);
+  const size = searchParams.get("size") || "md";
 
   // 카드 데이터 불러오기
   const { data, isPending, isError } = useQuery({
-    queryKey: [
-      "myGalleryCards_v8",
-      filters.gradeId,
-      filters.genreId,
-      filters.keyword,
-      filters.page,
-      filters.size,
-    ],
-    queryFn: async () => {
-      console.log("🔥 fetching with filters", filters);
-      const result = await getMyCards(filters);
-      console.log("📦 response data", result);
-      return result;
-    },
+    queryKey: ["myGalleryCards_v8", grade, genre, keyword, page, size],
+    queryFn: () => getMyCards({ grade, genre, keyword, page, size }),
     enabled: true, // 항상 실행
   });
+
+  // 필터 변경
+  const onFilterChange = (type, value) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // 전체 선택: 필터 제거
+    value === 0 ? params.delete(type) : params.set(type, value.toString());
+  };
 
   // 카드 개수 불러오기 (전체 + 등급별)
   const { data: count } = useQuery({
@@ -70,22 +54,6 @@ export default function MyPage() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  // 필터 변경
-  const onFilterChange = (type, value) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // 전체 선택: 필터 제거
-    if (value === 0) {
-      params.delete(type);
-    } else {
-      params.set(type, value.toString());
-    }
-
-    // 페이지 초기화하고 이동
-    params.set("page", "1");
-    router.replace(`${pathname}?${params.toString()}`);
-  };
-
   if (isPending) return <p>로딩 중...</p>;
   if (isError) return <p>오류 발생</p>;
 
@@ -98,15 +66,25 @@ export default function MyPage() {
         countsByGrade={count?.active.byGrade}
       />
       <section className="mb-15">
-        <div className="flex items-center mb-5">
+        <div className="flex items-center mb-5 gap-7 lg:gap-10">
           <div>
             <Search />
           </div>
-          {/* <FilterDropdown visibleFilters={["grade", "genre"]} /> */}
+          <div className="flex gap-6">
+            {Object.values(filterOptions).map((option) => (
+              <FilterDropdown
+                key={option.key}
+                option={option}
+                isOpen={isOpen === option.key}
+                onToggle={() => toggle(option.key)}
+                onClose={close}
+                onSelect={(value) => onFilterChange(option.key, value)}
+              />
+            ))}
+          </div>
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">
-          {/* {filteredData.length > 0 && */}
           {data?.items.map((card) => (
             <MyCard
               key={card.id}
@@ -114,7 +92,7 @@ export default function MyPage() {
               image={card.imageUrl}
               nickname={card.creator?.nickname || "나"}
               genre={card.genre?.name}
-              gradeId={card.gradeId}
+              gradeId={card.grade?.id}
               initialPrice={card.userCards?.[0]?.price}
               totalQuantity={card.userCards?.length}
             />
@@ -124,7 +102,7 @@ export default function MyPage() {
       <div className="flex justify-center mb-20">
         <Pagination
           totalPages={data?.pagination.totalPages}
-          currentPage={filters.page}
+          currentPage={page}
           onPageChange={onPageChange}
         />
       </div>

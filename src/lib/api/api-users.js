@@ -32,18 +32,16 @@ export const userService = {
 
 // GET: 마이 갤러리
 export async function getMyCards({
-  gradeId,
-  genreId,
+  grade,
+  genre,
   keyword,
   page = 1,
   size = "md",
 }) {
   const queryParams = new URLSearchParams();
 
-  if (gradeId && gradeId !== 0)
-    queryParams.append("gradeId", gradeId.toString());
-  if (genreId && genreId !== 0)
-    queryParams.append("genreId", genreId.toString());
+  if (grade && grade !== 0) queryParams.append("grade", grade.toString());
+  if (genre && genre !== 0) queryParams.append("genre", genre.toString());
   if (keyword) queryParams.append("keyword", keyword);
   if (page) queryParams.append("page", page.toString() || "1");
   if (size) queryParams.append("size", size || "md");

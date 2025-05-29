@@ -45,7 +45,7 @@ export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
             <div
               key={gradeId}
               className={clsx(
-                "bg-my-black border text-300-12 px-2.5 py-1.5 text-center",
+                "bg-my-black border text-300-12 px-2.5 py-1.5 text-center whitespace-nowrap overflow-x-auto",
                 border,
                 text,
                 label
