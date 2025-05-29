@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Search from "../ui/Search";
 import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
-import FilterDropdown from "../FllterDropdown/FilterDropdown";
+// import FilterDropdown from "../FllterDropdown/FilterDropdown";
 import CardSellDetail from "./CardSellDetail";
 import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
@@ -147,7 +147,7 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
             {/* 모바일 전용 */}
             <div className="flex gap-2 mb-4 md:hidden">
               <div>
-                <FilterDropdown iconSize={45} />
+                {/* <FilterDropdown iconSize={45} /> */}
               </div>
               <Search />
             </div>
@@ -157,7 +157,7 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
               <div>
                 <Search />
               </div>
-              <FilterDropdown />
+              {/* <FilterDropdown /> */}
             </div>
 
             {/* 카드 리스트 */}

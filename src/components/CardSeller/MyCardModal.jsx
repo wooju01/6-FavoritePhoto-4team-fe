@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Search from "../ui/Search";
 import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
-import FilterDropdown from "../FllterDropdown/FilterDropdown";
+
 import CardSellDetail from "./CardSellDetail";
 import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
