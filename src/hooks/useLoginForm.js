@@ -58,7 +58,7 @@ export function useLoginForm() {
     setIsPending(true);
     try {
       await authLogin(form.userEmail, form.userPassword);
-      router.push("/home"); // 성공 시 이동
+      window.location.href = "/home"; // 성공 시 이동
     } catch (error) {
       console.error("Login failed in hook:", error);
       setLoginError(error.message || "이메일 또는 비밀번호가 잘못되었습니다.");
