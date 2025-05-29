@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 import GradeTag from "../tag/GradeTag";
-import MyCardModal from "../CardSeller/MyCardModal";
+import MyTradeCard from "../CardSeller/MyTradeCard";
 
 function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
   const [isMd, setIsMd] = useState(false);
@@ -40,8 +40,7 @@ function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
       </p>
       <p className="mt-1 text-sm text-gray-500">카드 장르: {genreText}</p>
 
-      {/* 교환 모달 */}
-      <MyCardModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MyTradeCard isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }
