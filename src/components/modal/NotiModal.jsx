@@ -1,5 +1,5 @@
 // 사용 설명은 노션에...
-
+"use client";
 import React from "react";
 import { useAlertModal } from "@/providers/AlertModalProvider";
 import { FiX } from "react-icons/fi";
