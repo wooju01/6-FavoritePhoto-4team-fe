@@ -219,7 +219,11 @@ export default function CardSellDetail({ card, availableCards, onClose }) {
         <Button type="reject" className="w-full h-[55px]" onClick={onClose}>
           취소하기
         </Button>
-        <Button className="w-full h-[55px]" onClick={handleSale}>
+        <Button
+          type="exchangeGreen"
+          className="w-full h-[55px]"
+          onClick={handleSale}
+        >
           판매하기
         </Button>
       </div>

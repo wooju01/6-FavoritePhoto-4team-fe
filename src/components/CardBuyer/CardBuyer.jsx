@@ -19,7 +19,7 @@ export default function CardBuyer({
   isLoading = false,
 }) {
   const [quantity, setQuantity] = useState("");
-  const [isLargeScreen, setIsLargeScreen] = useState(null); 
+  const [isLargeScreen, setIsLargeScreen] = useState(null);
 
   const safeSubLabel = FIXED_LABELS.includes(subLabel) ? subLabel : "풍경";
 
@@ -45,15 +45,20 @@ export default function CardBuyer({
   return (
     <div className=" p-4 flex flex-col gap-4  text-white w-full h-[529px] lg:h-[612px]">
       <div className="flex items-center gap-2 text-sm">
-        
         {isLargeScreen !== null && <GradeTag grade={tier} size={gradeSize} />}
-        <span className="text-700-18 text-gray-300 lg:text-700-24">| {safeSubLabel}</span>
-        {creator && <span className="ml-auto text-700-18 lg:text-700-24">{creator}</span>}
+        <span className="text-700-18 text-gray-300 lg:text-700-24">
+          | {safeSubLabel}
+        </span>
+        {creator && (
+          <span className="ml-auto text-700-18 lg:text-700-24">{creator}</span>
+        )}
       </div>
 
       <hr className="border-gray-400" />
 
-      <p className="text-400-16 h-[46px] leading-snug  lg:text-400-18">{description}</p>
+      <p className="text-400-16 h-[46px] leading-snug  lg:text-400-18">
+        {description}
+      </p>
       <hr className="border-gray-400" />
 
       <div className="flex flex-col h-[68px] gap-[10px] text-400-18 lg:text-400-20">
@@ -102,9 +107,10 @@ export default function CardBuyer({
         </div>
       </div>
 
-       <Button
+      <Button
+        type="purchase"
         onClick={() => onBuy(quantity)}
-        disabled={remaining === 0 || isLoading} 
+        disabled={remaining === 0 || isLoading}
         className="h-[75px]  lg:h-[80px]"
       >
         {remaining === 0
