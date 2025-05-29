@@ -143,23 +143,7 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
             {/* md 이상일 때만 보이는 구분선 */}
             <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
 
-            {/* 검색 + 필터 영역 */}
-            {/* 모바일 전용 */}
-            <div className="flex gap-2 mb-4 md:hidden">
-              <div>
-                <FilterDropdown iconSize={45} />
-              </div>
-              <Search />
-            </div>
-
-            {/* md 이상 전용 */}
-            <div className="hidden md:flex gap-6 items-center mb-4 md:mb-10">
-              <div>
-                <Search />
-              </div>
-              <FilterDropdown />
-            </div>
-
+            
             {/* 카드 리스트 */}
             <div
               className={`grid grid-cols-2 gap-4 ${
