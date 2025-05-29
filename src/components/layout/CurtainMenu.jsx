@@ -20,13 +20,13 @@ const CurtainMenu = ({ user, onClose }) => (
           마켓플레이스
         </Link>
         <Link
-          href="/mygallery"
+          href="/my-gallery"
           className="text-700-14 text-white hover:text-main"
         >
           마이갤러리
         </Link>
         <Link
-          href="/selling"
+          href="/for-my-sales"
           className="text-700-14 text-white hover:text-main"
         >
           판매 중인 포토카드

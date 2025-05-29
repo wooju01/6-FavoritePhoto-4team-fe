@@ -1,52 +1,33 @@
+ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import BaseCardList from "../ui/BaseCardList";
-import FilterDropdown from "../FllterDropdown/FilterDropdown";
 import Search from "../ui/Search";
-import Sort from "../ui/Sort";
+// import Sort from "../ui/Sort";
 import { Suspense } from "react";
 import HomeFallbackCount from "../skeletons/HomeFallbackCount";
 import NoResultMessage from "../ui/NoResultsMessage";
 import { storeService } from "@/lib/api/api-store";
-
-export default async function BaseCardsSection({ grade, genre, sale }) {
-let data;
-try {
-  data = await storeService.getAllStoreCards(); 
-} catch (error) {
-  throw new Error("카드 데이터를 불러오는데 실패했습니다.");
-}
+import FilterControls from "../ui/FilterControls";
+import Sort from "../ui/Sort";
 
 
-  function parseFilterValue(value) {
-    if (!value) return [];
-    if (value.includes(",")) {
-      return value.split(",").map((v) => Number(v));
-    }
-    return [Number(value)];
-  }
+export default async function BaseCardsSection({ grade, genre, sale, keyword, orderBy }) {
+  
+  const orderByMap = {
+    price_asc: "낮은 가격순",
+    price_desc: "높은 가격순",
+    created_desc: "최신순",
+  };
 
-  const gradesArray = parseFilterValue(grade);
-  const genresArray = parseFilterValue(genre);
+  const filters = {
+    grade: grade ?? null,
+    genre: genre ?? null,
+    sale: sale ?? null,
+    keyword: keyword ?? null,
+    orderBy: orderByMap[orderBy] ?? "낮은 가격순",
+  };
 
-  const cardsArray = Array.isArray(data.sales) ? data.sales : [];
-
-  const gradeCounts = data.counts?.grade || [];
-  const genreCounts = data.counts?.genre || [];
-  const saleCounts = data.counts?.sale || [];
-
-  const filtered = cardsArray.filter((card) => {
-    const matchGrade =
-      !gradesArray.length || gradesArray.includes(card.cardGrade?.id);
-    const matchGenre =
-      !genresArray.length || genresArray.includes(card.cardGenre?.id);
-    const matchSale = !sale
-      ? true
-      : sale === "판매중"
-      ? card.status === "AVAILABLE"
-      : card.status !== "AVAILABLE";
-
-    return matchGrade && matchGenre && matchSale;
-  });
-
+  const data = await storeService.getAllStoreCards(filters); 
+  
   return (
     <>
       <div className="py-5 md:pb-7 lg:pb-14">
@@ -60,22 +41,20 @@ try {
           <div className="hidden md:block">
             <Search />
           </div>
-          <FilterDropdown
-            visibleFilters={["grade", "genre", "sale"]}
-            filteredCount={filtered.length}
-            gradeCounts={gradeCounts}
-            genreCounts={genreCounts}
-            saleCounts={saleCounts}
-          />
+          <div className="hidden md:flex items-center gap-7 flex-1 ml-10">
+            <FilterControls />
+          </div>
+          {/* 모바일 filter 버튼 */}
+          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs" ><HiAdjustmentsHorizontal className="w-5 h-5"/></button>
           <Sort />
         </div>
       </div>
-      {filtered.length === 0 ? (
+      {data.sales.length === 0 ? (
         <NoResultMessage message={"필터링 결과가 존재하지 않습니다."} />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-20">
-          <Suspense fallback={<HomeFallbackCount count={12} />}>
-            <BaseCardList cards={filtered} />
+          <Suspense key={data.sales || data.photoCard || data.cardGrade || data.cardGenre} fallback={<HomeFallbackCount count={12} />}>
+            <BaseCardList cards={data.sales} />
           </Suspense>
         </div>
       )}

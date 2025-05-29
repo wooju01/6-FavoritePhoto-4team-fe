@@ -31,12 +31,20 @@ export default function useSort() {
 
   const handleSelect = (option) => {
     const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.set("orderBy", getSortParam(option));
+
+    const paramValue = getSortParam(option);
+
+    if (paramValue === "price_asc") {
+      currentParams.delete("orderBy"); // ✅ 기본값이므로 제거
+    } else {
+      currentParams.set("orderBy", paramValue);
+    }
+
     router.replace(`?${currentParams.toString()}`, { scroll: false });
 
     close();
   };
-
+  
   // orderBy param 변환
   function getSortParam(label = order) {
     switch (label) {

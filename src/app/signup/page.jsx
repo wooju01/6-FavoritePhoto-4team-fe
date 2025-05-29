@@ -22,7 +22,7 @@ export default function SignupPage() {
             <Image
               src={mainLogoImg}
               alt="main-logo"
-              className="w-[189px] h-[35px] md:w-[330.82px] md:h-[60px]"
+              className="w-44 h-8"
             />
           </Link>
         </h2>
