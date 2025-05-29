@@ -10,7 +10,7 @@ export function middleware(request) {
   const authPaths = ["/login", "/signup"];
   const isAuthRoute = authPaths.some((path) => pathname === path);
 
-  const protectedRoutes = ["/my-gallery", "/home/[id]"];
+  const protectedRoutes = ["/my-gallery", "/home/[id]", "/for-my-sales"];
   const isProtectedRoute = protectedRoutes.some((route) => {
     if (route.includes("[") && route.includes("]")) {
       let regexPatternString = route

@@ -25,7 +25,7 @@ export default function GalleryTitle({ disabled }) {
     <>
       {isDisabled && <Noti />}
       {/* pc, tablet용 */}
-      <header className="hidden md:flex items-center justify-between mb-3 w-full">
+      <header className="hidden md:flex items-center justify-between my-10 w-full">
         <h2 className="title-48 lg:title-62">마이갤러리</h2>
         <div className="flex items-end gap-3">
           <span className="text-400-14 text-gray-300">{now}</span>
