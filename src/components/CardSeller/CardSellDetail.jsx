@@ -7,36 +7,88 @@ import Button from "../ui/Button";
 import example from "@/assets/example.svg";
 import MyCardDetail from "../ui/MyCardDetail";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { postCardSale } from "@/lib/api/api-sale";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function CardSellDetail({ card, onClose }) {
-  const [selectedGrade, setSelectedGrade] = useState(
-    card?.photoCard?.grade?.name || ""
-  );
+const grades = [
+  { id: 1, name: "COMMON" },
+  { id: 2, name: "RARE" },
+  { id: 3, name: "SUPER RARE" },
+  { id: 4, name: "LEGENDARY" },
+];
+
+const genres = [
+  { id: 1, name: "여행" },
+  { id: 2, name: "풍경" },
+  { id: 3, name: "인물" },
+  { id: 4, name: "사물" },
+];
+
+export default function CardSellDetail({ card, availableCards, onClose }) {
+  const queryClient = useQueryClient();
+
+  const [selectedGrade, setSelectedGrade] = useState(card?.photoCard?.gradeId);
   const [gradeOpen, setGradeOpen] = useState(false);
 
-  const [selectedGenre, setSelectedGenre] = useState(
-    card?.photoCard?.genre?.name || ""
-  );
+  const [selectedGenre, setSelectedGenre] = useState(card?.photoCard?.genreId);
   const [genreOpen, setGenreOpen] = useState(false);
+
+  const [description, setDescription] = useState("");
+  const [count, setCount] = useState(1);
+  const [price, setPrice] = useState(card?.price || "");
 
   const gradeRef = useRef(null);
   const genreRef = useRef(null);
 
-  const grades = ["COMMON", "RARE", "SUPER RARE", "LEGENDARY"];
-  const genres = ["여행", "풍경", "인물", "사물"];
-
   useEffect(() => {
-    function handleClickOutside(e) {
+    const handleClickOutside = (e) => {
       if (gradeRef.current && !gradeRef.current.contains(e.target)) {
         setGradeOpen(false);
       }
       if (genreRef.current && !genreRef.current.contains(e.target)) {
         setGenreOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleSale = async () => {
+    if (!availableCards || availableCards.length === 0) {
+      alert("보유한 카드 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    const selectedUserCardIds = availableCards
+      .slice(0, count)
+      .map((uc) => uc.id);
+
+    if (selectedUserCardIds.length < count) {
+      alert("판매할 수량만큼 보유 중인 카드가 부족합니다.");
+      return;
+    }
+
+    try {
+      await postCardSale({
+        photoCardId: card.photoCard.id,
+        userCardIds: selectedUserCardIds,
+        salePrice: Number(price),
+        saleQuantity: Number(count),
+        desiredGradeId: selectedGrade,
+        desiredGenreId: selectedGenre,
+        desiredDescription: description,
+      });
+
+      queryClient.invalidateQueries(["myGalleryCards_v3"]);
+      queryClient.invalidateQueries(["storeMainList"]);
+
+      alert("판매가 등록되었습니다.");
+      onClose();
+    } catch (error) {
+      console.error("판매 등록 실패", error);
+      alert("판매 등록에 실패했습니다.");
+    }
+  };
 
   const imageUrl = card?.photoCard?.imageUrl?.startsWith("http")
     ? card.photoCard.imageUrl
@@ -71,8 +123,14 @@ export default function CardSellDetail({ card, onClose }) {
         />
       </div>
 
-      {/* 카드 상세 설명 등 (예: 가격, 수량 등은 MyCardDetail로 표현) */}
-      <MyCardDetail card={card} />
+      {/* 카드 상세 */}
+      <MyCardDetail
+        card={card}
+        count={count}
+        setCount={setCount}
+        price={price}
+        setPrice={setPrice}
+      />
 
       {/* 교환 희망 정보 */}
       <div className="mt-25">
@@ -88,8 +146,8 @@ export default function CardSellDetail({ card, onClose }) {
             onClick={() => setGradeOpen(!gradeOpen)}
             className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
           >
-            <span className={selectedGrade ? "text-white" : "text-gray-400"}>
-              {selectedGrade || "등급을 선택해 주세요"}
+            <span className="text-white">
+              {grades.find((g) => g.id === selectedGrade)?.name || "선택"}
             </span>
             {gradeOpen ? <GoTriangleUp /> : <GoTriangleDown />}
           </button>
@@ -97,14 +155,14 @@ export default function CardSellDetail({ card, onClose }) {
             <ul className="absolute mt-1 w-full bg-my-black border border-white z-10">
               {grades.map((grade) => (
                 <li
-                  key={grade}
+                  key={grade.id}
                   className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
                   onClick={() => {
-                    setSelectedGrade(grade);
+                    setSelectedGrade(grade.id);
                     setGradeOpen(false);
                   }}
                 >
-                  {grade}
+                  {grade.name}
                 </li>
               ))}
             </ul>
@@ -118,8 +176,8 @@ export default function CardSellDetail({ card, onClose }) {
             onClick={() => setGenreOpen(!genreOpen)}
             className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
           >
-            <span className={selectedGenre ? "text-white" : "text-gray-400"}>
-              {selectedGenre || "장르를 선택해 주세요"}
+            <span className="text-white">
+              {genres.find((g) => g.id === selectedGenre)?.name || "선택"}
             </span>
             {genreOpen ? <GoTriangleUp /> : <GoTriangleDown />}
           </button>
@@ -127,14 +185,14 @@ export default function CardSellDetail({ card, onClose }) {
             <ul className="absolute mt-1 w-full bg-my-black border border-white z-10">
               {genres.map((genre) => (
                 <li
-                  key={genre}
+                  key={genre.id}
                   className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
                   onClick={() => {
-                    setSelectedGenre(genre);
+                    setSelectedGenre(genre.id);
                     setGenreOpen(false);
                   }}
                 >
-                  {genre}
+                  {genre.name}
                 </li>
               ))}
             </ul>
@@ -148,6 +206,8 @@ export default function CardSellDetail({ card, onClose }) {
           </label>
           <textarea
             rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="설명을 입력해 주세요"
             className="w-full bg-my-black border border-white text-white p-3 resize-none placeholder:text-gray-400 text-300-14"
           />
@@ -156,10 +216,12 @@ export default function CardSellDetail({ card, onClose }) {
 
       {/* 버튼 */}
       <div className="flex gap-3 mt-8">
-        <Button type="reject" className="w-full h-[55px]">
+        <Button type="reject" className="w-full h-[55px]" onClick={onClose}>
           취소하기
         </Button>
-        <Button className="w-full h-[55px]">판매하기</Button>
+        <Button className="w-full h-[55px]" onClick={handleSale}>
+          판매하기
+        </Button>
       </div>
     </div>
   );

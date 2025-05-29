@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import GradeTag from "../tag/GradeTag";
 
-export default function MyCardDetail({ card }) {
-  const [count, setCount] = useState(1);
-  const [price, setPrice] = useState("");
-
-  const maxQuantity = card?.photoCard?.totalQuantity || 1;
-  const defaultPrice = card?.price || 0;
-
+export default function MyCardDetail({
+  card,
+  count,
+  setCount,
+  price,
+  setPrice,
+}) {
   const handleDecrease = () => {
     if (count > 1) setCount(count - 1);
   };
 
   const handleIncrease = () => {
-    if (count < maxQuantity) setCount(count + 1);
+    if (count < card?.photoCard?.totalQuantity) setCount(count + 1);
   };
 
   const handlePriceChange = (e) => {
@@ -25,15 +25,10 @@ export default function MyCardDetail({ card }) {
     }
   };
 
-  // 초기값 설정
-  useEffect(() => {
-    if (card?.price) setPrice(card.price.toString());
-  }, [card]);
-
   return (
     <div className="w-full bg-my-black text-white py-1 border-none text-sm lg:text-base">
       {/* 상단 정보 */}
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 text-sm lg:text-[16px] mb-3">
         <span className="[&_*]:text-700-18">
           <GradeTag grade={card?.photoCard?.gradeId} />
         </span>
@@ -65,9 +60,11 @@ export default function MyCardDetail({ card }) {
             </div>
             <div className="flex flex-col justify-center text-[10px] lg:text-sm text-gray-300 leading-tight pt-[3px]">
               <div className="text-white text-base lg:text-lg font-bold">
-                / {maxQuantity}
+                / {card?.photoCard?.totalQuantity ?? 0}
               </div>
-              <div className="pl-[1px]">최대 {maxQuantity}장</div>
+              <div className="pl-[1px]">
+                최대 {card?.photoCard?.totalQuantity ?? 0}장
+              </div>
             </div>
           </div>
         </div>
