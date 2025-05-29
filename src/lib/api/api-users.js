@@ -58,6 +58,11 @@ export async function getMyCards({ grade, genre, search, page, size }) {
   );
 }
 
+// GET: 나의 판매 포토카드
+export async function getMyCardsOnSale() {
+  return await cookieFetch(`api/users/cards-on-sale`);
+}
+
 // GET: 카드 개수
 export async function getCardsCount() {
   return await cookieFetch("/api/users/cards-count");

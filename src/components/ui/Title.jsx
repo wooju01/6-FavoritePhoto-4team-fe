@@ -38,7 +38,7 @@ export const Title = ({
   buttonColor = "yellow",
 }) => {
   const fontClass = {
-    titleLg_Bk: "title-48 text-white md:title-62",
+    titleLg_Bk: "title-40 md:title-48 text-white lg:title-62",
     titleLg_Noto: "text-700-24 md:text-700-32 lg:text-700-40 text-white",
     titleMd_Bk: "title-40 md:title-46 text-white",
     titleMd_Noto: "text-700-20 md:text-700-22 lg:text-700-28 text-white",

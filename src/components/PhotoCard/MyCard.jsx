@@ -37,7 +37,7 @@ export default function MyCard({
       <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
         <Image
           src={getImageUrl(image)}
-          alt=""
+          alt="마이 갤러리 이미지"
           fill
           className="object-cover"
         />
