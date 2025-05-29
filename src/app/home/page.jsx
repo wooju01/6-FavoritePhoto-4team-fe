@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-import SkeletonCardLayout from "@/components/skeletons/ResponsiveFallbackWrapper";
 import SellButton from "@/components/ui/SellButton";
 import BaseCardsSection from "@/components/HompageComponents/BaseCardsSection";
 import RandomPoint from "@/components/RandomPoint";
@@ -11,6 +9,8 @@ export default async function HomePage({ searchParams }) {
   const grade = params?.grade ?? "";
   const genre = params?.genre ?? "";
   const sale = params?.sale ?? "";
+  const keyword = params?.keyword ?? ""; 
+  const orderBy = params?.orderBy ?? "낮은 가격순"; 
 
   return (
     <div>
@@ -26,7 +26,13 @@ export default async function HomePage({ searchParams }) {
         <RandomPoint />
       </RandomPointHomeTrigger>
       <div>
-        <BaseCardsSection grade={grade} genre={genre} sale={sale} />
+        <BaseCardsSection
+          grade={grade}
+          genre={genre}
+          sale={sale}
+          keyword={keyword}
+          orderBy={orderBy}
+        />
       </div>
     </div>
   );

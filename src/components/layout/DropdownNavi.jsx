@@ -50,7 +50,7 @@ const DropdownNavi = ({ user, open, onClose }) => {
           마이갤러리
         </Link>
         <Link
-          href="/for-sale"
+          href="/for-my-sales"
           className="text-700-14 text-white hover:text-main"
         >
           판매 중인 포토카드

@@ -13,15 +13,17 @@ const genreMap = {
   4: "사물",
 };
 
-export default function BaseCard({ id, photoCard, price, saleQuantity }) {
+export default function BaseCard({
+  id,
+  photoCard,
+  price,
+  saleQuantity,
+  seller
+}) {
   return (
     <Link href={`/home/${id}`}>
       <div className="flex flex-col gap-2.5 md:gap-5 p-[15px] md:p-5 lg:p-10 border-1 border-white/10 rounded-xs bg-gray-500">
-        <img
-          src={`https://six-favoritephoto-4team-be.onrender.com${photoCard.imageUrl}`}
-          alt="photo-img"
-          className="w-full h-full"
-        />
+        <img src={`https://six-favoritephoto-4team-be.onrender.com${photoCard.imageUrl}`} alt="photo-img" className="aspect-square" />
         <div className="flex flex-col gap-2.5 md:gap-5">
           <div>
             <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">
@@ -44,7 +46,7 @@ export default function BaseCard({ id, photoCard, price, saleQuantity }) {
               <div>
                 {/* 닉네임 */}
                 <span className="text-400-10 md:text-400-16 underline line-clamp-1">
-                  우리들의 이야기
+                  {seller.nickname}
                 </span>
               </div>
             </div>
@@ -64,7 +66,7 @@ export default function BaseCard({ id, photoCard, price, saleQuantity }) {
             <div>
               <p>잔여</p>
               <span>
-                {saleQuantity} / <span className="text-gray-300">5</span>
+                {saleQuantity} / <span className="text-gray-300">10</span>
               </span>
             </div>
           </div>

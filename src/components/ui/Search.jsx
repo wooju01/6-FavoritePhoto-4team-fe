@@ -3,13 +3,29 @@
 import React, { useState } from "react";
 import searchIcon from "@/assets/search.svg";
 import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function Search({ onSearch }) {
-  const [keyword, setKeyword] = useState("");
+export default function Search() {
+  const router = useRouter();
+  const pathname = usePathname();  
+  const searchParams = useSearchParams();
+  const [keyword, setKeyword] = useState(searchParams.get("keyword") ?? "");
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      onSearch(keyword.trim());
+      
+        const params = new URLSearchParams(searchParams.toString())
+
+        if(keyword) {
+          params.set('keyword', keyword);
+        } else {
+          params.delete("keyword")
+        }
+
+        const fullUrl = `${pathname}?${params}`
+        
+        router.push(fullUrl)
     }
   };
 
