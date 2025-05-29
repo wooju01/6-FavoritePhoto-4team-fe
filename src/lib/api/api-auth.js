@@ -37,6 +37,7 @@ export const authService = {
       console.error("서버 로그아웃 요청 실패:", error);
     } finally {
       authUtils.clearAccessToken();
+      window.location.href = "/home";
     }
   },
 };
