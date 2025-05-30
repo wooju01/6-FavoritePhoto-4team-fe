@@ -4,13 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 import Search from "../ui/Search";
 import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
-import FilterDropdown from "../FllterDropdown/FilterDropdown";
-import CardSellDetail from "./CardSellDetail";
+import CardTrade from "./CardTrade.jsx";
+
 import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
 import { getMyCards } from "@/lib/api/api-users";
 
-export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
+export default function MyTradeCard({
+  isOpen,
+  onClose,
+  currentUserId,
+  saleId,
+  refetchTradeRequests
+}) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -31,6 +37,9 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
+      setShowDetail(false);
+      setSelectedCard(null);
+
       if (typeof window !== "undefined") {
         setIsDesktop(window.innerWidth >= 1024);
       }
@@ -118,16 +127,11 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
         )}
 
         {showDetail && selectedCard ? (
-          <CardSellDetail
-            card={selectedCard}
-            availableCards={
-              data?.items?.find((c) => c.id === selectedCard.photoCard.id)
-                ?.userCards || []
-            }
-            onClose={() => {
-              setSelectedCard(null);
-              setShowDetail(false);
-            }}
+          <CardTrade
+            selectedCard={selectedCard}
+            onClose={handleClose}
+            saleId={saleId}
+            refetchTradeRequests={refetchTradeRequests}
           />
         ) : (
           <>
@@ -142,23 +146,6 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
 
             {/* md 이상일 때만 보이는 구분선 */}
             <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
-
-            {/* 검색 + 필터 영역 */}
-            {/* 모바일 전용 */}
-            <div className="flex gap-2 mb-4 md:hidden">
-              <div>
-                <FilterDropdown iconSize={45} />
-              </div>
-              <Search />
-            </div>
-
-            {/* md 이상 전용 */}
-            <div className="hidden md:flex gap-6 items-center mb-4 md:mb-10">
-              <div>
-                <Search />
-              </div>
-              <FilterDropdown />
-            </div>
 
             {/* 카드 리스트 */}
             <div
@@ -191,7 +178,7 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
                           : card.creator?.nickname || "Unknown"
                       }
                       totalQuantity={card.totalQuantity}
-                      initialPrice={card.userCards[0]?.price} // 대표 가격 표시
+                      initialPrice={card.userCards[0]?.price}
                     />
                   </div>
                 ))

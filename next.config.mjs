@@ -7,6 +7,7 @@ const nextConfig = {
       "picsum.photos",
       "six-favoritephoto-4team-be.onrender.com",
       "six-favoritephoto-4team-be.onrender.comundefined",
+      "res.cloudinary.com",
     ],
   },
 };

@@ -3,9 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 import GradeTag from "../tag/GradeTag";
-import MyTradeCard from "../CardSeller/MyTradeCard";
+import MyTradeCard from "../CardTrade/MyTradeCard";
 
-function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
+function ExchangeCard({
+  desiredDescription,
+  cardGradeId,
+  cardGenreId,
+  saleId,
+  refetchTradeRequests
+}) {
   const [isMd, setIsMd] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,7 +46,12 @@ function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
       </p>
       <p className="mt-1 text-sm text-gray-500">카드 장르: {genreText}</p>
 
-      <MyTradeCard isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MyTradeCard
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        saleId={saleId}
+        refetchTradeRequests={refetchTradeRequests}
+      />
     </div>
   );
 }

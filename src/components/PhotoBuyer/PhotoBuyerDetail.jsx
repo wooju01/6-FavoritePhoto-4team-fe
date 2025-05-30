@@ -54,9 +54,11 @@ export default function PhotoBuyerDetail({ id }) {
     <section>
       <PhotoBuyerSection photo={photo} />
       <ExchangeCard
+        saleId={id}
         desiredDescription={photo.desiredDescription}
         cardGradeId={photo.cardGradeId}
         cardGenreId={photo.cardGenreId}
+        refetchTradeRequests={loadData}
       />
       <Title title="내가 제시한 교환 목록" font="titleLg_Noto" />
       {tradeRequests.length === 0 ? (
