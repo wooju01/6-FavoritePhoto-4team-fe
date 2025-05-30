@@ -85,7 +85,7 @@ export default function CardSellDetail({
 
     const actualCardGradeName =
       grades.find((g) => g.id === card?.photoCard?.gradeId)?.name ||
-      "등급 정보 없음";
+      "등급 정보 없음"; // 백엔드 바뀌면서 안되니까 수정필요요
     const stateModalCardInfo = {
       grade: actualCardGradeName,
       name: card?.photoCard?.name || "카드 이름",
