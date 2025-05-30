@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import GradeTag from "../tag/GradeTag";
 import Button from "../ui/Button";
+import { approveTradeRequest, rejectTradeRequest } from "@/lib/api/api-trade";
 
 const genreMap = {
   1: "여행",
@@ -15,6 +16,26 @@ const genreMap = {
 export default function Exchange({ trade, onApprove, onReject }) {
   const userCard = trade.tradeRequestUserCards[0]?.userCard;
   const photoCard = userCard?.photoCard;
+
+  const handleApprove = async () => {
+    try {
+      await approveTradeRequest(trade.id);
+      if (onApprove) onApprove();
+    } catch (err) {
+      console.error("승인 실패:", err);
+      alert("교환 승인에 실패했습니다.");
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await rejectTradeRequest(trade.id);
+      if (onReject) onReject();
+    } catch (err) {
+      console.error("거절 실패:", err);
+      alert("교환 거절에 실패했습니다.");
+    }
+  };
 
   return (
     <div className="bg-my-black w-full px-2 py-2 border border-gray-800 text-white">
@@ -41,7 +62,7 @@ export default function Exchange({ trade, onApprove, onReject }) {
       <div className="flex justify-between items-center text-400-10">
         <div className="flex items-center gap-1.5">
           <p className="[&_*]:text-300-10">
-            <GradeTag grade={gradeId} />
+            <GradeTag grade={photoCard?.gradeId} />
           </p>
           <span className="text-gray-400">|</span>
           <span className="text-gray-300">{genreMap[photoCard?.genreId]}</span>
@@ -71,10 +92,10 @@ export default function Exchange({ trade, onApprove, onReject }) {
 
       {/* 버튼들 */}
       <div className="flex justify-between gap-2">
-        <Button type="reject" onClick={onReject}>
+        <Button type="reject" onClick={handleReject}>
           거절
         </Button>
-        <Button type="approve" onClick={onApprove}>
+        <Button type="approve" onClick={handleApprove}>
           승인
         </Button>
       </div>

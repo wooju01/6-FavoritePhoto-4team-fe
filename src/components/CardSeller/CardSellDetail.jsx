@@ -121,10 +121,6 @@ export default function CardSellDetail({
     }
   };
 
-  const imageUrl = card?.imageUrl?.startsWith("http")
-    ? card.imageUrl
-    : `https://six-favoritephoto-4team-be.onrender.com${card?.imageUrl}`;
-
   return (
     <div className="fixed inset-0 z-50 bg-my-black text-white overflow-y-auto px-4 pt-4 pb-8">
       {/* 헤더 */}
@@ -147,7 +143,7 @@ export default function CardSellDetail({
       {/* 카드 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-4">
         <Image
-          src={imageUrl || example}
+          src={card.photoCard.imageUrl}
           alt="카드 이미지"
           fill
           className="object-cover"

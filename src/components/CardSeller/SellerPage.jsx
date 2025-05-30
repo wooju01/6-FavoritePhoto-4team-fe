@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 import backIcon from "@/assets/back.svg";
 import CardSeller from "../ui/CardSeller";
 import Exchange from "../PhotoCard/Exchange";
-import { getTradeRequestsBySaleId } from "@/lib/api/api-trade";
+import {
+  approveTradeRequest,
+  getTradeRequestsBySaleId,
+  rejectTradeRequest,
+} from "@/lib/api/api-trade";
 
 export default function SellerPage({ sale }) {
   const router = useRouter();
@@ -15,18 +19,43 @@ export default function SellerPage({ sale }) {
 
   const [tradeRequests, setTradeRequests] = useState([]);
 
-  useEffect(() => {
-    const fetchTradeRequests = async () => {
-      try {
-        const data = await getTradeRequestsBySaleId(sale.id);
-        setTradeRequests(data);
-      } catch (err) {
-        console.error("교환 제시 가져오기 실패:", err);
-      }
-    };
+  const fetchTradeRequests = async () => {
+    try {
+      const data = await getTradeRequestsBySaleId(sale.id);
+      setTradeRequests(data);
+    } catch (err) {
+      console.error("교환 제시 가져오기 실패:", err);
+      alert("교환 제시 데이터를 불러오지 못했습니다.");
+    }
+  };
 
+  useEffect(() => {
     fetchTradeRequests();
   }, [sale.id]);
+
+  const handleApprove = async (tradeId) => {
+    if (!confirm("이 교환 제시를 승인하시겠습니까?")) return;
+    try {
+      await approveTradeRequest(tradeId);
+      alert("교환이 승인되었습니다.");
+      fetchTradeRequests(); // 리스트 갱신
+    } catch (err) {
+      console.error("승인 실패:", err);
+      alert("교환 승인에 실패했습니다.");
+    }
+  };
+
+  const handleReject = async (tradeId) => {
+    if (!confirm("이 교환 제시를 거절하시겠습니까?")) return;
+    try {
+      await rejectTradeRequest(tradeId);
+      alert("교환이 거절되었습니다.");
+      fetchTradeRequests(); // 리스트 갱신
+    } catch (err) {
+      console.error("거절 실패:", err);
+      alert("교환 거절에 실패했습니다.");
+    }
+  };
 
   return (
     <div className="bg-my-black text-white min-h-screen">
@@ -77,8 +106,8 @@ export default function SellerPage({ sale }) {
             <Exchange
               key={trade.id}
               trade={trade}
-              onApprove={() => console.log("승인", trade.id)}
-              onReject={() => console.log("거절", trade.id)}
+              onApprove={() => handleApprove(trade.id)}
+              onReject={() => handleReject(trade.id)}
             />
           );
         })}
