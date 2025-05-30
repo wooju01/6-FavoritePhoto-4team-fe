@@ -1,4 +1,4 @@
- import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import BaseCardList from "../ui/BaseCardList";
 import Search from "../ui/Search";
 // import Sort from "../ui/Sort";
