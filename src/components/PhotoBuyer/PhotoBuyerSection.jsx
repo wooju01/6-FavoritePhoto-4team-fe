@@ -18,13 +18,11 @@ export default function PhotoBuyerSection({ photo }) {
   const [remaining, setRemaining] = useState(photo.saleQuantity);
 
   const handleBuy = (data) => {
-  // 여기서 result는 storeService가 반환한 응답 데이터
-  // data.purchasedQuantity가 있다고 가정할 때
-  const purchased = data?.purchasedQuantity || 1; // fallback
-  alert(`구매 성공! ${purchased}장 구매되었습니다.`);
-  setRemaining((prev) => prev - purchased);
-};
-
+    // 여기서 result는 storeService가 반환한 응답 데이터
+    // data.purchasedQuantity가 있다고 가정할 때
+    const purchased = data?.purchasedQuantity || 1; // fallback
+    setRemaining((prev) => prev - purchased);
+  };
 
   const imageUrl = photo?.photoCard?.imageUrl || example;
   const name = photo?.photoCard?.name || "제목 없음";

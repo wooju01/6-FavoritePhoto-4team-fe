@@ -6,6 +6,10 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import Button from "../ui/Button.jsx";
 import GradeTag from "../tag/GradeTag";
 import { storeService } from "@/lib/api/api-store";
+import { useAlertModal } from "@/providers/AlertModalProvider";
+import { useStateModal } from "@/providers/StateModalProvider";
+import NotiModal from "@/components/modal/NotiModal";
+import StateModal from "@/components/modal/StateModal";
 
 const FIXED_LABELS = ["여행", "풍경", "인물", "사물"];
 
@@ -28,14 +32,28 @@ export default function CardBuyer({
 
   const totalPrice = pricePerCard * quantity;
 
+  const { openModal: openNotiModal } = useAlertModal();
+  const { openModal: openStateModal } = useStateModal();
+
   const { mutate, isPending } = useMutation({
     mutationFn: () => storeService.purchaseCard(cardId, quantity),
     onSuccess: (data) => {
       setLocalRemaining((prev) => prev - quantity);
       if (onSuccess) onSuccess(data);
+      openStateModal(200, "구매", {
+        grade: tier,
+        name: description,
+        count: quantity,
+      });
     },
     onError: (err) => {
-      alert(err.message || "구매 실패");
+      const status = err.response?.status || 400;
+      openStateModal(status, "구매", {
+        grade: tier,
+        name: description,
+        count: quantity,
+      });
+      console.error("구매 실패:", err.message || err);
     },
   });
 
@@ -52,6 +70,14 @@ export default function CardBuyer({
   };
 
   const gradeSize = isLargeScreen ? "xl" : "lg";
+
+  const handlePurchaseButtonClick = () => {
+    openNotiModal(
+      "구매",
+      { grade: tier, name: description, count: quantity },
+      () => mutate()
+    );
+  };
 
   return (
     <div className="p-4 flex flex-col gap-4 text-white w-full h-[529px] lg:h-[612px]">
@@ -119,18 +145,21 @@ export default function CardBuyer({
           <span className="ml-1 text-gray-300">({quantity}장)</span>
         </div>
       </div>
-
-      <Button
-        onClick={() => mutate()}
-        disabled={localRemaining === 0 || isPending}
-        className="h-[75px] lg:h-[80px]"
-      >
-        {localRemaining === 0
-          ? "품절되었습니다"
-          : isPending
-          ? "구매 중..."
-          : "포토카드 구매하기"}
-      </Button>
+      <>
+        <Button
+          onClick={handlePurchaseButtonClick}
+          disabled={localRemaining === 0 || isPending}
+          className="h-[75px] lg:h-[80px]"
+        >
+          {localRemaining === 0
+            ? "품절되었습니다"
+            : isPending
+            ? "구매 중..."
+            : "포토카드 구매하기"}
+        </Button>
+        <NotiModal />
+        <StateModal />
+      </>
     </div>
   );
 }
