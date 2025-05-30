@@ -10,11 +10,13 @@ export async function getMonthlyCardCount() {
   return await cookieFetch("/api/users/monthly-post-count");
 }
 
-// POST
-export async function postCard(formData) {
+
+// 예시: /lib/api/api-users.js
+export async function postCard(data) {
+  console.log("🔥🔥OK")
   return await cookieFetch("/api/users/post", {
     method: "POST",
-    body: formData,
+    body: data,
   });
 }
 

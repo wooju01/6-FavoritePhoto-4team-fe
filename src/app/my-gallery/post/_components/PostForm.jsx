@@ -10,6 +10,21 @@ import Button from "@/components/ui/Button";
 import { useMutation } from "@tanstack/react-query";
 import { postCard } from "@/lib/api/api-users";
 import { useStateModal } from "@/providers/StateModalProvider";
+import { upLoadImage } from "@/lib/api/api-uploader";
+
+const gradeMap = {
+  COMMON: 1,
+  RARE: 2,
+  SUPER_RARE: 3,
+  LEGENDARY: 4,
+};
+
+const genreMap = {
+  풍경: 1,
+  여행: 2,
+  인물: 3,
+  사물: 4,
+};
 
 export default function PostForm({ grades, genres, disabled }) {
   const [name, setName] = useState("");
@@ -95,7 +110,7 @@ export default function PostForm({ grades, genres, disabled }) {
   }, [name, grade, genre, price, volumn, image, description]);
 
   // 제출 함수
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsSubmitted(true); // 제출했어!
@@ -104,17 +119,27 @@ export default function PostForm({ grades, genres, disabled }) {
 
     if (!valid) return;
 
-    const formData = new FormData();
+    try {
+      const imageResponse = await upLoadImage(image);
+      const imageUrl = imageResponse.secure_url; // 또는 imageResponse.url
+      console.log("Cloudinary URL:", imageUrl);
 
-    formData.append("name", name);
-    formData.append("grade", grade);
-    formData.append("genre", genre);
-    formData.append("price", price);
-    formData.append("volumn", volumn);
-    formData.append("image", image);
-    formData.append("description", description);
+      const data = {
+        name,
+        grade,
+        genre,
+        price,
+        volumn,
+        image: imageUrl,
+        description,
+      };
 
-    mutate(formData);
+      console.log("🔥🔥🔥", data);
+
+      mutate(data); // JSON 객체로 전달
+    } catch (error) {
+      console.error("Cloudinary 업로드 실패:", error);
+    }
   };
 
   return (

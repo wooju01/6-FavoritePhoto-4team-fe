@@ -26,7 +26,7 @@ export default function BaseCard({
       <Link href={`/home/${id}`}>
         <div className="flex flex-col gap-2.5 md:gap-5 p-[15px] md:p-5 lg:p-10 border-1 border-white/10 rounded-xs bg-gray-500">
           <img
-            src={`https://six-favoritephoto-4team-be.onrender.com${photoCard.imageUrl}`}
+            src={photoCard.imageUrl}
             alt="photo-img"
             className="aspect-square"
           />
