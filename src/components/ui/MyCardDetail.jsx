@@ -30,7 +30,7 @@ export default function MyCardDetail({
       {/* 상단 정보 */}
       <div className="flex items-center gap-2 text-sm lg:text-[16px] mb-3">
         <span className="[&_*]:text-700-18">
-          <GradeTag grade={card?.photoCard?.gradeId} />
+          <GradeTag grade={card?.photoCard?.grade?.id} />
         </span>
         <span className="text-gray-400">|</span>
         <span className="text-gray-300 text-700-18">
