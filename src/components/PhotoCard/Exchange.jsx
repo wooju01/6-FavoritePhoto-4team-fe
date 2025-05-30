@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import GradeTag from "../tag/GradeTag";
-import example from "@/assets/example.svg";
 import Button from "../ui/Button";
 
 const genreMap = {
@@ -13,31 +12,30 @@ const genreMap = {
   4: "사물",
 };
 
-export default function Exchange({
-  name,
-  image,
-  gradeId,
-  genreId,
-  nickname,
-  price,
-  description,
-  onApprove,
-  onReject,
-}) {
+export default function Exchange({ trade, onApprove, onReject }) {
+  const userCard = trade.tradeRequestUserCards[0]?.userCard;
+  const photoCard = userCard?.photoCard;
+
   return (
     <div className="bg-my-black w-full px-2 py-2 border border-gray-800 text-white">
       {/* 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-3">
         <Image
-          src={image || example}
-          alt={name}
+          src={
+            photoCard?.imageUrl?.startsWith("http")
+              ? photoCard.imageUrl
+              : `https://six-favoritephoto-4team-be.onrender.com${
+                  photoCard?.imageUrl || ""
+                }`
+          }
+          alt={photoCard?.name || "카드 이미지"}
           fill
           className="object-cover"
         />
       </div>
 
       {/* 제목 */}
-      <h3 className="text-700-14 truncate mb-1">{name}</h3>
+      <h3 className="text-700-14 truncate mb-1">{photoCard?.name}</h3>
 
       {/* 등급 · 장르 · 작성자 */}
       <div className="flex justify-between items-center text-400-10">
@@ -46,17 +44,21 @@ export default function Exchange({
             <GradeTag grade={gradeId} />
           </p>
           <span className="text-gray-400">|</span>
-          <span className="text-gray-300">{genreMap[genreId]}</span>
+          <span className="text-gray-300">{genreMap[photoCard?.genreId]}</span>
         </div>
       </div>
 
       {/* 구매 가격 */}
       <div className="mt-1 flex justify-between items-center text-400-10">
         <span>
-          <span className="text-white font-semibold">{price} P</span>
+          <span className="text-white font-semibold">
+            {userCard?.price ?? 0} P
+          </span>
           <span className="text-gray-300"> 에 구매</span>
         </span>
-        <span className="underline text-brand-yellow">{nickname}</span>
+        <span className="underline text-brand-yellow">
+          {trade?.applicant?.nickname}
+        </span>
       </div>
 
       {/* 구분선 */}
@@ -64,7 +66,7 @@ export default function Exchange({
 
       {/* 설명 */}
       <p className="text-300-10 text-gray-200 line-clamp-2 mb-3">
-        {description}
+        {trade?.description}
       </p>
 
       {/* 버튼들 */}
