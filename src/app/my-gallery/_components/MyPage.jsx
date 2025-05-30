@@ -2,7 +2,7 @@
 
 import React from "react";
 import MyCard from "@/components/PhotoCard/MyCard";
-import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
+// import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import Pagination from "@/components/ui/Pagination";
 import Search from "@/components/ui/Search";
 import { useQuery } from "@tanstack/react-query";

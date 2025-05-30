@@ -10,24 +10,26 @@ export const storeService = {
     }
 
     const url = `/api/store?${query.toString()}`;
-    console.log(url)
+    console.log(url);
     return defaultFetch(url);
   },
-
 
   getStoreCardDetail: (id) => cookieFetch(`/api/store/cards/${id}`),
 
   getTradeRequests: (id) => cookieFetch(`/api/store/cards/${id}/exchange`),
 
   cancelTradeRequest: (listedCardId, tradeRequestId) =>
-    cookieFetch(`/api/store/cards/${listedCardId}/exchange/${tradeRequestId}/cancel`, {
-      method: "PATCH",
-    }),
+    cookieFetch(
+      `/api/store/cards/${listedCardId}/exchange/${tradeRequestId}/cancel`,
+      {
+        method: "PATCH",
+      }
+    ),
   purchaseCard: (id, quantity) =>
     cookieFetch(`/api/store/cards/${id}/purchase`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ quantity }),
     }),
+  getUserGalleryCardDetail: (id) => cookieFetch(`/api/users/gallery/${id}`),
 };
-

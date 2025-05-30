@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 import GradeTag from "../tag/GradeTag";
-import MyTradeCard from "../CardSeller/MyTradeCard";
+import MyTradeCard from "../CardTrade/MyTradeCard";
+
 
 function ExchangeCard({ desiredDescription, cardGradeId, cardGenreId }) {
   const [isMd, setIsMd] = useState(false);

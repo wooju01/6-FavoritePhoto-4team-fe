@@ -137,7 +137,7 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
 
             {/* Title */}
             <div className="text-start text-white mb-4 title-24 md:title-40-1 lg:title-46-1">
-              나의 포토카드 판매하기
+              포토카드 교환하기
             </div>
 
             {/* md 이상일 때만 보이는 구분선 */}
