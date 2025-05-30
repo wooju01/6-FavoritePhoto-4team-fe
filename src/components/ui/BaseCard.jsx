@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import favicon from "@/assets/favicon.svg";
 import GradeTag from "../tag/GradeTag";
-import example from "@/assets/example.svg";
+import Soldout from "@/assets/soldout.svg";
 import Link from "next/link";
 import NotiClickHandler from "@/components/HompageComponents/NotiClickHandler";
 
@@ -25,11 +25,26 @@ export default function BaseCard({
     <NotiClickHandler>
       <Link href={`/home/${id}`}>
         <div className="flex flex-col gap-2.5 md:gap-5 p-[15px] md:p-5 lg:p-10 border-1 border-white/10 rounded-xs bg-gray-500">
-          <img
-            src={photoCard.imageUrl}
-            alt="photo-img"
-            className="aspect-square"
-          />
+          <div className="relative">
+            <img
+              src={photoCard.imageUrl}
+              alt="photo-img"
+              className="aspect-square w-full h-full"
+            />
+            {
+              saleQuantity === 0 ? (
+                <div className="flex items-center justify-center absolute left-0 top-0 bg-black/30 w-full h-full">
+                  <Image
+                    src={Soldout}
+                    alt="soldout"
+                    className="w-28 h-28 md:w-52 md:h-52 lg:w-56 lg:h-56 aspect-square"
+                  />
+                </div>
+              ) : (
+                <></>
+              )
+            }
+          </div>
           <div className="flex flex-col gap-2.5 md:gap-5">
             <div>
               <h2 className="text-700-14 md:text-700-22 mb-1.5 md:mb-2.5">
