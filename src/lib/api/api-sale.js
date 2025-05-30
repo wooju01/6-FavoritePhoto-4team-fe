@@ -1,5 +1,6 @@
 import { cookieFetch } from "./fetch-client";
 
+// 판매 등록
 export async function postCardSale(payload) {
   return await cookieFetch("/api/store/cards", {
     method: "POST",
@@ -19,5 +20,12 @@ export async function patchCardSale(saleId, payload) {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
+  });
+}
+
+// 판매 내리기
+export async function cancelSaleById(saleId) {
+  return await cookieFetch(`/api/store/cards/${saleId}`, {
+    method: "DELETE",
   });
 }

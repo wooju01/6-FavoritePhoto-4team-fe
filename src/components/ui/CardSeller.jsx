@@ -6,6 +6,8 @@ import exchangeIcon from "@/assets/exchange.svg";
 import Button from "./Button";
 import GradeTag from "../tag/GradeTag";
 import CardSellDetail from "../CardSeller/CardSellDetail";
+import { useRouter } from "next/navigation";
+import { cancelSaleById } from "@/lib/api/api-sale";
 
 const genreMap = {
   1: "여행",
@@ -14,8 +16,23 @@ const genreMap = {
   4: "사물",
 };
 
-export default function CardSeller({ sale, onSellDown }) {
+export default function CardSeller({ sale }) {
   const [editModeOpen, setEditModeOpen] = useState(false);
+
+  const router = useRouter();
+
+  const handleCancelSale = async () => {
+    const confirmCancel = window.confirm("정말로 판매를 중단하시겠습니까?");
+    if (!confirmCancel) return;
+
+    try {
+      await cancelSaleById(sale.id);
+      alert("판매가 성공적으로 중단되었습니다.");
+      router.push("/home");
+    } catch (err) {
+      alert(err.message || "판매 중단에 실패했습니다.");
+    }
+  };
 
   const {
     photoCard,
@@ -86,7 +103,7 @@ export default function CardSeller({ sale, onSellDown }) {
           <Button type="purchase" onClick={() => setEditModeOpen(true)}>
             수정하기
           </Button>
-          <Button type="sellDown" onClick={onSellDown} />
+          <Button type="sellDown" onClick={handleCancelSale} />
         </div>
       </div>
       {editModeOpen && (
