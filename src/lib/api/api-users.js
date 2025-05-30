@@ -12,7 +12,6 @@ export async function getMonthlyCardCount() {
 
 // 예시: /lib/api/api-users.js
 export async function postCard(data) {
-  console.log("🔥🔥OK");
   return await cookieFetch("/api/users/post", {
     method: "POST",
     body: data,
