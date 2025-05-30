@@ -143,7 +143,6 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
             {/* md 이상일 때만 보이는 구분선 */}
             <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
 
-            
             {/* 카드 리스트 */}
             <div
               className={`grid grid-cols-2 gap-4 ${
@@ -151,7 +150,7 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
               } pb-10 flex-1`}
             >
               {isLoading ? (
-                <div className="text-white">로딩 중...</div>
+                <div className="text-white">잠시만 기다려주세요</div>
               ) : (
                 data?.items?.map((card) => (
                   <div
