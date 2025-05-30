@@ -19,7 +19,7 @@ export default function ForSale({
   name,
   image,
   gradeId,
-  genreId,
+  genre,
   nickname,
   remainingQuantity,
   initialPrice,
@@ -40,7 +40,7 @@ export default function ForSale({
       <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
         <Image
           src={image || example}
-          alt={name}
+          alt="나의 판매 카드 이미지"
           fill
           className={`object-cover transition-all duration-300 ${
             isSoldOut ? "brightness-[0.4]" : ""
@@ -87,7 +87,7 @@ export default function ForSale({
             <GradeTag grade={gradeId} />
           </p>
           <span className="text-gray-400">|</span>
-          <span className="text-gray-300">{genreMap[genreId]}</span>
+          <span className="text-gray-300">{genre || "-"}</span>
         </div>
         <div className="underline text-right">{nickname}</div>
       </div>

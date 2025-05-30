@@ -7,13 +7,36 @@ import { Title } from "@/components/ui/Title";
 import ForSale from "@/components/PhotoCard/ForSale";
 import OwnedCards from "../my-gallery/_components/OwnedCards";
 import Search from "@/components/ui/Search";
-import example from "@/assets/example.svg";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useGalleryFilter } from "@/hooks/useFilter";
 
 export default function ForSalePage() {
-  // const { data, isPending, isError } = useQuery({
-  //   queryKey: ["mysales"],
-  //   queryFn: getMyCardsOnSale,
-  // });
+  // 쿼리 문자열 처리
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const { isOpen, toggle, close, filterOptions } = useGalleryFilter();
+
+  const grade = Number(searchParams.get("grade")) || 0;
+  const genre = Number(searchParams.get("genre")) || 0;
+  const keyword = searchParams.get("keyword") || "";
+  const page = Number(searchParams.get("page") || 1);
+  const size = searchParams.get("size") || "md";
+
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["mysales_v2", grade, genre, keyword, page, size],
+    queryFn: () => getMyCardsOnSale({ grade, genre, keyword, page, size }),
+    enabled: true, // 항상 실행
+  });
+
+  // 필터 변경
+  const onFilterChange = (type, value) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    // 전체 선택: 필터 제거
+    value === 0 ? params.delete(type) : params.set(type, value.toString());
+  };
 
   // 카드 개수 불러오기 (전체 + 등급별)
   const { data: count } = useQuery({
@@ -21,17 +44,15 @@ export default function ForSalePage() {
     queryFn: getCardsCount,
   });
 
-  const cards = Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    name: "How Far I’ll Go",
-    image: example,
-    gradeId: 1,
-    genreId: 2,
-    nickname: "랍스타",
-    initialPrice: 4,
-    remainingQuantity: 1,
-    status: i === 0 ? "SOLDOUT" : i % 2 === 0 ? "AVAILABLE" : "PENDING", // 그냥 모두 한번에 보이게 하려고 넣음
-  }));
+  // 페이지 바꾸는 함수
+  const onPageChange = (newPage) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(newPage));
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  if (isPending) return <p>로딩 중...</p>;
+  if (isError) return <p>오류 발생</p>;
 
   return (
     <>
@@ -43,19 +64,37 @@ export default function ForSalePage() {
         countsByGrade={count?.inactive.byGrade}
       />
       <section className="mb-15">
-        <div className="flex items-center mb-5">
-          {/* <Search /> */}
-          {/*<FilterDropdown
-            visibleFilters={["grade", "genre"]}
-            gradeCounts={gradeForFilter}
-            genreCounts={genreForFilter}
-          /> */}
+        <div className="flex items-center mb-5 gap-7 lg:gap-10">
+          <Search />
+          {/* {Object.values(filterOptions).map((option) => (
+            <FilterDropdown
+              key={option.key}
+              option={option}
+              isOpen={isOpen === option.key}
+              onToggle={() => toggle(option.key)}
+              onClose={close}
+              onSelect={(value) => onFilterChange(option.key, value)}
+            />
+          ))} */}
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-10">
-          {cards.map((card) => (
-            <ForSale key={card.id} {...card} />
-          ))}
-        </div>
+        {/* 카드 렌더링 ↓ */}
+        <section className="grid grid-cols-2 lg:grid-cols-3">
+          {data?.items
+            .filter((card) => card.userCards?.length > 0)
+            .map((card) => (
+              <ForSale
+                key={card.id}
+                name={card.name}
+                image={card.imageUrl}
+                nickname={card.userCards?.[0]?.owner?.nickname || "나"}
+                genre={card.genre?.name}
+                gradeId={card.grade?.id}
+                initialPrice={card.userCards?.[0]?.price}
+                remainingQuantity={card.userCards?.length ?? 0}
+                status={card.userCards?.[0]?.status}
+              />
+            ))}
+        </section>
       </section>
     </>
   );

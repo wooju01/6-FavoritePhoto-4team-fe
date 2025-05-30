@@ -89,7 +89,7 @@ export default function MyPage() {
               key={card.id}
               name={card.name}
               image={card.imageUrl}
-              nickname={card.userCards?.owner?.nickname}
+              nickname={card.creator?.nickname || "나"}
               genre={card.genre?.name}
               gradeId={card.grade?.id}
               initialPrice={card.userCards?.[0]?.price}

@@ -55,8 +55,25 @@ export async function getMyCards({
 }
 
 // GET: 나의 판매 포토카드
-export async function getMyCardsOnSale() {
-  return await cookieFetch(`api/users/cards-on-sale`);
+export async function getMyCardsOnSale({
+  grade,
+  genre,
+  keyword,
+  page = 1,
+  size = "md",
+}) {
+  const queryParams = new URLSearchParams();
+
+  if (grade && grade !== 0) queryParams.append("grade", grade.toString());
+  if (genre && genre !== 0) queryParams.append("genre", genre.toString());
+  if (keyword) queryParams.append("keyword", keyword);
+  if (page) queryParams.append("page", page.toString() || "1");
+  if (size) queryParams.append("size", size || "md");
+
+  const queryString = queryParams.toString();
+  return await cookieFetch(
+    `api/users/cards-on-sale${queryString && `?${queryString}`}`
+  );
 }
 
 // GET: 카드 개수
