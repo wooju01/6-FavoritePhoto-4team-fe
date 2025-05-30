@@ -26,7 +26,7 @@ export default function StateModal() {
       textOrCount = cardInfo.count + "장";
       if (isSuccess) {
         buttonText = "나의 판매 포토카드에서 확인하기";
-        path = "/"; // 팀원들이 페이지 만들고 나서 경로 수정해야 함
+        path = "/for-my-sales";
       } else {
         buttonText = "마켓플레이스로 돌아가기";
         path = "/home";

@@ -9,6 +9,8 @@ import MyCardDetail from "../ui/MyCardDetail";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { patchCardSale, postCardSale } from "@/lib/api/api-sale";
 import { useQueryClient } from "@tanstack/react-query";
+import { useStateModal } from "@/providers/StateModalProvider";
+import StateModal from "../modal/StateModal";
 
 const grades = [
   { id: 1, name: "COMMON" },
@@ -31,6 +33,7 @@ export default function CardSellDetail({
   isEditMode = false,
 }) {
   const queryClient = useQueryClient();
+  const { openModal: openStateModal } = useStateModal();
 
   const [selectedGrade, setSelectedGrade] = useState(
     isEditMode ? card?.cardGradeId : card?.grade?.id
@@ -80,6 +83,15 @@ export default function CardSellDetail({
       return;
     }
 
+    const actualCardGradeName =
+      grades.find((g) => g.id === card?.photoCard?.gradeId)?.name ||
+      "등급 정보 없음";
+    const stateModalCardInfo = {
+      grade: actualCardGradeName,
+      name: card?.photoCard?.name || "카드 이름",
+      count: Number(count),
+    };
+
     try {
       if (isEditMode) {
         // 판매 수정 API 호출
@@ -91,8 +103,8 @@ export default function CardSellDetail({
           desiredDescription: description,
         });
 
+        openStateModal(200, "판매", stateModalCardInfo);
         queryClient.invalidateQueries(["storeMainList"]);
-        alert("판매 정보가 수정되었습니다.");
       } else {
         // 판매 등록 API 호출
         await postCardSale({
@@ -105,19 +117,14 @@ export default function CardSellDetail({
           desiredDescription: description,
         });
 
+        openStateModal(200, "판매", stateModalCardInfo);
         queryClient.invalidateQueries(["myGalleryCards_v3"]);
         queryClient.invalidateQueries(["storeMainList"]);
-        alert("판매가 등록되었습니다.");
       }
-
-      onClose();
     } catch (error) {
       console.error("판매 처리 실패", error);
-      alert(
-        isEditMode
-          ? "판매 정보 수정에 실패했습니다."
-          : "판매 등록에 실패했습니다."
-      );
+      const status = error.response?.status || 500; // 서버 에러 또는 일반 에러
+      openStateModal(status, "판매", stateModalCardInfo);
     }
   };
 
@@ -258,6 +265,7 @@ export default function CardSellDetail({
           {isEditMode ? "수정하기" : "판매하기"}
         </Button>
       </div>
+      <StateModal />
     </div>
   );
 }
