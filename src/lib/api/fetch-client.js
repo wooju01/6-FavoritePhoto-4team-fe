@@ -6,7 +6,8 @@
 //  const { user, isLoading } = useAuth(); 하고 if (user) 면 로그인 상태 if (!user)면 로그아웃 상태
 import { parseBackendError } from "../utils/error-parser";
 
-const API_BASE_URL = "http://localhost:3002"; // "https://six-favoritephoto-4team-be.onrender.com"
+const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
+// "http://localhost:3002"
 export const authUtils = {
   setAccessToken: (accessToken) => {
     if (typeof window !== "undefined") {
