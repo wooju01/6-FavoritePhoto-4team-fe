@@ -38,11 +38,10 @@ export default function ForSalePage() {
       <header className="hidden md:block my-10">
         <Title title="나의 판매 포토카드" font="titleLg_Bk" />
       </header>
-      {/* <OwnedCards
-        name={data?.owner?.nickname}
+      <OwnedCards
         totalCards={count?.inactive.total}
         countsByGrade={count?.inactive.byGrade}
-      /> */}
+      />
       <section className="mb-15">
         <div className="flex items-center mb-5">
           {/* <Search /> */}

@@ -61,7 +61,6 @@ export default function MyPage() {
     <>
       <GalleryTitle />
       <OwnedCards
-        name={data?.owner?.nickname}
         totalCards={count?.active.total}
         countsByGrade={count?.active.byGrade}
       />
@@ -90,7 +89,7 @@ export default function MyPage() {
               key={card.id}
               name={card.name}
               image={card.imageUrl}
-              nickname={card.creator?.nickname || "나"}
+              nickname={card.userCards?.owner?.nickname}
               genre={card.genre?.name}
               gradeId={card.grade?.id}
               initialPrice={card.userCards?.[0]?.price}
