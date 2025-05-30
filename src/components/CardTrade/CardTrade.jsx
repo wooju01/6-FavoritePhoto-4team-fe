@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { storeService } from "@/lib/api/api-store";
 import MyCard from "../PhotoCard/MyCard";
 
-export default function CardTrade({ selectedCard, onClose, saleId, refetchTradeRequests }) {
+export default function CardTrade({ selectedCard, onClose, saleId,}) {
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
 
@@ -52,7 +52,7 @@ export default function CardTrade({ selectedCard, onClose, saleId, refetchTradeR
           gradeId={photoCard.gradeId}
           genre={photoCard.genre?.name}
           nickname={photoCard.creator?.nickname}
-          totalQuantity={photoCard.totalQuantity}
+          totalQuantity={photoCard.userCards?.length}
           initialPrice={photoCard.initialPrice}
         />
       </div>

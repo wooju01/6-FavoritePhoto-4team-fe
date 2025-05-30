@@ -5,7 +5,6 @@ import Search from "../ui/Search";
 import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
 import CardTrade from "./CardTrade.jsx";
-
 import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
 import { getMyCards } from "@/lib/api/api-users";
@@ -15,7 +14,7 @@ export default function MyTradeCard({
   onClose,
   currentUserId,
   saleId,
-  refetchTradeRequests
+  refetchTradeRequests,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -45,6 +44,8 @@ export default function MyTradeCard({
       }
     }
   }, [isOpen]);
+
+
 
   // 기존 close 로직 유지
   const handleClose = () => {
@@ -177,7 +178,7 @@ export default function MyTradeCard({
                           ? "나"
                           : card.creator?.nickname || "Unknown"
                       }
-                      totalQuantity={card.totalQuantity}
+                      totalQuantity={card.userCards?.length}
                       initialPrice={card.userCards[0]?.price}
                     />
                   </div>

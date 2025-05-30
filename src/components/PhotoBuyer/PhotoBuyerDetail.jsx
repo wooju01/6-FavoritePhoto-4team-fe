@@ -8,57 +8,49 @@ import ExchangeCancel from "../PhotoCard/ExchangeCancel";
 import { Title } from "../ui/Title";
 import { storeService } from "@/lib/api/api-store";
 
-export default function PhotoBuyerDetail({ id }) {
-  const [photo, setPhoto] = useState(null);
+export default function PhotoBuyerDetail({ sale }) {
+  const id = sale.id;
   const [tradeRequests, setTradeRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // 데이터 불러오기
-  const loadData = async () => {
+  // 교환 요청 목록만 불러옴
+  const loadTradeRequests = async () => {
     try {
-      const photoData = await storeService.getStoreCardDetail(id);
-      if (!photoData) {
-        router.push("/login");
-        return;
-      }
-      setPhoto(photoData);
-
       const tradeReqs = await storeService.getTradeRequests(id);
       setTradeRequests(tradeReqs);
     } catch (err) {
-      console.error("데이터 로딩 실패:", err);
+      console.error("교환 요청 로딩 실패:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // 취소 핸들러
+  // 교환 제시 취소
   const handleCancel = async (tradeRequestId) => {
     try {
       await storeService.cancelTradeRequest(id, tradeRequestId);
-      await loadData();
+      await loadTradeRequests();
     } catch (err) {
       console.error("교환 요청 취소 실패:", err);
     }
   };
 
   useEffect(() => {
-    if (id) loadData();
+    if (id) loadTradeRequests();
   }, [id]);
 
   if (loading) return <p>로딩 중...</p>;
-  if (!photo) return null;
 
   return (
     <section>
-      <PhotoBuyerSection photo={photo} />
+      <PhotoBuyerSection photo={sale} />
       <ExchangeCard
-        saleId={id}
-        desiredDescription={photo.desiredDescription}
-        cardGradeId={photo.cardGradeId}
-        cardGenreId={photo.cardGenreId}
-        refetchTradeRequests={loadData}
+        saleId={sale.id}
+        desiredDescription={sale.desiredDescription}
+        cardGradeId={sale.cardGradeId}
+        cardGenreId={sale.cardGenreId}
+        refetchTradeRequests={loadTradeRequests}
       />
       <Title title="내가 제시한 교환 목록" font="titleLg_Noto" />
       {tradeRequests.length === 0 ? (
