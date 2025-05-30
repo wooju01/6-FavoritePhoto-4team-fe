@@ -3,7 +3,7 @@ import React from "react";
 import Image from "next/image";
 import favicon from "@/assets/favicon.svg";
 import GradeTag from "../tag/GradeTag";
-import Soldout from "@/assets/soldout.png";
+import Soldout from "@/assets/soldout.svg";
 import Link from "next/link";
 import NotiClickHandler from "@/components/HompageComponents/NotiClickHandler";
 
