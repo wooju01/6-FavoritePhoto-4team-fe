@@ -37,7 +37,7 @@ export default function MyCardDetail({
           {card?.photoCard?.genre?.name || "-"}
         </span>
         <div className="ml-auto text-700-18 underline">
-          {card?.owner?.nickname || "나"}
+          {card?.photoCard?.creator?.nickname || "나"}
         </div>
       </div>
 

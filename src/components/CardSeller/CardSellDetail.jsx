@@ -7,7 +7,7 @@ import Button from "../ui/Button";
 import example from "@/assets/example.svg";
 import MyCardDetail from "../ui/MyCardDetail";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { postCardSale } from "@/lib/api/api-sale";
+import { patchCardSale, postCardSale } from "@/lib/api/api-sale";
 import { useQueryClient } from "@tanstack/react-query";
 
 const grades = [
@@ -24,18 +24,31 @@ const genres = [
   { id: 4, name: "사물" },
 ];
 
-export default function CardSellDetail({ card, availableCards, onClose }) {
+export default function CardSellDetail({
+  card,
+  availableCards,
+  onClose,
+  isEditMode = false,
+}) {
   const queryClient = useQueryClient();
 
-  const [selectedGrade, setSelectedGrade] = useState(card?.photoCard?.gradeId);
+  const [selectedGrade, setSelectedGrade] = useState(
+    isEditMode ? card?.cardGradeId : card?.photoCard?.gradeId
+  );
   const [gradeOpen, setGradeOpen] = useState(false);
 
-  const [selectedGenre, setSelectedGenre] = useState(card?.photoCard?.genreId);
+  const [selectedGenre, setSelectedGenre] = useState(
+    isEditMode ? card?.cardGenreId : card?.photoCard?.genreId
+  );
   const [genreOpen, setGenreOpen] = useState(false);
 
-  const [description, setDescription] = useState("");
-  const [count, setCount] = useState(1);
-  const [price, setPrice] = useState(card?.price || "");
+  const [description, setDescription] = useState(
+    isEditMode ? card?.desiredDescription : ""
+  );
+  const [count, setCount] = useState(isEditMode ? card?.saleQuantity : 1);
+  const [price, setPrice] = useState(
+    isEditMode ? card?.price : card?.price || ""
+  );
 
   const gradeRef = useRef(null);
   const genreRef = useRef(null);
@@ -53,40 +66,61 @@ export default function CardSellDetail({ card, availableCards, onClose }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSale = async () => {
-    if (!availableCards || availableCards.length === 0) {
+  const handleAction = async () => {
+    if (!isEditMode && (!availableCards || availableCards.length === 0)) {
       alert("보유한 카드 정보를 찾을 수 없습니다.");
       return;
     }
 
-    const selectedUserCardIds = availableCards
-      .slice(0, count)
-      .map((uc) => uc.id);
+    if (!isEditMode) {
+      const selectedUserCardIds = availableCards
+        .slice(0, count)
+        .map((uc) => uc.id);
 
-    if (selectedUserCardIds.length < count) {
-      alert("판매할 수량만큼 보유 중인 카드가 부족합니다.");
-      return;
+      if (selectedUserCardIds.length < count) {
+        alert("판매할 수량만큼 보유 중인 카드가 부족합니다.");
+        return;
+      }
     }
 
     try {
-      await postCardSale({
-        photoCardId: card.photoCard.id,
-        userCardIds: selectedUserCardIds,
-        salePrice: Number(price),
-        saleQuantity: Number(count),
-        desiredGradeId: selectedGrade,
-        desiredGenreId: selectedGenre,
-        desiredDescription: description,
-      });
+      if (isEditMode) {
+        // 판매 수정 API 호출
+        await patchCardSale(card.id, {
+          salePrice: Number(price),
+          saleQuantity: Number(count),
+          desiredGradeId: selectedGrade,
+          desiredGenreId: selectedGenre,
+          desiredDescription: description,
+        });
 
-      queryClient.invalidateQueries(["myGalleryCards_v3"]);
-      queryClient.invalidateQueries(["storeMainList"]);
+        queryClient.invalidateQueries(["storeMainList"]);
+        alert("판매 정보가 수정되었습니다.");
+      } else {
+        // 판매 등록 API 호출
+        await postCardSale({
+          photoCardId: card.photoCard.id,
+          userCardIds: selectedUserCardIds,
+          salePrice: Number(price),
+          saleQuantity: Number(count),
+          desiredGradeId: selectedGrade,
+          desiredGenreId: selectedGenre,
+          desiredDescription: description,
+        });
 
-      alert("판매가 등록되었습니다.");
+        queryClient.invalidateQueries(["myGalleryCards_v3"]);
+        queryClient.invalidateQueries(["storeMainList"]);
+        alert("판매가 등록되었습니다.");
+      }
+
       onClose();
     } catch (error) {
-      console.error("판매 등록 실패", error);
-      alert("판매 등록에 실패했습니다.");
+      console.error("판매 처리 실패", error);
+      alert(
+        isEditMode
+          ? "판매 정보 수정에 실패했습니다."
+          : "판매 등록에 실패했습니다."
+      );
     }
   };
 
@@ -102,7 +136,7 @@ export default function CardSellDetail({ card, availableCards, onClose }) {
           <Image src={back} alt="뒤로가기" width={24} height={24} />
         </button>
         <div className="flex-1 text-center title-20">
-          나의 포토카드 판매하기
+          {isEditMode ? "수정하기" : "나의 포토카드 판매하기"}
         </div>
       </div>
 
@@ -222,9 +256,9 @@ export default function CardSellDetail({ card, availableCards, onClose }) {
         <Button
           type="exchangeGreen"
           className="w-full h-[55px]"
-          onClick={handleSale}
+          onClick={handleAction}
         >
-          판매하기
+          {isEditMode ? "수정하기" : "판매하기"}
         </Button>
       </div>
     </div>

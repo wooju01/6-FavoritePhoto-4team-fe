@@ -6,6 +6,7 @@ const nextConfig = {
       "localhost",
       "picsum.photos",
       "six-favoritephoto-4team-be.onrender.com",
+      "six-favoritephoto-4team-be.onrender.comundefined",
     ],
   },
 };
