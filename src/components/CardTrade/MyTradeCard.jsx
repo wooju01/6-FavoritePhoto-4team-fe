@@ -4,13 +4,19 @@ import React, { useEffect, useRef, useState } from "react";
 import Search from "../ui/Search";
 import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
-import CardTradePage from "./CardTrade.jsx";
+import CardTrade from "./CardTrade.jsx";
 
 import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
 import { getMyCards } from "@/lib/api/api-users";
 
-export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
+export default function MyTradeCard({
+  isOpen,
+  onClose,
+  currentUserId,
+  saleId,
+  refetchTradeRequests
+}) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -121,7 +127,12 @@ export default function MyTradeCard({ isOpen, onClose, currentUserId }) {
         )}
 
         {showDetail && selectedCard ? (
-          <CardTradePage cardId={selectedCard.photoCard.id} />
+          <CardTrade
+            selectedCard={selectedCard}
+            onClose={handleClose}
+            saleId={saleId}
+            refetchTradeRequests={refetchTradeRequests}
+          />
         ) : (
           <>
             <div className="text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">

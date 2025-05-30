@@ -46,7 +46,7 @@ export default function PhotoBuyerSection({ photo }) {
       <div className="md:flex">
         <div className="w-full h-[260px] lg:h-[720px] overflow-hidden rounded-md mb-4 relative">
           <img
-            src={imageUrl}
+            src={`https://six-favoritephoto-4team-be.onrender.com${imageUrl}`}
             alt={name}
             className="object-cover w-full h-full"
             style={{ objectFit: "cover" }}
