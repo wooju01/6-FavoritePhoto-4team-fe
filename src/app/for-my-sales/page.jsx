@@ -9,6 +9,8 @@ import OwnedCards from "../my-gallery/_components/OwnedCards";
 import Search from "@/components/ui/Search";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useGalleryFilter } from "@/hooks/useFilter";
+import Pagination from "@/components/ui/Pagination";
+import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 
 export default function ForSalePage() {
   // 쿼리 문자열 처리
@@ -24,12 +26,12 @@ export default function ForSalePage() {
   const page = Number(searchParams.get("page") || 1);
   const size = searchParams.get("size") || "md";
 
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["mysales_v2", grade, genre, keyword, page, size],
     queryFn: () => getMyCardsOnSale({ grade, genre, keyword, page, size }),
-    enabled: true, // 항상 실행
   });
 
+  console.log({ grade, genre, keyword, page, size });
   // 필터 변경
   const onFilterChange = (type, value) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -52,7 +54,7 @@ export default function ForSalePage() {
   };
 
   if (isPending) return <p>로딩 중...</p>;
-  if (isError) return <p>오류 발생</p>;
+  if (isError) console.error(error);
 
   return (
     <>
@@ -66,7 +68,7 @@ export default function ForSalePage() {
       <section className="mb-15">
         <div className="flex items-center mb-5 gap-7 lg:gap-10">
           <Search />
-          {/* {Object.values(filterOptions).map((option) => (
+          {Object.values(filterOptions).map((option) => (
             <FilterDropdown
               key={option.key}
               option={option}
@@ -75,7 +77,7 @@ export default function ForSalePage() {
               onClose={close}
               onSelect={(value) => onFilterChange(option.key, value)}
             />
-          ))} */}
+          ))}
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">
@@ -86,7 +88,7 @@ export default function ForSalePage() {
                 key={card.id}
                 name={card.name}
                 image={card.imageUrl}
-                nickname={card.userCards?.[0]?.owner?.nickname || "나"}
+                nickname={card.creator?.nickname || "나"}
                 genre={card.genre?.name}
                 gradeId={card.grade?.id}
                 initialPrice={card.userCards?.[0]?.price}
@@ -96,6 +98,13 @@ export default function ForSalePage() {
             ))}
         </section>
       </section>
+      <div className="flex justify-center mb-20">
+        <Pagination
+          totalPages={data?.pagination.totalPages}
+          currentPage={page}
+          onPageChange={onPageChange}
+        />
+      </div>
     </>
   );
 }

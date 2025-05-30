@@ -10,10 +10,9 @@ export async function getMonthlyCardCount() {
   return await cookieFetch("/api/users/monthly-post-count");
 }
 
-
 // 예시: /lib/api/api-users.js
 export async function postCard(data) {
-  console.log("🔥🔥OK")
+  console.log("🔥🔥OK");
   return await cookieFetch("/api/users/post", {
     method: "POST",
     body: data,
@@ -72,7 +71,7 @@ export async function getMyCardsOnSale({
 
   const queryString = queryParams.toString();
   return await cookieFetch(
-    `api/users/cards-on-sale${queryString && `?${queryString}`}`
+    `/api/users/cards-on-sale${queryString && `?${queryString}`}`
   );
 }
 
