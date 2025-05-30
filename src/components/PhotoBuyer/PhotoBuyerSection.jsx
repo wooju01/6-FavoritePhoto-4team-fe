@@ -17,25 +17,14 @@ export default function PhotoBuyerSection({ photo }) {
   const [isLoading, setIsLoading] = useState(false);
   const [remaining, setRemaining] = useState(photo.saleQuantity);
 
-  const handleBuy = async (quantity) => {
-    if (quantity <= 0) {
-      alert("구매 수량을 선택해주세요.");
-      return;
-    }
+  const handleBuy = (data) => {
+  // 여기서 result는 storeService가 반환한 응답 데이터
+  // data.purchasedQuantity가 있다고 가정할 때
+  const purchased = data?.purchasedQuantity || 1; // fallback
+  alert(`구매 성공! ${purchased}장 구매되었습니다.`);
+  setRemaining((prev) => prev - purchased);
+};
 
-    setIsLoading(true);
-
-    try {
-      const result = await storeService.purchaseCard(photo.id, quantity);
-      alert(`구매 성공! ${result.purchasedQuantity}장 구매되었습니다.`);
-
-      setRemaining((prev) => prev - quantity);
-    } catch (error) {
-      alert(`구매 실패: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const imageUrl = photo?.photoCard?.imageUrl || example;
   const name = photo?.photoCard?.name || "제목 없음";

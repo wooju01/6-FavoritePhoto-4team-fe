@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { storeService } from "@/lib/api/api-store";
 import MyCard from "../PhotoCard/MyCard";
 
-export default function CardTrade({ selectedCard, onClose, saleId,}) {
+export default function CardTrade({ selectedCard, onClose, saleId, refetchTradeRequests}) {
   const [message, setMessage] = useState("");
   const queryClient = useQueryClient();
 
