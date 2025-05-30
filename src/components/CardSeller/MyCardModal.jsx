@@ -24,7 +24,7 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
     queryFn: getMyCards,
     enabled: isOpen,
     onSuccess: (res) => {
-      console.log("🧾 myGallery 응답:", res);
+      console.log("myGallery 응답:", res);
     },
   });
 
@@ -152,32 +152,32 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
               {isLoading ? (
                 <div className="text-white">잠시만 기다려주세요</div>
               ) : (
-                data?.items?.map((card) => (
-                  <div
-                    key={card.id}
-                    onClick={() => {
-                      setSelectedCard({
-                        photoCard: card,
-                        userCard: card.userCards[0],
-                      }); // 대표 userCard 사용
-                      setShowDetail(true);
-                    }}
-                  >
-                    <MyCard
-                      name={card.name}
-                      image={card.imageUrl}
-                      gradeId={card.gradeId}
-                      genre={card.genre?.name}
-                      nickname={
-                        card.creator?.id === currentUserId
-                          ? "나"
-                          : card.creator?.nickname || "Unknown"
-                      }
-                      totalQuantity={card.totalQuantity}
-                      initialPrice={card.userCards[0]?.price} // 대표 가격 표시
-                    />
-                  </div>
-                ))
+                data?.items?.map((card) => {
+                  const representativeUserCard = card.userCards[0];
+
+                  return (
+                    <div
+                      key={card.id}
+                      onClick={() => {
+                        setSelectedCard({
+                          photoCard: card,
+                          userCard: representativeUserCard,
+                        });
+                        setShowDetail(true);
+                      }}
+                    >
+                      <MyCard
+                        name={card.name}
+                        image={card.imageUrl}
+                        gradeId={card.grade?.id}
+                        genre={card.genre?.name}
+                        nickname={card?.creator?.nickname || "Unknown"}
+                        totalQuantity={card.totalQuantity}
+                        initialPrice={representativeUserCard?.price}
+                      />
+                    </div>
+                  );
+                })
               )}
             </div>
           </>

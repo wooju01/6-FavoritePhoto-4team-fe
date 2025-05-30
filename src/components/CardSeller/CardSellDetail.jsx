@@ -33,23 +33,23 @@ export default function CardSellDetail({
   const queryClient = useQueryClient();
 
   const [selectedGrade, setSelectedGrade] = useState(
-    isEditMode ? card?.cardGradeId : card?.photoCard?.gradeId
+    isEditMode ? card?.cardGradeId : card?.grade?.id
   );
-  const [gradeOpen, setGradeOpen] = useState(false);
 
   const [selectedGenre, setSelectedGenre] = useState(
-    isEditMode ? card?.cardGenreId : card?.photoCard?.genreId
+    isEditMode ? card?.cardGenreId : card?.genre?.id
   );
-  const [genreOpen, setGenreOpen] = useState(false);
 
   const [description, setDescription] = useState(
     isEditMode ? card?.desiredDescription : ""
   );
   const [count, setCount] = useState(isEditMode ? card?.saleQuantity : 1);
   const [price, setPrice] = useState(
-    isEditMode ? card?.price : card?.price || ""
+    isEditMode ? card?.price : card?.userCard?.price || ""
   );
 
+  const [gradeOpen, setGradeOpen] = useState(false);
+  const [genreOpen, setGenreOpen] = useState(false);
   const gradeRef = useRef(null);
   const genreRef = useRef(null);
 
@@ -72,15 +72,12 @@ export default function CardSellDetail({
       return;
     }
 
-    if (!isEditMode) {
-      const selectedUserCardIds = availableCards
-        .slice(0, count)
-        .map((uc) => uc.id);
+    const selectedUserCardIds =
+      availableCards?.slice(0, count)?.map((uc) => uc.id) || [];
 
-      if (selectedUserCardIds.length < count) {
-        alert("판매할 수량만큼 보유 중인 카드가 부족합니다.");
-        return;
-      }
+    if (!isEditMode && selectedUserCardIds.length < count) {
+      alert("판매할 수량만큼 보유 중인 카드가 부족합니다.");
+      return;
     }
 
     try {
@@ -124,9 +121,9 @@ export default function CardSellDetail({
     }
   };
 
-  const imageUrl = card?.photoCard?.imageUrl?.startsWith("http")
-    ? card.photoCard.imageUrl
-    : `https://six-favoritephoto-4team-be.onrender.com${card?.photoCard?.imageUrl}`;
+  const imageUrl = card?.imageUrl?.startsWith("http")
+    ? card.imageUrl
+    : `https://six-favoritephoto-4team-be.onrender.com${card?.imageUrl}`;
 
   return (
     <div className="fixed inset-0 z-50 bg-my-black text-white overflow-y-auto px-4 pt-4 pb-8">
@@ -142,7 +139,7 @@ export default function CardSellDetail({
 
       {/* 카드 제목 */}
       <div className="text-700-24 font-bold mb-3">
-        {card?.photoCard?.name || "카드 이름"}
+        {card?.name || "카드 이름"}
       </div>
 
       <div className="w-full h-[2px] bg-gray-200 mb-4" />
