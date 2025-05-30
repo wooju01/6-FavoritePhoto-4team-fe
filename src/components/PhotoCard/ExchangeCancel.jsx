@@ -30,7 +30,7 @@ export default function ExchangeCancel({
       {/* 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-3">
         <img
-          src={`https://six-favoritephoto-4team-be.onrender.com${image}`}
+          src={image}
           alt={name}
           className="object-cover"
         />
