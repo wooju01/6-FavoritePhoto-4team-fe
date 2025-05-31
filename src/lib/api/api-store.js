@@ -2,11 +2,15 @@ import { defaultFetch, cookieFetch } from "@/lib/api/fetch-client";
 
 export const storeService = {
   //스토어의 모든 카드 데이터를 가져옵니다.
-  getAllStoreCards: (filters) => {
+  getAllStoreCards: (filters, withCounts = false) => {
     const query = new URLSearchParams();
 
     for (const [key, value] of Object.entries(filters)) {
       if (value) query.set(key, value);
+    }
+
+    if (withCounts) {
+      query.set("withCounts", "true");
     }
 
     const url = `/api/store?${query.toString()}`;

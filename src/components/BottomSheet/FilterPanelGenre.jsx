@@ -21,7 +21,7 @@ export default function FilterPanelGenre({
   return (
     <ul>
       {genreOptions.map(({ label, value }) => {
-        const count = counts[label] || 0;
+        const count = counts[value] || 0; // ✅ fix here
         const isSelected = selectedGenres.includes(value);
 
         return (
