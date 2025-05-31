@@ -8,9 +8,10 @@ import ForSale from "@/components/PhotoCard/ForSale";
 import OwnedCards from "../my-gallery/_components/OwnedCards";
 import Search from "@/components/ui/Search";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useGalleryFilter } from "@/hooks/useFilter";
+import { use4Filter } from "@/hooks/useFilter";
 import Pagination from "@/components/ui/Pagination";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
+import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
 export default function ForMySales() {
   // 쿼리 문자열 처리
@@ -18,17 +19,37 @@ export default function ForMySales() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isOpen, toggle, close, filterOptions } = useGalleryFilter();
+  const { isOpen, toggle, close, filterOptions } = use4Filter();
 
   const grade = Number(searchParams.get("grade")) || 0;
   const genre = Number(searchParams.get("genre")) || 0;
   const keyword = searchParams.get("keyword") || "";
   const page = Number(searchParams.get("page") || 1);
   const size = searchParams.get("size") || "md";
+  const saleType = searchParams.get("saleType") || "";
+  const saleStatus = searchParams.get("saleStatus") || "";
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["mysales_v2", grade, genre, keyword, page, size],
-    queryFn: () => getMyCardsOnSale({ grade, genre, keyword, page, size }),
+    queryKey: [
+      "mysales_v2",
+      grade,
+      genre,
+      keyword,
+      saleType,
+      saleStatus,
+      page,
+      size,
+    ],
+    queryFn: () =>
+      getMyCardsOnSale({
+        grade,
+        genre,
+        keyword,
+        saleType,
+        saleStatus,
+        page,
+        size,
+      }),
   });
 
   console.log({ grade, genre, keyword, page, size });
@@ -67,35 +88,44 @@ export default function ForMySales() {
       />
       <section className="mb-15">
         <div className="flex items-center mb-5 gap-7 lg:gap-10">
-          <Search />
-          {Object.values(filterOptions).map((option) => (
-            <FilterDropdown
-              key={option.key}
-              option={option}
-              isOpen={isOpen === option.key}
-              onToggle={() => toggle(option.key)}
-              onClose={close}
-              onSelect={(value) => onFilterChange(option.key, value)}
-            />
-          ))}
+          <div className="order-2 md:order-1">
+            <Search />
+          </div>
+          {/* filter */}
+          <div className="hidden md:flex items-center gap-6 flex-1 order-1 md:order-2">
+            {Object.values(filterOptions).map((option) => (
+              <FilterDropdown
+                key={option.key}
+                option={option}
+                isOpen={isOpen === option.key}
+                onToggle={() => toggle(option.key)}
+                onClose={close}
+                onSelect={(value) => onFilterChange(option.key, value)}
+              />
+            ))}
+          </div>
+          {/* 모바일 filter 버튼 */}
+          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs order-1 md:order-2">
+            <HiAdjustmentsHorizontal className="w-5 h-5" />
+          </button>
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">
-          {data?.items
-            .filter((card) => card.userCards?.length > 0)
-            .map((card) => (
-              <ForSale
-                key={card.id}
-                name={card.name}
-                image={card.imageUrl}
-                nickname={card.creator?.nickname || "나"}
-                genre={card.genre?.name}
-                gradeId={card.grade?.id}
-                initialPrice={card.userCards?.[0]?.price}
-                remainingQuantity={card.userCards?.length ?? 0}
-                status={card.userCards?.[0]?.status}
-              />
-            ))}
+          {data?.items.map((card) => (
+            <ForSale
+              key={card.id}
+              name={card?.photoCard.name}
+              image={card?.photoCard.imageUrl}
+              nickname={card?.photoCard.creator?.nickname || "나"}
+              genre={card?.photoCard.genre?.name}
+              gradeId={card?.photoCard.grade?.id}
+              initialPrice={
+                card.price ? card.price : card?.photoCard.initialPrice
+              }
+              remainingQuantity={card.saleQuantity}
+              status={card.status}
+            />
+          ))}
         </section>
       </section>
       <div className="flex justify-center mb-20">

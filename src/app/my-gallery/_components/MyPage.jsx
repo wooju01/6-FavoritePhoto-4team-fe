@@ -10,7 +10,8 @@ import { getCardsCount, getMyCards } from "@/lib/api/api-users";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import GalleryTitle from "./GalleryTitle";
 import OwnedCards from "./OwnedCards";
-import { useGalleryFilter } from "@/hooks/useFilter";
+import { use2Filter } from "@/hooks/useFilter";
+import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
 export default function MyPage() {
   // 쿼리 문자열 처리
@@ -18,7 +19,7 @@ export default function MyPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isOpen, toggle, close, filterOptions } = useGalleryFilter();
+  const { isOpen, toggle, close, filterOptions } = use2Filter();
 
   const grade = Number(searchParams.get("grade")) || 0;
   const genre = Number(searchParams.get("genre")) || 0;
@@ -66,10 +67,11 @@ export default function MyPage() {
       />
       <section className="mb-15">
         <div className="flex items-center mb-5 gap-7 lg:gap-10">
-          <div>
+          <div className="order-2 md:order-1">
             <Search />
           </div>
-          <div className="flex gap-6">
+          {/* filter */}
+          <div className="hidden md:flex items-center gap-6 flex-1 order-1 md:order-2">
             {Object.values(filterOptions).map((option) => (
               <FilterDropdown
                 key={option.key}
@@ -81,6 +83,10 @@ export default function MyPage() {
               />
             ))}
           </div>
+          {/* 모바일 filter 버튼 */}
+          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs order-1 md:order-2">
+            <HiAdjustmentsHorizontal className="w-5 h-5" />
+          </button>
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">

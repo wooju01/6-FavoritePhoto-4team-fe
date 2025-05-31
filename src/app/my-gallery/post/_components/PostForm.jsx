@@ -7,24 +7,10 @@ import TextArea from "./TextArea";
 import Select from "./Select";
 import File from "./File";
 import Button from "@/components/ui/Button";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { postCard } from "@/lib/api/api-users";
 import { useStateModal } from "@/providers/StateModalProvider";
 import { upLoadImage } from "@/lib/api/api-uploader";
-
-const gradeMap = {
-  COMMON: 1,
-  RARE: 2,
-  SUPER_RARE: 3,
-  LEGENDARY: 4,
-};
-
-const genreMap = {
-  풍경: 1,
-  여행: 2,
-  인물: 3,
-  사물: 4,
-};
 
 export default function PostForm({ grades, genres, disabled }) {
   const [name, setName] = useState("");
@@ -47,14 +33,35 @@ export default function PostForm({ grades, genres, disabled }) {
 
   const { openModal } = useStateModal(); // 모달 provider
 
+  // 버튼 누르면 초기화
+  const resetForm = () => {
+    setName("");
+    setGrade("");
+    setGenre("");
+    setPrice("");
+    setVolumn("");
+    setImage("");
+    setDescription("");
+    setDirty({
+      name: false,
+      price: false,
+      volumn: false,
+      description: false,
+    });
+    setIsSubmitted(false);
+  };
+
   // BE와 연동
   const { mutate, isPending } = useMutation({
     mutationFn: postCard,
     onSuccess: (data) => {
       openModal(201, "생성", { grade, name, count: volumn });
+      QueryClient.invalidateQueries(["creationCardCount"]);
+      resetForm();
     },
     onError: (err) => {
       openModal(500, "생성", { grade, name, count: volumn });
+      resetForm();
       console.error("등록 실패", err.message);
     },
   });
@@ -122,7 +129,6 @@ export default function PostForm({ grades, genres, disabled }) {
     try {
       const imageResponse = await upLoadImage(image);
       const imageUrl = imageResponse.secure_url; // 또는 imageResponse.url
-      console.log("Cloudinary URL:", imageUrl);
 
       const data = {
         name,
@@ -133,8 +139,6 @@ export default function PostForm({ grades, genres, disabled }) {
         image: imageUrl,
         description,
       };
-
-      console.log("🔥🔥🔥", data);
 
       mutate(data); // JSON 객체로 전달
     } catch (error) {
@@ -204,7 +208,7 @@ export default function PostForm({ grades, genres, disabled }) {
         onChange={handleChange(setDescription, "description")}
         error={(isSubmitted || dirty.description) && errors.description}
       />
-      <Button type="exchangeGreen" disabled={!isValid || disabled}>
+      <Button type="exchangeGreen" disabled={!isValid || disabled || isPending}>
         {isPending ? "생성 중..." : "생성하기"}
       </Button>
     </form>

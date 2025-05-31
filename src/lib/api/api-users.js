@@ -12,7 +12,6 @@ export async function getMonthlyCardCount() {
 
 // 예시: /lib/api/api-users.js
 export async function postCard(data) {
-  console.log("🔥🔥OK");
   return await cookieFetch("/api/users/post", {
     method: "POST",
     body: data,
@@ -21,14 +20,6 @@ export async function postCard(data) {
 
 export const userService = {
   getMe: () => cookieFetch("/api/users"),
-
-  getMyCardsOnSale: async (params = {}) => {
-    const queryParams = new URLSearchParams(params);
-    const queryString = queryParams.toString();
-    return await cookieFetch(
-      `/api/users/cards-on-sale${queryString ? `?${queryString}` : ""}`
-    );
-  },
 };
 
 // GET: 마이 갤러리
@@ -58,6 +49,8 @@ export async function getMyCardsOnSale({
   grade,
   genre,
   keyword,
+  saleType, // 판매, 교환 (품절x)
+  saleStatus, // '판매 중', '판매 완료' (교환x)
   page = 1,
   size = "md",
 }) {
@@ -66,6 +59,8 @@ export async function getMyCardsOnSale({
   if (grade && grade !== 0) queryParams.append("grade", grade.toString());
   if (genre && genre !== 0) queryParams.append("genre", genre.toString());
   if (keyword) queryParams.append("keyword", keyword);
+  if (saleType) queryParams.append("saleType", saleType);
+  if (saleStatus) queryParams.append("saleStatus", saleStatus);
   if (page) queryParams.append("page", page.toString() || "1");
   if (size) queryParams.append("size", size || "md");
 
