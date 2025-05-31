@@ -8,10 +8,15 @@ import NoResultMessage from "../ui/NoResultsMessage";
 import { storeService } from "@/lib/api/api-store";
 import FilterControls from "../ui/FilterControls";
 import Sort from "../ui/Sort";
+import FilterSheetControls from "../BottomSheet/FilterSheetControls";
 
-
-export default async function BaseCardsSection({ grade, genre, sale, keyword, orderBy }) {
-  
+export default async function BaseCardsSection({
+  grade,
+  genre,
+  sale,
+  keyword,
+  orderBy,
+}) {
   const orderByMap = {
     price_asc: "낮은 가격순",
     price_desc: "높은 가격순",
@@ -26,8 +31,8 @@ export default async function BaseCardsSection({ grade, genre, sale, keyword, or
     orderBy: orderByMap[orderBy] ?? "낮은 가격순",
   };
 
-  const data = await storeService.getAllStoreCards(filters); 
-  
+  const data = await storeService.getAllStoreCards(filters, true); 
+
   return (
     <>
       <div className="py-5 md:pb-7 lg:pb-14">
@@ -45,7 +50,7 @@ export default async function BaseCardsSection({ grade, genre, sale, keyword, or
             <FilterControls />
           </div>
           {/* 모바일 filter 버튼 */}
-          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs" ><HiAdjustmentsHorizontal className="w-5 h-5"/></button>
+          <FilterSheetControls/>
           <Sort />
         </div>
       </div>
@@ -53,7 +58,12 @@ export default async function BaseCardsSection({ grade, genre, sale, keyword, or
         <NoResultMessage message={"필터링 결과가 존재하지 않습니다."} />
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-20">
-          <Suspense key={data.sales || data.photoCard || data.cardGrade || data.cardGenre} fallback={<HomeFallbackCount count={12} />}>
+          <Suspense
+            key={
+              data.sales || data.photoCard || data.cardGrade || data.cardGenre
+            }
+            fallback={<HomeFallbackCount count={12} />}
+          >
             <BaseCardList cards={data.sales} />
           </Suspense>
         </div>
