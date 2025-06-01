@@ -9,15 +9,15 @@ import FilterTab from "./FilterTab";
 import FilterPanelGrade from "./FilterPanelGrade";
 import FilterPanelGenre from "./FilterPanelGenre";
 import FilterPanelSale from "./FilterPanelSale";
-import FilterPanelStatus from "./FilterPanelStatus";
+import FilterPanelSaleType from "./FilterPanelSaleType"; // ⬅️ 새로 만든 컴포넌트
 
 export default function BottomSheet({
-  filters = ["grade", "genre", "status","sale",],
-  counts = { grade: [], genre: [], status: [] ,sale: []},
+  filters = ["grade", "genre", "saleType", "sale"],
+  counts = { grade: [], genre: [], saleType: [], sale: [] },
   loading = false,
   filteredCount,
   onClose,
-  onFilterChange, 
+  onFilterChange,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -30,36 +30,31 @@ export default function BottomSheet({
     if (!val) return [];
     return val
       .split(",")
-      .map((v) => (key === "sale" ? v : key === "status" ? v : Number(v)));
+      .map((v) => (key === "sale" || key === "saleType" ? v : Number(v)));
   };
 
   const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
   const [selectedGenre, setSelectedGenre] = useState(getInitialValues("genre"));
   const [selectedSale, setSelectedSale] = useState(getInitialValues("sale"));
-  const [selectedStatuses, setSelectedStatuses] = useState(
-    getInitialValues("status")
-  );
-
-
+  const [selectedSaleTypes, setSelectedSaleTypes] = useState(getInitialValues("saleType"));
 
   useEffect(() => {
     const filters = {};
-
     if (selectedGrade.length) filters.grade = selectedGrade.join(",");
     if (selectedGenre.length) filters.genre = selectedGenre.join(",");
     if (selectedSale.length) filters.sale = selectedSale.join(",");
-    if (selectedStatuses.length) filters.status = selectedStatuses.join(",");
+    if (selectedSaleTypes.length) filters.saleType = selectedSaleTypes.join(",");
 
     if (onFilterChange) {
       onFilterChange(filters);
     }
-  }, [selectedGrade, selectedGenre, selectedSale, selectedStatuses]);
+  }, [selectedGrade, selectedGenre, selectedSale, selectedSaleTypes]);
 
   const handleReset = () => {
     setSelectedGrade([]);
     setSelectedGenre([]);
     setSelectedSale([]);
-    setSelectedStatuses([]);
+    setSelectedSaleTypes([]);
   };
 
   const handleApply = () => {
@@ -68,7 +63,9 @@ export default function BottomSheet({
     selectedGrade.length ? params.set("grade", selectedGrade.join(",")) : params.delete("grade");
     selectedGenre.length ? params.set("genre", selectedGenre.join(",")) : params.delete("genre");
     selectedSale.length ? params.set("sale", selectedSale.join(",")) : params.delete("sale");
-    selectedStatuses.length ? params.set("status", selectedStatuses.join(",")) : params.delete("status");
+    selectedSaleTypes.length
+      ? params.set("saleType", selectedSaleTypes.join(","))
+      : params.delete("saleType");
 
     router.push(`${pathname}?${params.toString()}`);
     if (onClose) onClose();
@@ -80,8 +77,6 @@ export default function BottomSheet({
     { label: "SUPER RARE", value: 3 },
     { label: "LEGENDARY", value: 4 },
   ];
-
-  
 
   const genreOptions = [
     { label: "여행", value: 1 },
@@ -97,7 +92,7 @@ export default function BottomSheet({
         return acc;
       }, {})
     : counts.grade;
-    
+
   const normalizedGenres = Array.isArray(counts.genre)
     ? counts.genre.reduce((acc, item) => {
         const option = genreOptions.find((opt) => opt.value === item.genreId);
@@ -113,12 +108,12 @@ export default function BottomSheet({
       }, {})
     : counts.sale;
 
-    const normalizedStatuses = Array.isArray(counts.status)
-  ? counts.status.reduce((acc, item) => {
-      acc[item.status] = item.count;
-      return acc;
-    }, {})
-  : counts.status;
+  const normalizedSaleTypes = Array.isArray(counts.saleType)
+    ? counts.saleType.reduce((acc, item) => {
+        acc[item.status] = item.count;
+        return acc;
+      }, {})
+    : counts.saleType;
 
   return (
     <div className="fixed flex flex-col justify-between bottom-0 left-0 w-full h-120 bg-[#1B1B1B] text-white p-4 z-9000 border-t border-gray-700 rounded-t-2xl max-h-[70vh] overflow-auto">
@@ -133,11 +128,7 @@ export default function BottomSheet({
           </button>
         </div>
 
-        <FilterTab
-          selected={selectedTab}
-          onChange={setSelectedTab}
-          filters={filters}
-        />
+        <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
 
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
@@ -163,11 +154,11 @@ export default function BottomSheet({
           />
         )}
 
-        {selectedTab === "status" && filters.includes("status") && (
-          <FilterPanelStatus
-            statuses={normalizedStatuses}
-            selectedStatuses={selectedStatuses}
-            onSelectStatuses={setSelectedStatuses}
+        {selectedTab === "saleType" && filters.includes("saleType") && (
+          <FilterPanelSaleType
+            saleTypes={normalizedSaleTypes}
+            selectedSaleTypes={selectedSaleTypes}
+            onSelectSaleTypes={setSelectedSaleTypes}
           />
         )}
       </div>
@@ -180,20 +171,20 @@ export default function BottomSheet({
           <RiResetLeftFill className="w-[21px] h-[21px]" />
         </div>
 
-   <button
-  className="w-full bg-yellow-400 text-black py-3 font-bold rounded disabled:opacity-50 cursor-pointer"
-  onClick={handleApply}
-  disabled={loading}
->
-  {loading
-    ? "불러오는 중..."
-    : (selectedGrade.length ||
-       selectedGenre.length ||
-       selectedSale.length ||
-       selectedStatuses.length)
-    ? `${filteredCount}개 포토보기`
-    : "포토보기"}
-</button>
+        <button
+          className="w-full bg-yellow-400 text-black py-3 font-bold rounded disabled:opacity-50 cursor-pointer"
+          onClick={handleApply}
+          disabled={loading}
+        >
+          {loading
+            ? "불러오는 중..."
+            : selectedGrade.length ||
+              selectedGenre.length ||
+              selectedSale.length ||
+              selectedSaleTypes.length
+            ? `${filteredCount}개 포토보기`
+            : "포토보기"}
+        </button>
       </div>
     </div>
   );
