@@ -12,12 +12,12 @@ import FilterPanelSale from "./FilterPanelSale";
 import FilterPanelStatus from "./FilterPanelStatus";
 
 export default function BottomSheet({
-  filters = ["grade", "genre", "sale", "method"],
-  counts = { grade: [], genre: [], sale: [], method: [] },
+  filters = ["grade", "genre", "status","sale",],
+  counts = { grade: [], genre: [], status: [] ,sale: []},
   loading = false,
   filteredCount,
   onClose,
-  onFilterChange, // ✅ 새로 추가된 props
+  onFilterChange, 
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,7 +28,9 @@ export default function BottomSheet({
   const getInitialValues = (key) => {
     const val = searchParams.get(key);
     if (!val) return [];
-    return val.split(",").map((v) => (key === "sale" ? v : Number(v)));
+    return val
+      .split(",")
+      .map((v) => (key === "sale" ? v : key === "status" ? v : Number(v)));
   };
 
   const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
@@ -38,11 +40,7 @@ export default function BottomSheet({
     getInitialValues("status")
   );
 
-  const isFilterActive =
-    selectedGrade.length > 0 ||
-    selectedGenre.length > 0 ||
-    selectedSale.length > 0 ||
-    selectedStatuses.length > 0;
+
 
   useEffect(() => {
     const filters = {};
@@ -83,13 +81,7 @@ export default function BottomSheet({
     { label: "LEGENDARY", value: 4 },
   ];
 
-  const normalizedGrades = Array.isArray(counts.grade)
-    ? counts.grade.reduce((acc, item) => {
-        const option = gradeOptions.find((opt) => opt.value === item.gradeId);
-        if (option) acc[option.label] = item.count;
-        return acc;
-      }, {})
-    : counts.grade;
+  
 
   const genreOptions = [
     { label: "여행", value: 1 },
@@ -98,6 +90,14 @@ export default function BottomSheet({
     { label: "사물", value: 4 },
   ];
 
+  const normalizedGrades = Array.isArray(counts.grade)
+    ? counts.grade.reduce((acc, item) => {
+        const option = gradeOptions.find((opt) => opt.value === item.gradeId);
+        if (option) acc[option.label] = item.count;
+        return acc;
+      }, {})
+    : counts.grade;
+    
   const normalizedGenres = Array.isArray(counts.genre)
     ? counts.genre.reduce((acc, item) => {
         const option = genreOptions.find((opt) => opt.value === item.genreId);
@@ -180,17 +180,20 @@ export default function BottomSheet({
           <RiResetLeftFill className="w-[21px] h-[21px]" />
         </div>
 
-        <button
-          className="w-full bg-yellow-400 text-black py-3 font-bold rounded disabled:opacity-50 cursor-pointer"
-          onClick={handleApply}
-          disabled={loading}
-        >
-          {loading
-            ? "불러오는 중..."
-            : isFilterActive
-            ? `${filteredCount}개 포토보기`
-            : "포토보기"}
-        </button>
+   <button
+  className="w-full bg-yellow-400 text-black py-3 font-bold rounded disabled:opacity-50 cursor-pointer"
+  onClick={handleApply}
+  disabled={loading}
+>
+  {loading
+    ? "불러오는 중..."
+    : (selectedGrade.length ||
+       selectedGenre.length ||
+       selectedSale.length ||
+       selectedStatuses.length)
+    ? `${filteredCount}개 포토보기`
+    : "포토보기"}
+</button>
       </div>
     </div>
   );

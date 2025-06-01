@@ -37,7 +37,8 @@ export async function getMyCards({
   if (keyword) queryParams.append("keyword", keyword);
   if (page) queryParams.append("page", page.toString() || "1");
   if (size) queryParams.append("size", size || "md");
-
+ queryParams.append("withCounts", "true");
+ 
   const queryString = queryParams.toString();
   return await cookieFetch(
     `/api/users/gallery${queryString && `?${queryString}`}`
