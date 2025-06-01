@@ -27,32 +27,22 @@ export default function ForMySales() {
   const page = Number(searchParams.get("page") || 1);
   const size = searchParams.get("size") || "md";
   const saleType = searchParams.get("saleType") || "";
-  const saleStatus = searchParams.get("saleStatus") || "";
+  const sale = searchParams.get("sale") || "";
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey: [
-      "mysales_v2",
-      grade,
-      genre,
-      keyword,
-      saleType,
-      saleStatus,
-      page,
-      size,
-    ],
+    queryKey: ["mysales_v2", grade, genre, keyword, saleType, sale, page, size],
     queryFn: () =>
       getMyCardsOnSale({
         grade,
         genre,
         keyword,
         saleType,
-        saleStatus,
+        sale,
         page,
         size,
       }),
   });
 
-  console.log({ grade, genre, keyword, page, size });
   // 필터 변경
   const onFilterChange = (type, value) => {
     const params = new URLSearchParams(searchParams.toString());
