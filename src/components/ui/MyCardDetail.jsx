@@ -14,9 +14,14 @@ export default function MyCardDetail({
   // 현재 보유 중인 ACTIVE 카드 수
   const baseCount = card?.photoCard?.userCards?.length ?? 0;
 
-  // 수정 모드일 경우 판매 중 수량 포함
+  // 수정 모드 - 기존 보유 카드 + 판매 중인 카드
   const saleQuantity = card?.saleQuantity ?? 0;
   const availableCount = isEditMode ? baseCount + saleQuantity : baseCount;
+
+  // 수정 모드 - 닉네임은 판매자 기준으로
+  const nickname = isEditMode
+    ? card?.seller?.nickname
+    : card.userCard?.owner?.nickname;
 
   const handleDecrease = () => {
     if (count > 1) setCount(count - 1);
@@ -44,9 +49,7 @@ export default function MyCardDetail({
         <span className="text-gray-300 text-700-18">
           {card?.photoCard?.genre?.name || "-"}
         </span>
-        <div className="ml-auto text-700-18 underline">
-          {card.userCard?.owner?.nickname || "나"}
-        </div>
+        <div className="ml-auto text-700-18 underline">{nickname || "나"}</div>
       </div>
 
       <div className="w-full h-[1px] bg-gray-400 my-6" />
