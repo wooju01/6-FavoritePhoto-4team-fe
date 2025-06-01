@@ -11,6 +11,7 @@ export function useFilterSheet(fetcher) {
     if (filtersObj.genre) parsed.genre = filtersObj.genre.split(",").map(Number);
     if (filtersObj.sale) parsed.sale = filtersObj.sale.split(",");
     if (filtersObj.status) parsed.status = filtersObj.status.split(",");
+
     return parsed;
   };
 
@@ -53,6 +54,8 @@ const fetchFilteredCount = async (rawFilters) => {
     if (Array.isArray(filters.status) && filters.status.length) {
       query.status = filters.status.join(",");
     }
+
+
 
     console.log("query sent to fetcher:", query);
     const data = await fetcher(query, true);

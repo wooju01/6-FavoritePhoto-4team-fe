@@ -12,6 +12,7 @@ import { use4Filter } from "@/hooks/useFilter";
 import Pagination from "@/components/ui/Pagination";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+import SaleGalleryFilter from "@/components/BottomSheet/SaleGaileryFilter";
 
 export default function ForMySales() {
   // 쿼리 문자열 처리
@@ -95,9 +96,7 @@ export default function ForMySales() {
             ))}
           </div>
           {/* 모바일 filter 버튼 */}
-          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs order-1 md:order-2">
-            <HiAdjustmentsHorizontal className="w-5 h-5" />
-          </button>
+         <SaleGalleryFilter/>
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">
