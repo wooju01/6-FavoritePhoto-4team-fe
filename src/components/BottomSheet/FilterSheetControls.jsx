@@ -22,25 +22,24 @@ export default function FilterSheetControls() {
     status: [],
   });
 
-  // 필터 문자열을 숫자 배열 등으로 파싱
   const parseFilters = (filtersObj) => {
     const parsed = {};
-    if (filtersObj.grade) parsed.grade = filtersObj.grade.split(",").map(Number);
-    if (filtersObj.genre) parsed.genre = filtersObj.genre.split(",").map(Number);
+    if (filtersObj.grade)
+      parsed.grade = filtersObj.grade.split(",").map(Number);
+    if (filtersObj.genre)
+      parsed.genre = filtersObj.genre.split(",").map(Number);
     if (filtersObj.sale) parsed.sale = filtersObj.sale.split(",");
     if (filtersObj.status) parsed.status = filtersObj.status.split(",");
     return parsed;
   };
 
-  // 1. counts 초기 데이터만 가져오는 함수
   const fetchCountsData = async () => {
     setLoading(true);
     try {
-      // 필터 없이 전체 counts 정보만 불러오기
       const data = await storeService.getAllStoreCards({}, true);
       setCounts(data.counts ?? {});
-      // 전체 필터 적용 전 사진 개수도 세팅
-      const totalCount = data.counts?.sale?.reduce((acc, item) => acc + item.count, 0) ?? 0;
+      const totalCount =
+        data.counts?.sale?.reduce((acc, item) => acc + item.count, 0) ?? 0;
       setFilteredCount(totalCount);
     } catch (err) {
       console.error("초기 counts 데이터 불러오기 오류:", err);
@@ -49,24 +48,27 @@ export default function FilterSheetControls() {
     }
   };
 
-  // 2. 필터 조건에 맞는 filteredCount만 가져오는 함수
   const fetchFilteredCount = async (rawFilters) => {
     setLoading(true);
     try {
       const finalFilters =
-        typeof rawFilters.grade === "string" || typeof rawFilters.sale === "string"
+        typeof rawFilters.grade === "string" ||
+        typeof rawFilters.sale === "string"
           ? parseFilters(rawFilters)
           : rawFilters;
 
       const query = {};
-      if (finalFilters.grade?.length) query.grade = finalFilters.grade.join(",");
-      if (finalFilters.genre?.length) query.genre = finalFilters.genre.join(",");
+      if (finalFilters.grade?.length)
+        query.grade = finalFilters.grade.join(",");
+      if (finalFilters.genre?.length)
+        query.genre = finalFilters.genre.join(",");
       if (finalFilters.sale?.length) query.sale = finalFilters.sale.join(",");
-      if (finalFilters.status?.length) query.status = finalFilters.status.join(",");
+      if (finalFilters.status?.length)
+        query.status = finalFilters.status.join(",");
 
       const data = await storeService.getAllStoreCards(query, true);
-      // counts는 업데이트하지 않고 filteredCount만 업데이트
-      const totalCount = data.counts?.sale?.reduce((acc, item) => acc + item.count, 0) ?? 0;
+      const totalCount =
+        data.counts?.sale?.reduce((acc, item) => acc + item.count, 0) ?? 0;
       setFilteredCount(totalCount);
     } catch (err) {
       console.error("필터링된 개수 불러오기 오류:", err);
@@ -77,16 +79,34 @@ export default function FilterSheetControls() {
 
   useEffect(() => {
     if (isOpen) {
-      fetchCountsData();  // BottomSheet 열 때 counts 초기 세팅
+      fetchCountsData();
     }
-
     const onPopState = () => {
       if (isOpen) fetchCountsData();
     };
-
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, [isOpen]);
+
+  // 화면 크기 감지해서 744px 이상이면 자동 닫기
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 744px)");
+    const handleResize = (e) => {
+      if (e.matches) {
+        setIsOpen(false);
+      }
+    };
+    if (mediaQuery.matches) {
+      setIsOpen(false);
+    }
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleResize);
+      return () => mediaQuery.removeEventListener("change", handleResize);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleResize);
+      return () => mediaQuery.removeListener(handleResize);
+    }
+  }, []);
 
   return (
     <>
@@ -101,17 +121,31 @@ export default function FilterSheetControls() {
       )}
 
       {isOpen && (
-        <BottomSheet
-          counts={counts} 
-          filteredCount={filteredCount} 
-          loading={loading}
-          onClose={() => setIsOpen(false)}
-          onFilterChange={(newFilters) => {
-            const parsed = parseFilters(newFilters);
-            setFilters(parsed);
-            fetchFilteredCount(parsed);  
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0  z-50 flex justify-center items-end"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            backdropFilter: "blur(3px)",
           }}
-        />
+          aria-modal="true"
+          role="dialog"
+        >
+          {/* BottomSheet 내부 클릭 시 외부로 이벤트 전달 방지 */}
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md">
+            <BottomSheet
+              counts={counts}
+              filteredCount={filteredCount}
+              loading={loading}
+              onClose={() => setIsOpen(false)}
+              onFilterChange={(newFilters) => {
+                const parsed = parseFilters(newFilters);
+                setFilters(parsed);
+                fetchFilteredCount(parsed);
+              }}
+            />
+          </div>
+        </div>
       )}
     </>
   );
