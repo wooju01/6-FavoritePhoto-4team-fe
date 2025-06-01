@@ -1,31 +1,31 @@
-const statusOptions = [
+const saleTypeOptions = [
   { label: "교환중", value: "PENDING" },
   { label: "판매중", value: "AVAILABLE" },
 ];
 
-export default function FilterPanelStatus({
-  statuses = {},
-  selectedStatuses = [],
-  onSelectStatuses,
+export default function FilterPanelSaleType({
+  saleTypes = {},
+  selectedSaleTypes = [],
+  onSelectSaleTypes,
 }) {
   const handleClick = (value) => {
-    if (selectedStatuses.includes(value)) {
-      onSelectStatuses(selectedStatuses.filter((v) => v !== value));
+    if (selectedSaleTypes.includes(value)) {
+      onSelectSaleTypes(selectedSaleTypes.filter((v) => v !== value));
     } else {
-      onSelectStatuses([...selectedStatuses, value]);
+      onSelectSaleTypes([...selectedSaleTypes, value]);
     }
   };
 
   return (
     <ul>
-      {statusOptions.map(({ label, value }) => {
-        const count = statuses[value] || 0;
-        const isSelected = selectedStatuses.includes(value);
+      {saleTypeOptions.map(({ label, value }) => {
+        const count = saleTypes[value] || 0;
+        const isSelected = selectedSaleTypes.includes(value);
         return (
           <li
             key={value}
-            className={`flex justify-between py-2 cursor-pointer ${
-              isSelected ? "bg-gray-500" : ""
+            className={`flex justify-between py-2 px-3 rounded cursor-pointer ${
+              isSelected ? "bg-gray-600" : ""
             }`}
             onClick={() => handleClick(value)}
           >

@@ -64,7 +64,7 @@ export async function getMyCardsOnSale({
   if (sale) queryParams.append("sale", sale);
   if (page) queryParams.append("page", page.toString() || "1");
   if (size) queryParams.append("size", size || "md");
-
+  queryParams.append("withCounts", "true"); // 우주: 필터 카운트 포함 요청
   const queryString = queryParams.toString();
   return await cookieFetch(
     `/api/users/cards-on-sale${queryString && `?${queryString}`}`

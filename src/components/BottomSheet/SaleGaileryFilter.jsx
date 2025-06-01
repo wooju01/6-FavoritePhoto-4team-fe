@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useFilterSheet } from "@/hooks/useFilterSheet";
-import { getMyCards } from "@/lib/api/api-users";
+import { getMyCardsOnSale } from "@/lib/api/api-users";
 import BottomSheet from "./BottomSheet";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
-export default function MyGalleryFilter() {
+export default function SaleGalleryFilter() {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -15,7 +15,7 @@ export default function MyGalleryFilter() {
     loading,
     fetchCounts,
     fetchFilteredCount,
-  } = useFilterSheet(getMyCards);
+  } = useFilterSheet(getMyCardsOnSale);
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +58,7 @@ export default function MyGalleryFilter() {
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md">
             <BottomSheet
-              filters={["grade", "genre"]}
+              filters={["grade", "genre", "saleType", "sale"]}
               counts={counts}
               filteredCount={filteredCount}
               loading={loading}

@@ -5,6 +5,7 @@ import { useFilterSheet } from "@/hooks/useFilterSheet";
 import { storeService } from "@/lib/api/api-store";
 import BottomSheet from "./BottomSheet";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+
 export default function FilterSheetControls() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,6 +16,21 @@ export default function FilterSheetControls() {
     if (isOpen) {
       fetchCounts();
     }
+  }, [isOpen]);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 744 && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [isOpen]);
 
   return (
