@@ -22,7 +22,19 @@ export default function MyGalleryFilter() {
       fetchCounts();
     }
   }, [isOpen]);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 744 && isOpen) {
+        setIsOpen(false);
+      }
+    };
 
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isOpen]);
   return (
     <>
       {!isOpen && (

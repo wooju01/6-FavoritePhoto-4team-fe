@@ -85,7 +85,7 @@ export function use4Filter() {
       ],
     },
     매진여부: {
-      key: "saleStatus",
+      key: "sale",
       label: "매진 여부",
       options: [
         { id: 0, label: "전체" },
