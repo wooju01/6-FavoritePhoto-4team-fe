@@ -19,6 +19,5 @@ export async function approveTradeRequest(tradeRequestId) {
 export async function rejectTradeRequest(tradeRequestId) {
   return await cookieFetch(`/api/store/trade/${tradeRequestId}/reject`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
   });
 }

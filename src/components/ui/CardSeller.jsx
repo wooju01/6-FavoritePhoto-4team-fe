@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import exchangeIcon from "@/assets/exchange.svg";
 import Button from "./Button";
@@ -8,6 +8,7 @@ import GradeTag from "../tag/GradeTag";
 import CardSellDetail from "../CardSeller/CardSellDetail";
 import { useRouter } from "next/navigation";
 import { cancelSaleById } from "@/lib/api/api-sale";
+import { getMyCards } from "@/lib/api/api-users";
 
 const genreMap = {
   1: "여행",
@@ -17,9 +18,24 @@ const genreMap = {
 };
 
 export default function CardSeller({ sale }) {
+  const router = useRouter();
+
   const [editModeOpen, setEditModeOpen] = useState(false);
 
-  const router = useRouter();
+  const [availableCards, setAvailableCards] = useState([]);
+
+  // 수정하기 모드에서도 현 보유수량 데이터 호출
+  useEffect(() => {
+    async function fetchAvailableCards() {
+      const res = await getMyCards({});
+      const matchedCard = res.items.find(
+        (item) => item.id === sale.photoCard.id
+      );
+      setAvailableCards(matchedCard?.userCards || []);
+    }
+
+    if (editModeOpen) fetchAvailableCards();
+  }, [editModeOpen, sale.photoCard.id]);
 
   const handleCancelSale = async () => {
     const confirmCancel = window.confirm("정말로 판매를 중단하시겠습니까?");
@@ -108,8 +124,14 @@ export default function CardSeller({ sale }) {
       </div>
       {editModeOpen && (
         <CardSellDetail
-          card={sale} // 필요한 필드만 넘기기
-          availableCards={[]} // 수정에서는 사용 안 하니 빈 배열
+          card={{
+            ...sale,
+            photoCard: {
+              ...sale.photoCard,
+              userCards: availableCards || [], // sale 데이터 이외의 데이터 연결
+            },
+          }}
+          availableCards={availableCards}
           onClose={() => setEditModeOpen(false)}
           isEditMode={true}
         />

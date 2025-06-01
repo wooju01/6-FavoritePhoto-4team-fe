@@ -4,13 +4,13 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import back from "@/assets/back.svg";
 import Button from "../ui/Button";
-import example from "@/assets/example.svg";
 import MyCardDetail from "../ui/MyCardDetail";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { patchCardSale, postCardSale } from "@/lib/api/api-sale";
 import { useQueryClient } from "@tanstack/react-query";
 import { useStateModal } from "@/providers/StateModalProvider";
 import StateModal from "../modal/StateModal";
+import { useRouter } from "next/navigation";
 
 const grades = [
   { id: 1, name: "COMMON" },
@@ -32,6 +32,8 @@ export default function CardSellDetail({
   onClose,
   isEditMode = false,
 }) {
+  const router = useRouter();
+
   const queryClient = useQueryClient();
   const { openModal: openStateModal } = useStateModal();
 
@@ -103,8 +105,8 @@ export default function CardSellDetail({
           desiredDescription: description,
         });
 
-        openStateModal(200, "판매", stateModalCardInfo);
         queryClient.invalidateQueries(["storeMainList"]);
+        router.push("/for-my-sales");
       } else {
         // 판매 등록 API 호출
         await postCardSale({
@@ -164,6 +166,7 @@ export default function CardSellDetail({
         setCount={setCount}
         price={price}
         setPrice={setPrice}
+        isEditMode={isEditMode}
       />
 
       {/* 교환 희망 정보 */}
@@ -261,7 +264,7 @@ export default function CardSellDetail({
           {isEditMode ? "수정하기" : "판매하기"}
         </Button>
       </div>
-      <StateModal />
+      {!isEditMode && <StateModal />}
     </div>
   );
 }

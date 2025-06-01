@@ -171,8 +171,10 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
                         image={card.imageUrl}
                         gradeId={card.grade?.id}
                         genre={card.genre?.name}
-                        nickname={card?.creator?.nickname || "Unknown"}
-                        totalQuantity={card.totalQuantity}
+                        nickname={
+                          representativeUserCard?.owner?.nickname || "Unknown"
+                        }
+                        totalQuantity={card.userCards?.length}
                         initialPrice={representativeUserCard?.price}
                       />
                     </div>

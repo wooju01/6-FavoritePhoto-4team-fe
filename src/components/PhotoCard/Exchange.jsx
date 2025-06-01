@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import GradeTag from "../tag/GradeTag";
 import Button from "../ui/Button";
-import { approveTradeRequest, rejectTradeRequest } from "@/lib/api/api-trade";
 
 const genreMap = {
   1: "여행",
@@ -17,30 +16,11 @@ export default function Exchange({ trade, onApprove, onReject }) {
   const userCard = trade.tradeRequestUserCards[0]?.userCard;
   const photoCard = userCard?.photoCard;
 
-  const handleApprove = async () => {
-    try {
-      await approveTradeRequest(trade.id);
-      if (onApprove) onApprove();
-    } catch (err) {
-      console.error("승인 실패:", err);
-      alert("교환 승인에 실패했습니다.");
-    }
-  };
-
-  const handleReject = async () => {
-    try {
-      await rejectTradeRequest(trade.id);
-      if (onReject) onReject();
-    } catch (err) {
-      console.error("거절 실패:", err);
-      alert("교환 거절에 실패했습니다.");
-    }
-  };
-
   return (
     <div className="bg-my-black w-full px-2 py-2 border border-gray-800 text-white">
       {/* 이미지 */}
       <div className="w-full aspect-[4/3] relative mb-3">
+        {/* 여기 로직 이상한거 압니다..근데 이상하게 이미지가 잘 떠서 그냥 두시길 바랍니다.. */}
         <Image
           src={
             photoCard?.imageUrl?.startsWith("http")
@@ -92,10 +72,20 @@ export default function Exchange({ trade, onApprove, onReject }) {
 
       {/* 버튼들 */}
       <div className="flex justify-between gap-2">
-        <Button type="reject" onClick={handleReject}>
+        <Button
+          type="reject"
+          onClick={() => {
+            onReject(trade.id); // SellerPage에서 reject 실행
+          }}
+        >
           거절
         </Button>
-        <Button type="approve" onClick={handleApprove}>
+        <Button
+          type="approve"
+          onClick={() => {
+            onApprove(trade.id); // SellerPage에서 approve 실행
+          }}
+        >
           승인
         </Button>
       </div>
