@@ -12,6 +12,7 @@ import GalleryTitle from "./GalleryTitle";
 import OwnedCards from "./OwnedCards";
 import { use2Filter } from "@/hooks/useFilter";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+import MyGalleryFilter from "@/components/BottomSheet/Mygalleryfilter";
 
 export default function MyPage() {
   // 쿼리 문자열 처리
@@ -84,9 +85,7 @@ export default function MyPage() {
             ))}
           </div>
           {/* 모바일 filter 버튼 */}
-          <button className="md:hidden h-9 w-9 flex justify-center items-center border-1 rounded-xs order-1 md:order-2">
-            <HiAdjustmentsHorizontal className="w-5 h-5" />
-          </button>
+      <MyGalleryFilter/>
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">

@@ -1,9 +1,11 @@
 export default function FilterTab({ selected, onChange, filters }) {
-  const allTabs = [
-    { key: "grade", label: "등급" },
-    { key: "genre", label: "장르" },
-    { key: "sale", label: "매진 여부" },
-  ];
+const allTabs = [
+  { key: "grade", label: "등급" },
+  { key: "genre", label: "장르" },
+  { key: "status", label: "판매방법" }, 
+  { key: "sale", label: "매진 여부" },
+];
+
 
   // filters 배열에 포함된 탭만 사용
   const visibleTabs = allTabs.filter((tab) => filters.includes(tab.key));

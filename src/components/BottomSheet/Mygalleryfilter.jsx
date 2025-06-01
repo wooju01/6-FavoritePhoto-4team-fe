@@ -2,14 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useFilterSheet } from "@/hooks/useFilterSheet";
-import { storeService } from "@/lib/api/api-store";
+import { getMyCards } from "@/lib/api/api-users";
 import BottomSheet from "./BottomSheet";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
-export default function FilterSheetControls() {
+
+export default function MyGalleryFilter() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { counts, filteredCount, loading, fetchCounts, fetchFilteredCount } =
-    useFilterSheet(storeService.getAllStoreCards);
+  const {
+    counts,
+    filteredCount,
+    loading,
+    fetchCounts,
+    fetchFilteredCount,
+  } = useFilterSheet(getMyCards);
 
   useEffect(() => {
     if (isOpen) {
@@ -28,6 +34,7 @@ export default function FilterSheetControls() {
           <HiAdjustmentsHorizontal className="w-5 h-5" />
         </button>
       )}
+
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
@@ -39,7 +46,7 @@ export default function FilterSheetControls() {
         >
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md">
             <BottomSheet
-              filters={["grade", "genre", "sale"]}
+              filters={["grade", "genre"]}
               counts={counts}
               filteredCount={filteredCount}
               loading={loading}
