@@ -41,7 +41,10 @@ export default function SellerPage({ sale }) {
       fetchTradeRequests(); // 리스트 갱신
     } catch (err) {
       console.error("승인 실패:", err);
-      alert("교환 승인에 실패했습니다.");
+      const msg = err.message.includes("사용 가능한 카드가 없습니다")
+        ? "판매 가능한 카드가 없습니다. 이미 교환되었거나 판매가 취소되었을 수 있습니다."
+        : "교환 승인에 실패했습니다.";
+      alert(msg);
     }
   };
 
@@ -106,8 +109,8 @@ export default function SellerPage({ sale }) {
             <Exchange
               key={trade.id}
               trade={trade}
-              onApprove={() => handleApprove(trade.id)}
-              onReject={() => handleReject(trade.id)}
+              onApprove={handleApprove}
+              onReject={handleReject}
             />
           );
         })}

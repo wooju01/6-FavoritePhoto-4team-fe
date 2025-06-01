@@ -9,13 +9,21 @@ export default function MyCardDetail({
   setCount,
   price,
   setPrice,
+  isEditMode = false,
 }) {
+  // 현재 보유 중인 ACTIVE 카드 수
+  const baseCount = card?.photoCard?.userCards?.length ?? 0;
+
+  // 수정 모드일 경우 판매 중 수량 포함
+  const saleQuantity = card?.saleQuantity ?? 0;
+  const availableCount = isEditMode ? baseCount + saleQuantity : baseCount;
+
   const handleDecrease = () => {
     if (count > 1) setCount(count - 1);
   };
 
   const handleIncrease = () => {
-    if (count < card?.photoCard?.totalQuantity) setCount(count + 1);
+    if (count < availableCount) setCount(count + 1);
   };
 
   const handlePriceChange = (e) => {
@@ -37,7 +45,7 @@ export default function MyCardDetail({
           {card?.photoCard?.genre?.name || "-"}
         </span>
         <div className="ml-auto text-700-18 underline">
-          {card?.photoCard?.creator?.nickname || "나"}
+          {card.userCard?.owner?.nickname || "나"}
         </div>
       </div>
 
@@ -60,11 +68,9 @@ export default function MyCardDetail({
             </div>
             <div className="flex flex-col justify-center text-[10px] lg:text-sm text-gray-300 leading-tight pt-[3px]">
               <div className="text-white text-base lg:text-lg font-bold">
-                / {card?.photoCard?.totalQuantity ?? 0}
+                / {availableCount}
               </div>
-              <div className="pl-[1px]">
-                최대 {card?.photoCard?.totalQuantity ?? 0}장
-              </div>
+              <div className="pl-[1px]">최대 {availableCount}장</div>
             </div>
           </div>
         </div>
