@@ -1,6 +1,6 @@
 "use client";
 
-import { userService } from "@/lib/api/api-users";
+import { getMe } from "@/lib/api/api-users";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import React from "react";
@@ -24,7 +24,7 @@ const gradeStyle = {
 export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
   const { data: user } = useQuery({
     queryKey: ["user"],
-    queryFn: userService.getMe,
+    queryFn: getMe,
   });
 
   return (
@@ -37,7 +37,7 @@ export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
           ({totalCards}장)
         </span>
       </div>
-      <div className="flex gap-2.5">
+      <div className="flex gap-2.5 whitespace-nowrap overflow-x-auto">
         {Object.keys(gradeStyle).map((gradeId) => {
           const count = countsByGrade[gradeId] ?? 0;
           const { label, border, text } = gradeStyle[gradeId];
@@ -45,7 +45,7 @@ export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
             <div
               key={gradeId}
               className={clsx(
-                "bg-my-black border text-300-12 px-2.5 py-1.5 text-center whitespace-nowrap overflow-x-auto",
+                "bg-my-black border text-300-12 px-2.5 py-1.5 text-center",
                 border,
                 text,
                 label
@@ -56,7 +56,7 @@ export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
           );
         })}
       </div>
-      <hr className="border-gray-400 my-5" />
+      <hr className="border-gray-400 mb-5 md:my-5" />
     </section>
   );
 }

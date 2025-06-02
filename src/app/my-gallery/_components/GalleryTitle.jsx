@@ -25,7 +25,7 @@ export default function GalleryTitle({ disabled }) {
     <>
       {isDisabled && <Noti />}
       {/* pc, tablet용 */}
-      <header className="hidden md:flex items-center justify-between my-10 w-full">
+      <header className="hidden md:flex items-center justify-between my-3 w-full">
         <h2 className="title-48 lg:title-62">마이갤러리</h2>
         <div className="flex items-end gap-3">
           <span className="text-400-14 text-gray-300">{now}</span>
@@ -48,7 +48,6 @@ export default function GalleryTitle({ disabled }) {
       </header>
       {/* mobile용 */}
       <div className="fixed block md:hidden z-10 bottom-10 w-full left-0 px-4">
-        <div></div>
         <button
           disabled={disabled}
           onClick={() => {
@@ -64,7 +63,7 @@ export default function GalleryTitle({ disabled }) {
           포토카드 생성하기 ({count}/3)
         </button>
       </div>
-      <hr className="hidden md:block w-full h-0.5 bg-gray-100 mb-5" />
+      <hr className="hidden md:block w-full h-0.5 bg-gray-100 mb-10" />
     </>
   );
 }

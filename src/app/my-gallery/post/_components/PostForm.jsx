@@ -16,7 +16,7 @@ export default function PostForm({ grades, genres, disabled }) {
     dirty,
     isValid,
     isSubmitted,
-    isPending,
+    isPostPending,
     handleChange,
     handleFileChange,
     handleSelectChange,
@@ -85,8 +85,11 @@ export default function PostForm({ grades, genres, disabled }) {
         onChange={handleChange}
         error={(isSubmitted || dirty.description) && errors.description}
       />
-      <Button type="exchangeGreen" disabled={!isValid || disabled || isPending}>
-        {isPending ? "생성 중..." : "생성하기"}
+      <Button
+        type="exchangeGreen"
+        disabled={!isValid || disabled || isPostPending}
+      >
+        {isPostPending ? "생성 중..." : "생성하기"}
       </Button>
     </form>
   );

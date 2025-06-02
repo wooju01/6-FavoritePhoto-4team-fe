@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postCard } from "@/lib/api/api-users";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getCardMeta,
+  getMonthlyCardCount,
+  postCard,
+} from "@/lib/api/api-users";
 import { useStateModal } from "@/providers/StateModalProvider";
 import { upLoadImage } from "@/lib/api/api-uploader";
 
@@ -119,8 +123,12 @@ export default function usePostForm() {
     validate();
   }, [form]);
 
-  // ☑️ api 호출 : 모달도 같이
-  const { mutate, isPending } = useMutation({
+  // ☑️ api 호출1 - 생성: 모달도 같이 가져옴
+  const {
+    mutate,
+    isPending: isPostPending,
+    isError: isPostError,
+  } = useMutation({
     mutationFn: postCard,
     onSuccess: () => {
       openModal(201, "생성", {
@@ -140,6 +148,26 @@ export default function usePostForm() {
       resetForm();
       console.error("등록 실패", err.message);
     },
+  });
+
+  // ☑️ api 호출2 - 등급/장르 가져옴
+  const {
+    data: meta,
+    isPending: isMetaPending,
+    isError: isMetaError,
+  } = useQuery({
+    queryKey: ["cardMeta"],
+    queryFn: getCardMeta,
+  });
+
+  // ☑️ api 호출3 - 카드 생성 횟수 가져옴
+  const {
+    data,
+    isPending: isCountPending,
+    isError: isCountError,
+  } = useQuery({
+    queryKey: ["creationCardCount"],
+    queryFn: getMonthlyCardCount,
   });
 
   // ✅ 제출 함수
@@ -170,7 +198,14 @@ export default function usePostForm() {
     dirty,
     isValid,
     isSubmitted,
-    isPending,
+    meta, // 등급/장르 가져옴
+    data, // 카드 생성 횟수 가져옴
+    isPostPending,
+    isMetaPending,
+    isCountPending,
+    isPostError,
+    isMetaError,
+    isCountError,
     handleChange,
     handleFileChange,
     handleSelectChange,
