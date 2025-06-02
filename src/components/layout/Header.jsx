@@ -4,21 +4,36 @@ import mainLogoImg from "@/assets/main-logo.png";
 import humbergerIconImg from "@/assets/icon-humberger.png";
 import CurtainMenu from "./CurtainMenu";
 import DropdownNavi from "./DropdownNavi";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import iconBack from "@/assets/icon_back.svg";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/providers/AuthProvider";
 import Notification from "./Notification";
 import { getSocket, disconnectSocket } from "@/lib/socket";
 
+const specialPages = [
+  { path: "/notification", label: "알림" },
+  { path: "/my-gallery/post", label: "포토카드 생성" },
+  { path: "/for-my-sales", label: "나의 판매 포토카드" },
+  { path: "/my-gallery", label: "마이 갤러리" }, // 추가
+];
+
+function getSpecialPage(pathname) {
+  if (pathname.startsWith("/home/")) return { label: "마켓플레이스" };
+  return specialPages.find((p) => p.path === pathname);
+}
+
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout, isLoading } = useAuth();
   const [point, setPoint] = useState(null);
   const [pointLoading, setPointLoading] = useState(false);
   const [pointError, setPointError] = useState("");
   const [isCurtainOpen, setIsCurtainOpen] = useState(false); // 커튼 메뉴 상태 추가
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 닉네임 드롭다운 상태
+  const special = getSpecialPage(pathname);
 
   // 토큰 가져오기 (쿠키에서)
   const getToken = () => {
@@ -128,20 +143,35 @@ const Navbar = () => {
       `}
       >
         <div className="w-full relative md:static flex items-center justify-between">
-          <button className="md:hidden" onClick={() => setIsCurtainOpen(true)}>
-            <Image src={humbergerIconImg} alt="hamburger" />
-          </button>
+          {special ? (
+            <button className="md:hidden" onClick={() => router.back()}>
+              <Image src={iconBack} alt="back" width={24} height={24} />
+            </button>
+          ) : (
+            <button
+              className="md:hidden"
+              onClick={() => setIsCurtainOpen(true)}
+            >
+              <Image src={humbergerIconImg} alt="hamburger" />
+            </button>
+          )}
 
-          <Link
-            href={"/"}
-            className="absolute md:static left-1/2 md:left-0 -translate-x-1/2 md:-translate-0 "
-          >
-            <Image
-              src={mainLogoImg}
-              alt="main-logo"
-              className="w-20 md:w-28 lg:w-[138px] h-4 md:h-5 lg:h-[26px]"
-            />
-          </Link>
+          {special ? (
+            <span className="absolute md:static left-1/2 md:left-0 -translate-x-1/2 md:-translate-0 text-white text-lg font-bold title-20 ">
+              {special.label}
+            </span>
+          ) : (
+            <Link
+              href={"/"}
+              className="absolute md:static left-1/2 md:left-0 -translate-x-1/2 md:-translate-0 "
+            >
+              <Image
+                src={mainLogoImg}
+                alt="main-logo"
+                className="w-20 md:w-28 lg:w-[138px] h-4 md:h-5 lg:h-[26px]"
+              />
+            </Link>
+          )}
 
           {isLoading ? (
             <span className="text-gray-400">확인 중...</span>
@@ -157,7 +187,7 @@ const Navbar = () => {
                   ? `${point} P`
                   : "-"}
               </span>
-              <Notification />
+              {!special && <Notification />}
               <span
                 className="hidden md:block text-700-14 text-gray-200 cursor-pointer relative"
                 onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -190,7 +220,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
-      {isCurtainOpen && user && (
+      {isCurtainOpen && user && !special && (
         <CurtainMenu
           user={{ ...user, point: point ?? 0 }}
           onClose={() => setIsCurtainOpen(false)}
