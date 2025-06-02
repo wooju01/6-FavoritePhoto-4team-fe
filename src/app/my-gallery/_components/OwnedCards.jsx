@@ -1,6 +1,6 @@
 "use client";
 
-import { userService } from "@/lib/api/api-users";
+import { getMe } from "@/lib/api/api-users";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import React from "react";
@@ -24,7 +24,7 @@ const gradeStyle = {
 export default function OwnedCards({ totalCards = 0, countsByGrade = {} }) {
   const { data: user } = useQuery({
     queryKey: ["user"],
-    queryFn: userService.getMe,
+    queryFn: getMe,
   });
 
   return (

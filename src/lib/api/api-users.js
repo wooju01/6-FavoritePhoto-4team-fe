@@ -1,16 +1,16 @@
 import { cookieFetch } from "./fetch-client";
 
-// 장르 + 등급 get
+// ✅ 장르 + 등급 get
 export async function getCardMeta() {
   return await cookieFetch("/api/users/card-meta");
 }
 
-// 월별 생성 횟수 get
+// ✅ 월별 생성 횟수 get
 export async function getMonthlyCardCount() {
   return await cookieFetch("/api/users/monthly-post-count");
 }
 
-// 카드 생성
+// ✅ 카드 생성
 export async function postCard(data) {
   return await cookieFetch("/api/users/post", {
     method: "POST",
@@ -18,11 +18,17 @@ export async function postCard(data) {
   });
 }
 
-export const userService = {
-  getMe: () => cookieFetch("/api/users"),
-};
+// ✅ 사용자 1인 조회
+export async function getMe() {
+  return await cookieFetch("/api/users");
+}
 
-// GET: 마이 갤러리
+// ✅ GET: 카드 개수
+export async function getCardsCount() {
+  return await cookieFetch("/api/users/cards-count");
+}
+
+// ✅ GET: 마이 갤러리
 export async function getMyCards({
   grade,
   genre,
@@ -45,7 +51,7 @@ export async function getMyCards({
   );
 }
 
-// GET: 나의 판매 포토카드
+// ✅ GET: 나의 판매 포토카드
 export async function getMyCardsOnSale({
   grade,
   genre,
@@ -69,9 +75,4 @@ export async function getMyCardsOnSale({
   return await cookieFetch(
     `/api/users/cards-on-sale${queryString && `?${queryString}`}`
   );
-}
-
-// GET: 카드 개수
-export async function getCardsCount() {
-  return await cookieFetch("/api/users/cards-count");
 }

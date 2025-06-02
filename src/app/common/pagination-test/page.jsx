@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Pagination from "@/components/ui/Pagination";
-import { userService } from "@/lib/api/api-users";
+import { getMyCards } from "@/lib/api/api-users";
 import MyCard from "@/components/PhotoCard/MyCard"; // MyCard 컴포넌트 임포트
 import { useQuery } from "@tanstack/react-query";
 
@@ -50,8 +50,7 @@ export default function PaginationTestPage() {
     isFetching,
   } = useQuery({
     queryKey: ["myGallery", currentPage, pageSize],
-    queryFn: () =>
-      userService.getMyGallery({ page: currentPage, size: pageSize }),
+    queryFn: () => getMyCards({ page: currentPage, size: pageSize }),
     keepPreviousData: true,
   });
 

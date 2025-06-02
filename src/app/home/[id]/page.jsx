@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSaleDetail } from "@/lib/api/api-sale";
-import { userService } from "@/lib/api/api-users";
+import { getMe } from "@/lib/api/api-users";
 import SellerPage from "@/components/CardSeller/SellerPage";
 import PhotoBuyerDetail from "@/components/PhotoBuyer/PhotoBuyerDetail";
 
@@ -18,7 +18,7 @@ export default function PhotoDetailPage() {
       try {
         const [saleData, userData] = await Promise.all([
           getSaleDetail(saleId),
-          userService.getMe(),
+          getMe(),
         ]);
         setSale(saleData);
         setCurrentUser(userData);
@@ -42,4 +42,3 @@ export default function PhotoDetailPage() {
     <PhotoBuyerDetail sale={sale} />
   );
 }
-
