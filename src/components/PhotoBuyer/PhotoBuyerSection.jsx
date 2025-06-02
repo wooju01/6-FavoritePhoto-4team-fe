@@ -51,6 +51,7 @@ export default function PhotoBuyerSection({ photo }) {
           total={photo?.photoCard?.totalQuantity}
           onSuccess={handleBuy}
           isLoading={isLoading}
+          cardName={name} // 카드 제목 전달 추가가
         />
       </div>
     </section>
