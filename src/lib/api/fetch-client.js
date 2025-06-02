@@ -7,7 +7,7 @@
 import { parseBackendError } from "../utils/error-parser";
 
 const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
-//"http://localhost:3002"
+// "http://localhost:3002";
 export const authUtils = {
   setAccessToken: (accessToken) => {
     if (typeof window !== "undefined") {

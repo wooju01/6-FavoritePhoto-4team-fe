@@ -11,6 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useStateModal } from "@/providers/StateModalProvider";
 import StateModal from "../modal/StateModal";
 import { useRouter } from "next/navigation";
+import closeIcon from "@/assets/close.svg";
 
 const grades = [
   { id: 1, name: "COMMON" },
@@ -29,7 +30,8 @@ const genres = [
 export default function CardSellDetail({
   card,
   availableCards,
-  onClose,
+  onCloseDetail,
+  onCloseModal,
   isEditMode = false,
 }) {
   const router = useRouter();
@@ -57,6 +59,19 @@ export default function CardSellDetail({
   const [genreOpen, setGenreOpen] = useState(false);
   const gradeRef = useRef(null);
   const genreRef = useRef(null);
+
+  const [isClosing, setIsClosing] = useState(false); // md버전: 모달닫힘 애니메이션용
+  const handleSlideBarClick = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      if (typeof onCloseModal === "function") {
+        onCloseModal(); // lg에서만 닫기 실행
+      } else {
+        onCloseDetail(); // md/모바일에서는 CardSellDetail 자체만 닫기
+      }
+    }, 300);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -131,10 +146,29 @@ export default function CardSellDetail({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-my-black text-white overflow-y-auto px-4 pt-4 pb-8">
-      {/* 헤더 */}
-      <div className="flex items-center mb-4">
-        <button onClick={onClose} className="w-10 h-10 flex items-center">
+    <div
+      className={`
+        relative bg-my-black md:bg-gray-500 text-white overflow-y-auto
+        px-4 pt-4 pb-8 
+        ${isClosing ? "animate-slide-down" : "animate-slide-up"}
+        lg:animate-none
+        
+        md:rounded-t-sm md:h-[90%]
+        
+        lg:rounded-md
+        lg:max-w-[1160px] lg:w-full lg:max-h-[920px]
+        lg:px-0 lg:pt-0 lg:pb-0 lg:pr-8
+        `}
+    >
+      {/* 슬라이드바 (md만) */}
+      <div
+        className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3 mt-2 hidden md:block lg:hidden"
+        onClick={handleSlideBarClick}
+      />
+
+      {/* 헤더 (모바일 전용) */}
+      <div className="flex items-center mb-4 md:hidden">
+        <button onClick={onCloseDetail} className="w-10 h-10 flex items-center">
           <Image src={back} alt="뒤로가기" width={24} height={24} />
         </button>
         <div className="flex-1 text-center title-20">
@@ -142,32 +176,41 @@ export default function CardSellDetail({
         </div>
       </div>
 
+      {/* 모달명 (md, lg 전용) */}
+      <div className="hidden md:block text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">
+        나의 포토카드 판매하기
+      </div>
+
       {/* 카드 제목 */}
-      <div className="text-700-24 font-bold mb-3">
-        {card?.name || "카드 이름"}
+      <div className="text-700-24 md:text-700-32 mb-3">
+        {card?.photoCard?.name || "카드 이름"}
       </div>
 
       <div className="w-full h-[2px] bg-gray-200 mb-4" />
 
-      {/* 카드 이미지 */}
-      <div className="w-full aspect-[4/3] relative mb-4">
-        <Image
-          src={card.photoCard.imageUrl}
-          alt="카드 이미지"
-          fill
-          className="object-cover"
-        />
-      </div>
+      <div className="flex flex-col md:flex-row md:items-start md:gap-6 mb-8">
+        {/* 카드 이미지 */}
+        <div className="w-full md:w-1/2 aspect-[4/3] relative mb-4 md:mb-0">
+          <Image
+            src={card.photoCard.imageUrl}
+            alt="카드 이미지"
+            fill
+            className="object-cover"
+          />
+        </div>
 
-      {/* 카드 상세 */}
-      <MyCardDetail
-        card={card}
-        count={count}
-        setCount={setCount}
-        price={price}
-        setPrice={setPrice}
-        isEditMode={isEditMode}
-      />
+        {/* 카드 상세 */}
+        <div className="w-full md:w-1/2">
+          <MyCardDetail
+            card={card}
+            count={count}
+            setCount={setCount}
+            price={price}
+            setPrice={setPrice}
+            isEditMode={isEditMode}
+          />
+        </div>
+      </div>
 
       {/* 교환 희망 정보 */}
       <div className="mt-25">
@@ -176,64 +219,77 @@ export default function CardSellDetail({
         </div>
         <div className="w-full h-[2px] bg-gray-200 mb-4" />
 
-        {/* 등급 드롭다운 */}
-        <div className="mt-10 relative" ref={gradeRef}>
-          <label className="block text-white mb-2 text-700-16">등급</label>
-          <button
-            onClick={() => setGradeOpen(!gradeOpen)}
-            className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
-          >
-            <span className="text-white">
-              {grades.find((g) => g.id === selectedGrade)?.name || "선택"}
-            </span>
-            {gradeOpen ? <GoTriangleUp /> : <GoTriangleDown />}
-          </button>
-          {gradeOpen && (
-            <ul className="absolute mt-1 w-full bg-my-black border border-white z-10">
-              {grades.map((grade) => (
-                <li
-                  key={grade.id}
-                  className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => {
-                    setSelectedGrade(grade.id);
-                    setGradeOpen(false);
-                  }}
-                >
-                  {grade.name}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {/* 등급 + 장르: md, lg는 가로 정렬 */}
+        <div className="flex flex-col mt-10 md:flex-row md:gap-4">
+          {/* 등급 드롭다운 */}
+          <div className="w-full md:w-1/2 relative" ref={gradeRef}>
+            <label className="block text-white mb-2 text-700-16">등급</label>
+            <button
+              onClick={() => setGradeOpen(!gradeOpen)}
+              className="w-full h-[55px] bg-gray-500 border border-white text-left px-3 flex justify-between items-center"
+            >
+              <span
+                className={
+                  selectedGrade ? "text-white" : "text-gray-300 text-300-14"
+                }
+              >
+                {grades.find((g) => g.id === selectedGrade)?.name ||
+                  "등급을 선택해 주세요"}
+              </span>
+              {gradeOpen ? <GoTriangleUp /> : <GoTriangleDown />}
+            </button>
+            {gradeOpen && (
+              <ul className="absolute mt-1 w-full bg-gray-500 border border-white z-10">
+                {grades.map((grade) => (
+                  <li
+                    key={grade.id}
+                    className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setSelectedGrade(grade.id);
+                      setGradeOpen(false);
+                    }}
+                  >
+                    {grade.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-        {/* 장르 드롭다운 */}
-        <div className="mt-8 relative" ref={genreRef}>
-          <label className="block text-white mb-2 text-700-16">장르</label>
-          <button
-            onClick={() => setGenreOpen(!genreOpen)}
-            className="w-full h-[55px] bg-my-black border border-white text-left px-3 flex justify-between items-center"
-          >
-            <span className="text-white">
-              {genres.find((g) => g.id === selectedGenre)?.name || "선택"}
-            </span>
-            {genreOpen ? <GoTriangleUp /> : <GoTriangleDown />}
-          </button>
-          {genreOpen && (
-            <ul className="absolute mt-1 w-full bg-my-black border border-white z-10">
-              {genres.map((genre) => (
-                <li
-                  key={genre.id}
-                  className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => {
-                    setSelectedGenre(genre.id);
-                    setGenreOpen(false);
-                  }}
-                >
-                  {genre.name}
-                </li>
-              ))}
-            </ul>
-          )}
+          {/* 장르 드롭다운 */}
+          <div className="mt-8 md:mt-0 w-full md:w-1/2 relative" ref={genreRef}>
+            <label className="block text-white mb-2 text-700-16">장르</label>
+            <button
+              onClick={() => setGenreOpen(!genreOpen)}
+              className="w-full h-[55px] bg-gray-500 border border-white text-left px-3 flex justify-between items-center"
+            >
+              <span
+                className={
+                  selectedGrade ? "text-white" : "text-gray-300 text-300-14"
+                }
+              >
+                {genres.find((g) => g.id === selectedGenre)?.name ||
+                  "장르를 선택해 주세요"}
+              </span>
+              {genreOpen ? <GoTriangleUp /> : <GoTriangleDown />}
+            </button>
+            {genreOpen && (
+              <ul className="absolute mt-1 w-full bg-gray-500 border border-white z-10">
+                {genres.map((genre) => (
+                  <li
+                    key={genre.id}
+                    className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => {
+                      setSelectedGenre(genre.id);
+                      setGenreOpen(false);
+                    }}
+                  >
+                    {genre.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* 교환 희망 설명 */}
@@ -246,14 +302,18 @@ export default function CardSellDetail({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="설명을 입력해 주세요"
-            className="w-full bg-my-black border border-white text-white p-3 resize-none placeholder:text-gray-400 text-300-14"
+            className="w-full bg-gray-500 border border-white text-white p-3 resize-none placeholder:text-gray-300 text-300-14"
           />
         </div>
       </div>
 
       {/* 버튼 */}
-      <div className="flex gap-3 mt-8">
-        <Button type="reject" className="w-full h-[55px]" onClick={onClose}>
+      <div className="flex gap-3 mt-10">
+        <Button
+          type="reject"
+          className="w-full h-[55px]"
+          onClick={onCloseDetail}
+        >
           취소하기
         </Button>
         <Button

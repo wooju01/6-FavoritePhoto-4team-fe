@@ -2,76 +2,73 @@
 
 import React from "react";
 import MyCard from "@/components/PhotoCard/MyCard";
+import GalleryTitle from "./GalleryTitle";
+import OwnedCards from "./OwnedCards";
+
+import { use2Filter } from "@/hooks/useFilter";
+import { useMyGallery } from "@/hooks/useMyGallery";
+
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import Pagination from "@/components/ui/Pagination";
 import Search from "@/components/ui/Search";
-import { useQuery } from "@tanstack/react-query";
-import { getCardsCount, getMyCards } from "@/lib/api/api-users";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import GalleryTitle from "./GalleryTitle";
-import OwnedCards from "./OwnedCards";
-import { use2Filter } from "@/hooks/useFilter";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import MyGalleryFilter from "@/components/BottomSheet/Mygalleryfilter";
 
 export default function MyPage() {
-  // 쿼리 문자열 처리
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  // ✅ 쿼리 문자열 처리
+  const {
+    data,
+    count,
+    isPending,
+    isError,
+    page,
+    onFilterChange,
+    onPageChange,
+  } = useMyGallery();
 
+  // ✅ 필터 관련 정보 가져옴
   const { isOpen, toggle, close, filterOptions } = use2Filter();
 
-  const grade = Number(searchParams.get("grade")) || 0;
-  const genre = Number(searchParams.get("genre")) || 0;
-  const keyword = searchParams.get("keyword") || "";
-  const page = Number(searchParams.get("page") || 1);
-  const size = searchParams.get("size") || "md";
-
-  // 카드 데이터 불러오기
-  const { data, isPending, isError } = useQuery({
-    queryKey: ["myGalleryCards_v8", grade, genre, keyword, page, size],
-    queryFn: () => getMyCards({ grade, genre, keyword, page, size }),
-    enabled: true, // 항상 실행
-  });
-
-  // 필터 변경
-  const onFilterChange = (type, value) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // 전체 선택: 필터 제거
-    value === 0 ? params.delete(type) : params.set(type, value.toString());
-  };
-
-  // 카드 개수 불러오기 (전체 + 등급별)
-  const { data: count } = useQuery({
-    queryKey: ["countedCards"],
-    queryFn: getCardsCount,
-  });
-
-  // 페이지 바꾸는 함수
-  const onPageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  if (isPending) return <p>로딩 중...</p>;
-  if (isError) return <p>오류 발생</p>;
+  // ✅ 로딩 중 + 오류 났을 때 디자인
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>로딩 중입니다...</p>
+        <svg
+          className="ml-3 size-5 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          ></path>
+        </svg>
+      </div>
+    );
+  if (isError) return <p>데이터를 불러오는 데 실패했습니다.</p>;
 
   return (
     <>
+      {/* title */}
       <GalleryTitle />
+      {/* 보유 포토카드 */}
       <OwnedCards
         totalCards={count?.active.total}
         countsByGrade={count?.active.byGrade}
       />
+
+      {/* 검색창 ~ 페이지네이션 전(=카드)까지 */}
       <section className="mb-15">
-        <div className="flex items-center gap-2.5 md:gap-10">
-          <div className="order-2 flex-1 md:flex-0">
+        {/* 검색창, 등급/장르 필터 */}
+        <div className="flex items-center mb-5 md:mb-10 lg:mb-12 gap-7 lg:gap-10">
+          {/* search */}
+          <div className="order-2 md:order-1 w-full md:w-52 lg:w-[320px]">
             <Search />
           </div>
-          {/* filter */}
+
+          {/* pc filter */}
           <div className="hidden md:flex items-center gap-6 flex-1 order-1 md:order-2">
             {Object.values(filterOptions).map((option) => (
               <FilterDropdown
@@ -83,12 +80,13 @@ export default function MyPage() {
                 onSelect={(value) => onFilterChange(option.key, value)}
               />
             ))}
-          </div> 
-          {/* 모바일 filter 버튼 */}
-      <MyGalleryFilter/>
+          </div>
+          {/* mobile filter */}
+          <MyGalleryFilter />
         </div>
+
         {/* 카드 렌더링 ↓ */}
-        <section className="py-4 md:py-6 lg:py-8 grid grid-cols-2 gap-2 md:gap-4 lg:gap-14 lg:grid-cols-3">
+        <section className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 lg:gap-5">
           {data?.items.map((card) => (
             <MyCard
               key={card.id}
@@ -101,8 +99,12 @@ export default function MyPage() {
               totalQuantity={card.userCards?.length}
             />
           ))}
+          {/* 카드를 하나도 안 만들었을 때 */}
+          {data?.items.length === 0 && <p>보유한 포토카드가 없습니다.</p>}
         </section>
       </section>
+
+      {/* 페이지네이션 */}
       <div className="flex justify-center mb-20">
         <Pagination
           totalPages={data?.pagination.totalPages}
