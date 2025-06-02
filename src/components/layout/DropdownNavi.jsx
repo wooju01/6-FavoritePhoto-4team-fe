@@ -2,6 +2,12 @@
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 
+const menuItems = [
+  { href: "/home", label: "마켓플레이스" },
+  { href: "/my-gallery", label: "마이갤러리" },
+  { href: "/for-my-sales", label: "판매 중인 포토카드" },
+];
+
 const DropdownNavi = ({ user, open, onClose }) => {
   const dropdownRef = useRef(null);
 
@@ -23,6 +29,10 @@ const DropdownNavi = ({ user, open, onClose }) => {
 
   if (!open) return null;
 
+  const handleLinkClick = () => {
+    if (onClose) onClose();
+  };
+
   return (
     <div
       ref={dropdownRef}
@@ -35,29 +45,31 @@ const DropdownNavi = ({ user, open, onClose }) => {
         </div>
         <div className="flex justify-between text-300-12 text-gray-200 w-[200px]">
           <span className="text-gray-300">보유 포인트</span>
-          <span className="text-main">{user.point.toLocaleString()} P</span>
+          <span className="text-main">
+            {(user.point ?? 0).toLocaleString()} P
+          </span>
         </div>
       </div>
       <hr className="border-gray-400 mb-4 w-full" />
       <nav className="flex flex-col gap-4 ml-5 mb-6">
-        <Link href="/home" className="text-700-14 text-white hover:text-main">
-          마켓플레이스
-        </Link>
-        <Link
-          href="/my-gallery"
-          className="text-700-14 text-white hover:text-main"
-        >
-          마이갤러리
-        </Link>
-        <Link
-          href="/for-my-sales"
-          className="text-700-14 text-white hover:text-main"
-        >
-          판매 중인 포토카드
-        </Link>
+        {menuItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="text-700-14 text-white hover:text-main"
+            onClick={handleLinkClick}
+          >
+            {item.label}
+          </Link>
+        ))}
       </nav>
     </div>
   );
 };
 
 export default DropdownNavi;
+
+//개선 사항
+//1. 메뉴 항목을 배열로 관리 map으로 렌더링
+//2. Link 클릭 시 onClose 호출
+//3. user.point 안전하게 처리 (null/undefined 방지)
