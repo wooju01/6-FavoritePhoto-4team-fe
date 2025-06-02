@@ -114,7 +114,7 @@ const Button = ({
   );
 
   return (
-    <button className={allStyles} disabled={disabled} {...rest}>
+     <button className={`${allStyles} w-full`} disabled={disabled} {...rest}>
       {children || defaultChildrenText}
     </button>
   );

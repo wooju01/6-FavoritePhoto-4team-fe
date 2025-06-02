@@ -30,12 +30,12 @@ export default function PhotoBuyerSection({ photo }) {
   return (
     <section className="w-full">
       <Title title={name} font="titleLg_Noto" />
-      <div className="md:flex">
-        <div className="w-full h-[260px] lg:h-[720px] overflow-hidden rounded-md mb-4 relative">
+      <div className="md:py-5 lg:py-7 md:grid grid-cols-2 gap-5 lg:grid-cols-3 lg:gap-10">
+        <div className="relative py-4 md:py-0 lg:col-span-2">
           <img
             src={imageUrl}
             alt={name}
-            className="object-cover w-full h-full"
+            className="aspect-square w-full h-full"
             style={{ objectFit: "cover" }}
           />
         </div>
@@ -51,7 +51,6 @@ export default function PhotoBuyerSection({ photo }) {
           total={photo?.photoCard?.totalQuantity}
           onSuccess={handleBuy}
           isLoading={isLoading}
-          cardName={name} // 카드 제목 전달 추가가
         />
       </div>
     </section>
