@@ -13,6 +13,13 @@ import StateModal from "@/components/modal/StateModal";
 
 const FIXED_LABELS = ["여행", "풍경", "인물", "사물"];
 
+const tierToGradeName = {
+  1: "COMMON",
+  2: "RARE",
+  3: "SUPER RARE",
+  4: "LEGENDARY",
+};
+
 export default function CardBuyer({
   cardId,
   tier,
@@ -23,6 +30,7 @@ export default function CardBuyer({
   remaining,
   total,
   onSuccess,
+  cardName, // 카드 제목 전달 추가가
 }) {
   const [quantity, setQuantity] = useState(1);
   const [localRemaining, setLocalRemaining] = useState(remaining);
@@ -38,19 +46,20 @@ export default function CardBuyer({
   const { mutate, isPending } = useMutation({
     mutationFn: () => storeService.purchaseCard(cardId, quantity),
     onSuccess: (data) => {
+      const gradeName = tierToGradeName[tier];
       setLocalRemaining((prev) => prev - quantity);
       if (onSuccess) onSuccess(data);
       openStateModal(200, "구매", {
-        grade: tier,
-        name: description,
+        grade: gradeName,
+        name: cardName,
         count: quantity,
       });
     },
     onError: (err) => {
       const status = err.response?.status || 400;
       openStateModal(status, "구매", {
-        grade: tier,
-        name: description,
+        grade: gradeName,
+        name: cardName,
         count: quantity,
       });
       console.error("구매 실패:", err.message || err);
@@ -72,9 +81,10 @@ export default function CardBuyer({
   const gradeSize = isLargeScreen ? "xl" : "lg";
 
   const handlePurchaseButtonClick = () => {
+    const gradeName = tierToGradeName[tier];
     openNotiModal(
       "구매",
-      { grade: tier, name: description, count: quantity },
+      { grade: gradeName, name: cardName, count: quantity },
       () => mutate()
     );
   };
