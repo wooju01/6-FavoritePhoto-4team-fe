@@ -11,7 +11,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { use4Filter } from "@/hooks/useFilter";
 import Pagination from "@/components/ui/Pagination";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import SaleGalleryFilter from "@/components/BottomSheet/SaleGaileryFilter";
 
 export default function ForMySales() {
@@ -74,8 +73,8 @@ export default function ForMySales() {
         <Title title="나의 판매 포토카드" font="titleLg_Bk" />
       </header>
       <OwnedCards
-        totalCards={count?.inactive.total}
-        countsByGrade={count?.inactive.byGrade}
+        totalCards={count?.active.total}
+        countsByGrade={count?.active.byGrade}
       />
       <section className="mb-15">
         <div className="flex items-center mb-5 gap-7 lg:gap-10">
@@ -96,7 +95,7 @@ export default function ForMySales() {
             ))}
           </div>
           {/* 모바일 filter 버튼 */}
-         <SaleGalleryFilter/>
+          <SaleGalleryFilter />
         </div>
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3">
