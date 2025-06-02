@@ -53,25 +53,27 @@ export default function PhotoBuyerDetail({ sale }) {
         refetchTradeRequests={loadTradeRequests}
       />
       <Title title="내가 제시한 교환 목록" font="titleLg_Noto" />
-      {tradeRequests.length === 0 ? (
-        <p>거래 요청이 없습니다.</p>
-      ) : (
-        tradeRequests.map((req) =>
-          req.tradeRequestUserCards.map(({ userCard }) => (
-            <ExchangeCancel
-              key={userCard.id}
-              name={userCard.photoCard?.name || "제목 없음"}
-              image={userCard.photoCard?.imageUrl}
-              gradeId={userCard.photoCard?.gradeId}
-              genreId={userCard.photoCard?.genreId}
-              nickname={userCard.photoCard?.creator?.nickname || "익명"}
-              price={userCard.price}
-              description={req.description || ""}
-              onCancel={() => handleCancel(req.id)}
-            />
-          ))
-        )
-      )}
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+        {tradeRequests.length === 0 ? (
+          <p>거래 요청이 없습니다.</p>
+        ) : (
+          tradeRequests.map((req) =>
+            req.tradeRequestUserCards.map(({ userCard }) => (
+              <ExchangeCancel
+                key={userCard.id}
+                name={userCard.photoCard?.name || "제목 없음"}
+                image={userCard.photoCard?.imageUrl}
+                gradeId={userCard.photoCard?.gradeId}
+                genreId={userCard.photoCard?.genreId}
+                nickname={userCard.photoCard?.creator?.nickname || "익명"}
+                price={userCard.price}
+                description={req.description || ""}
+                onCancel={() => handleCancel(req.id)}
+              />
+            ))
+          )
+        )}
+      </div>
     </section>
   );
 }

@@ -24,50 +24,48 @@ export default function ExchangeCancel({
   onApprove,
   onCancel,
 }) {
- 
   return (
-    <div className="bg-my-black w-full px-2 py-2 border border-gray-800 text-white">
+    <div className="flex flex-col justify-between bg-gray-500  border-1 w-full px-2 py-2  border-gray-800 text-white mt-5">
       {/* 이미지 */}
-      <div className="w-full aspect-[4/3] relative mb-3">
-        <img
-          src={image}
-          alt={name}
-          className="object-cover"
-        />
+      <div className=" relative mb-3 ">
+        <img src={image} alt={name} className="object-cover w-full h-full aspect-square" />
       </div>
 
       {/* 제목 */}
-      <h3 className="text-700-14 truncate mb-1">{name}</h3>
+      <div className="flex flex-col justify-baseline ">
+        <h3 className="text-700-14 truncate mb-1">{name}</h3>
 
-      <div className="flex">
-        {/* 등급 · 장르 · 작성자 */}
-        <div className="flex justify-between items-center text-400-10">
-          <div className="flex items-center gap-1.5">
-            <p className="[&_*]:text-300-10">
-              <GradeTag grade={gradeId} />
-            </p>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-300">{genreMap[genreId]}</span>
+        <div>
+          {/* 등급 · 장르 · 작성자 */}
+          <div className="flex justify-between items-center text-400-10">
+            <div className="flex items-center gap-1.5">
+              <p className="[&_*]:text-300-10">
+                <GradeTag grade={gradeId} />
+              </p>
+              <span className="text-gray-400">|</span>
+              <span className="text-gray-300">{genreMap[genreId]}</span>
+            </div>
+          </div>
+
+          {/* 구매 가격 */}
+          <div className="mt-1 flex justify-between items-center text-400-10  md:text-400-16">
+            <span>
+              <span className="text-white font-semibold ">{price} P</span>
+              <span className="text-gray-300"> 에 구매</span>
+            </span>
+            <span className="underline text-brand-yellow">{nickname}</span>
           </div>
         </div>
+        <div>
+          {/* 구분선 */}
+          <div className="border-t border-gray-700 my-2" />
 
-        {/* 구매 가격 */}
-        <div className="mt-1 flex justify-between items-center text-400-10">
-          <span>
-            <span className="text-white font-semibold">{price} P</span>
-            <span className="text-gray-300"> 에 구매</span>
-          </span>
-          <span className="underline text-brand-yellow">{nickname}</span>
+          {/* 설명 */}
+          <p className="text-300-10 text-gray-200 line-clamp-2 mb-3 md:text-400-18">
+            {description}
+          </p>
         </div>
       </div>
-      {/* 구분선 */}
-      <div className="border-t border-gray-700 my-2" />
-
-      {/* 설명 */}
-      <p className="text-300-10 text-gray-200 line-clamp-2 mb-3">
-        {description}
-      </p>
-
       {/* 버튼들 */}
       <div className="w-full">
         <Button type="reject" onClick={onCancel}>
