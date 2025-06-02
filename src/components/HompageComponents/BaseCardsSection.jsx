@@ -9,6 +9,7 @@ import { storeService } from "@/lib/api/api-store";
 import FilterControls from "../ui/FilterControls";
 import Sort from "../ui/Sort";
 import FilterSheetControls from "../BottomSheet/FilterSheetControls";
+import FakeInfiniteCardList from "../ui/FakeInfiniteCardList";
 
 export default async function BaseCardsSection({
   grade,
@@ -57,7 +58,7 @@ export default async function BaseCardsSection({
       {data.sales.length === 0 ? (
         <NoResultMessage message={"필터링 결과가 존재하지 않습니다."} />
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-20">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-14">
           <Suspense
             key={
               data.sales || data.photoCard || data.cardGrade || data.cardGenre
@@ -68,6 +69,7 @@ export default async function BaseCardsSection({
           </Suspense>
         </div>
       )}
+
     </>
   );
 }

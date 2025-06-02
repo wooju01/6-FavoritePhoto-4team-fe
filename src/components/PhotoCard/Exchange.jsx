@@ -17,11 +17,11 @@ export default function Exchange({ trade, onApprove, onReject }) {
   const photoCard = userCard?.photoCard;
 
   return (
-    <div className="bg-my-black w-full px-2 py-2 border border-gray-800 text-white">
+    <div className="bg-gray-500 w-full p-2 md:p-5 lg:p-10 border border-gray-800 text-white rounded-xs">
       {/* 이미지 */}
-      <div className="w-full aspect-[4/3] relative mb-3">
+      <div className="relative mb-3">
         {/* 여기 로직 이상한거 압니다..근데 이상하게 이미지가 잘 떠서 그냥 두시길 바랍니다.. */}
-        <Image
+        <img
           src={
             photoCard?.imageUrl?.startsWith("http")
               ? photoCard.imageUrl
@@ -30,34 +30,33 @@ export default function Exchange({ trade, onApprove, onReject }) {
                 }`
           }
           alt={photoCard?.name || "카드 이미지"}
-          fill
-          className="object-cover"
+          className="object-cover w-full h-full aspect-square"
         />
       </div>
 
-      {/* 제목 */}
-      <h3 className="text-700-14 truncate mb-1">{photoCard?.name}</h3>
+      {/* 제목 */}  
+      <h3 className="text-700-14 md:text-700-22 truncate mb-1">{photoCard?.name}</h3>
 
       {/* 등급 · 장르 · 작성자 */}
       <div className="flex justify-between items-center text-400-10">
         <div className="flex items-center gap-1.5">
-          <p className="[&_*]:text-300-10">
+          <p className="[&>span]:text-300-10 md:[&>span]:text-300-16">
             <GradeTag grade={photoCard?.gradeId} />
           </p>
-          <span className="text-gray-400">|</span>
-          <span className="text-gray-300">{genreMap[photoCard?.genreId]}</span>
+          <span className="text-gray-400 md:text-400-16">|</span>
+          <span className="text-gray-300 md:text-400-16">{genreMap[photoCard?.genreId]}</span>
         </div>
       </div>
 
       {/* 구매 가격 */}
       <div className="mt-1 flex justify-between items-center text-400-10">
         <span>
-          <span className="text-white font-semibold">
+          <span className="text-white font-semibold md:text-400-16">
             {userCard?.price ?? 0} P
           </span>
-          <span className="text-gray-300"> 에 구매</span>
+          <span className="text-gray-300 md:text-400-16"> 에 구매</span>
         </span>
-        <span className="underline text-brand-yellow">
+        <span className="underline text-brand-yellow md:text-400-16">
           {trade?.applicant?.nickname}
         </span>
       </div>
@@ -66,19 +65,20 @@ export default function Exchange({ trade, onApprove, onReject }) {
       <div className="border-t border-gray-700 my-2" />
 
       {/* 설명 */}
-      <p className="text-300-10 text-gray-200 line-clamp-2 mb-3">
+      <p className="text-300-10 md:text-400-16 text-gray-200 line-clamp-2 mb-3">
         {trade?.description}
       </p>
 
       {/* 버튼들 */}
-      <div className="flex justify-between gap-2">
+      <div className="flex justify-between gap-2 md:gap-5 md:[&>button]:h-14">
         <Button
           type="reject"
           onClick={() => {
             onReject(trade.id); // SellerPage에서 reject 실행
           }}
         >
-          거절
+          <span className="text-700-12 md:hidden">거절</span>
+          <span className="hidden md:block text-400-16 font-medium">거절하기</span>
         </Button>
         <Button
           type="approve"
@@ -86,7 +86,8 @@ export default function Exchange({ trade, onApprove, onReject }) {
             onApprove(trade.id); // SellerPage에서 approve 실행
           }}
         >
-          승인
+          <span className="text-700-12 md:hidden">승인</span>
+          <span className="hidden md:block text-700-16">승인하기</span>
         </Button>
       </div>
     </div>

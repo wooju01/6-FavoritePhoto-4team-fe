@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import exchangeIcon from "@/assets/exchange.svg";
-import Button from "./Button";
-import GradeTag from "../tag/GradeTag";
-import CardSellDetail from "../CardSeller/CardSellDetail";
 import { useRouter } from "next/navigation";
+import { FiRefreshCw } from "react-icons/fi";
 import { cancelSaleById } from "@/lib/api/api-sale";
 import { getMyCards } from "@/lib/api/api-users";
+import GradeTag from "../tag/GradeTag";
+import Button from "./Button";
 
 const genreMap = {
   1: "여행",
@@ -61,81 +59,60 @@ export default function CardSeller({ sale }) {
   } = sale;
 
   return (
-    <>
-      <div className="w-full bg-my-black text-white lg:p-5 flex flex-col justify-between text-sm lg:text-base">
-        {/* 상단 정보 */}
-        <div className="flex items-center font-bold gap-2 mb-2 text-sm lg:text-[15px]">
+    <div>
+      {/* 카드 정보 */}
+      <div className="flex-col gap-7">
+        <div className="flex-row-center gap-2.5 [&_*]:text-700-18 lg:[&_*]:text-700-24">
           <GradeTag grade={photoCard.gradeId} />
-          <span className="text-gray-400 text-700-18">|</span>
-          <span className="text-gray-300 text-700-18">
-            {genreMap[photoCard.genreId]}
-          </span>
-          <div className="ml-auto text-700-18 underline">{seller.nickname}</div>
+          <span className="text-gray-300">|</span>
+          <span className="text-gray-300">{genreMap[photoCard.genreId]}</span>
+          <p className="flex-1 text-end underline">{seller.nickname}</p>
         </div>
-
-        <div className="w-full h-[1.5px] bg-gray-400 my-5" />
-
-        {/* 설명 */}
-        <p className="leading-relaxed text-400-16 lg:text-sm">
-          {photoCard.description}
-        </p>
-
-        <div className="w-full h-[2px] bg-gray-400 my-5" />
-
-        {/* 가격/잔여 */}
-        <div className="flex flex-col gap-2 mb-18">
-          <div className="flex justify-between">
-            <span className="text-gray-300 text-400-18">가격</span>
-            <span className="text-700-20">{price} P</span>
+        <h3 className="w-full h-[1px] bg-gray-400"></h3>
+        <div>
+          <p className="lg:text-400-18">{photoCard.description}</p>
+        </div>
+        <h3 className="w-full h-[1px] bg-gray-400"></h3>
+        <div className="flex-col gap-2.5">
+          <div className="flex-between-center [&_*]:text-400-18 lg:[&_*]:text-400-20">
+            <span className="text-gray-300">가격</span>
+            <span>{price} P</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-300 text-400-18">잔여</span>
-            <span className="text-700-20">{saleQuantity} / 10</span>
+          <div className="flex-between-center [&_*]:text-400-18 lg:[&_*]:text-400-20">
+            <span className="text-gray-300">잔여</span>
+            <div>
+              <span>{saleQuantity} </span>
+              <span className="text-gray-300">/ 10</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* 교환 희망 정보 */}
-        <div className="flex items-center gap-2 mb-1">
-          <Image src={exchangeIcon} alt="교환" width={20} height={20} />
-          <span className="text-700-22">교환 희망 정보</span>
+      {/* 교환 희망 정보 */}
+      <div className="py-24 flex-col gap-7 lg:gap-10">
+        <div className="">
+          <div className="flex-row-center gap-2.5 mb-2">
+            <FiRefreshCw className="w-6 h-6 lg:w-7 lg:h-7"/>
+            <h2 className="text-700-22 lg:text-700-28">교환 희망 정보</h2>
+          </div>
+          <h3 className="w-full h-[1.5px] bg-gray-200"></h3>
         </div>
-        <div className="w-full h-[1.5px] bg-gray-100" />
-
-        {/* 희망 카테고리 */}
-        <div className="flex items-center font-bold gap-2 my-6.5 text-sm lg:text-base">
-          <GradeTag grade={cardGradeId} />
-          <span className="text-gray-400 text-700-18">|</span>
-          <span className="text-gray-300 text-700-18">
-            {genreMap[cardGenreId]}
-          </span>
+        <div className="flex-row-center gap-2.5 lg:gap-3.5 [&>span]:text-700-18 lg:[&>span]:text-700-24">
+          <GradeTag grade={photoCard.gradeId} />
+          <span className="text-gray-300">|</span>
+          <span className="text-gray-300">{genreMap[cardGenreId]}</span>
         </div>
-
-        <div className="w-full h-[1.5px] bg-gray-400 mb-6" />
-
-        <p className="text-gray-200 mb-12 text-400-16">{desiredDescription}</p>
-
-        {/* 버튼 영역 */}
-        <div className="flex flex-col gap-3">
+        <h3 className="w-full h-[1px] bg-gray-400"></h3>
+        <div>
+          <p className="text-400-16 lg:text-400-18">{desiredDescription}</p>
+        </div>
+        <div className="flex-col gap-5">
           <Button type="purchase" onClick={() => setEditModeOpen(true)}>
             수정하기
           </Button>
           <Button type="sellDown" onClick={handleCancelSale} />
         </div>
       </div>
-      {editModeOpen && (
-        <CardSellDetail
-          card={{
-            ...sale,
-            photoCard: {
-              ...sale.photoCard,
-              userCards: availableCards || [], // sale 데이터 이외의 데이터 연결
-            },
-          }}
-          availableCards={availableCards}
-          onClose={() => setEditModeOpen(false)}
-          isEditMode={true}
-        />
-      )}
-    </>
+    </div>
   );
 }
