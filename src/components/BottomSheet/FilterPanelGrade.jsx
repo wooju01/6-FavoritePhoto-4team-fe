@@ -9,29 +9,27 @@ const gradeOptions = [
 
 export default function FilterPanelGrade({
   grades = {},
-  selectedGrade = [],
+  selectedGrade = null, // 단일 선택이라 null 또는 숫자
   onSelectGrade,
 }) {
-  // value로 label 찾는 헬퍼
   const getLabelByValue = (value) => {
     const option = gradeOptions.find((opt) => opt.value === Number(value));
     return option ? option.label : "";
   };
 
   const handleClick = (value) => {
-    if (selectedGrade.includes(value)) {
-      onSelectGrade(selectedGrade.filter((v) => v !== value));
+    if (selectedGrade === value) {
+      onSelectGrade(null); // 선택 해제
     } else {
-      onSelectGrade([...selectedGrade, value]);
+      onSelectGrade(value); // 선택
     }
   };
 
   return (
     <ul>
       {gradeOptions.map(({ label, value }) => {
-        
         const count = grades[getLabelByValue(value)] || 0;
-        const isSelected = selectedGrade.includes(value);
+        const isSelected = selectedGrade === value;
         return (
           <li
             key={label}

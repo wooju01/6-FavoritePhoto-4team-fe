@@ -47,13 +47,14 @@ export default function CardTrade({ selectedCard, onClose, saleId, refetchTradeR
     <div className="text-white p-4">
       <div className="w-[440px]">
         <MyCard
+          key={photoCard.id}
           name={photoCard.name}
           image={photoCard.imageUrl}
-          gradeId={photoCard.gradeId}
+          gradeId={photoCard.grade?.id}
           genre={photoCard.genre?.name}
           nickname={photoCard.creator?.nickname}
           totalQuantity={photoCard.userCards?.length}
-          initialPrice={photoCard.initialPrice}
+          initialPrice={photoCard.userCards?.[0]?.price}
         />
       </div>
 
