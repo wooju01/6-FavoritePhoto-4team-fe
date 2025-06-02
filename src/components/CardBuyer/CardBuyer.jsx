@@ -90,33 +90,34 @@ export default function CardBuyer({
   };
 
   return (
-    <div className="p-4 flex flex-col gap-4 text-white w-full h-[529px] lg:h-[612px]">
-      <div className="flex items-center gap-2 text-sm">
-        {isLargeScreen !== null && <GradeTag grade={tier} size={gradeSize} />}
-        <span className="text-700-18 text-gray-300 lg:text-700-24">
-          | {safeSubLabel}
-        </span>
+     <div className="flex flex-col gap-7 md:">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="lg:[&>span]:text-700-24">{isLargeScreen !== null && <GradeTag grade={tier} size={gradeSize} />}</span>
+          <span className="text-gray-400 lg:text-700-24">|</span>
+          <span className="text-700-18 text-gray-300 lg:text-700-24">{safeSubLabel}</span>
+        </div>
         {creator && (
-          <span className="ml-auto text-700-18 lg:text-700-24">{creator}</span>
+          <span className="underline text-700-18 lg:text-700-24">{creator}</span>
         )}
       </div>
 
       <hr className="border-gray-400" />
 
-      <p className="text-400-16 h-[46px] leading-snug lg:text-400-18">
+      <p className="text-400-16 line-clamp-2 lg:text-400-18 lg:line-clamp-5">
         {description}
       </p>
 
       <hr className="border-gray-400" />
 
-      <div className="flex flex-col h-[68px] gap-[10px] text-400-18 lg:text-400-20">
-        <div className="flex justify-between">
-          <span className="text-gray-300">가격</span>
-          <span className="font-semibold">{pricePerCard}P</span>
+      <div className="flex flex-col gap-2.5 ">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-300 text-400-18 lg:text-400-20">가격</span>
+          <span className="text-700-20 lg:text-700-24">{pricePerCard} P</span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-gray-300">잔여</span>
-          <span className="font-semibold">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-300 text-400-18 lg:text-400-20">잔여</span>
+          <span className="text-700-20 lg:text-700-24">
             {localRemaining}
             <span className="text-gray-300"> / 10</span>
           </span>
@@ -125,37 +126,40 @@ export default function CardBuyer({
 
       <hr className="border-gray-400" />
 
-      <div className="flex items-center justify-between">
-        <div className="flex w-full h-[45px] justify-between items-center gap-2">
-          <span className="text-400-18 lg:text-400-20">구매수량</span>
-          <div className="w-[144px] text-400-18 h-full items-center flex justify-between border lg:text-400-20">
-            <button
-              onClick={() => handleQuantity(-1)}
-              disabled={quantity <= 1}
-              className="px-2 disabled:opacity-50"
-            >
-              <FaMinus />
-            </button>
-            <span>{quantity}</span>
-            <button
-              onClick={() => handleQuantity(1)}
-              disabled={quantity >= localRemaining}
-              className="px-2 disabled:opacity-50"
-            >
-              <FaPlus />
-            </button>
+      <div className="flex flex-col gap-5">
+        <div className="">
+          <div className="flex items-center justify-between">
+            <span className="text-400-18 lg:text-400-20">구매수량</span>
+            <div className="flex gap-8 lg:gap-10 px-3 py-2.5 border-1 border-gray-200 rounded-xs">
+              <button
+                onClick={() => handleQuantity(-1)}
+                disabled={quantity <= 1}
+                className=""
+              >
+                <FaMinus />
+              </button>
+              <span>{quantity}</span>
+              <button
+                onClick={() => handleQuantity(1)}
+                disabled={quantity >= localRemaining}
+                className=""
+              >
+                <FaPlus />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <span className="text-400-18 lg:text-400-20">총 가격</span>
+          <div className="flex items-center gap-2.5">
+            <strong className="text-700-20 lg:text-700-24">{totalPrice} P</strong>
+            <span className="text-400-18 text-gray-300 lg:text-400-20">({quantity}장)</span>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-between items-center text-400-18 lg:text-400-20">
-        <span>총 가격</span>
-        <div>
-          <strong>{totalPrice} P</strong>
-          <span className="ml-1 text-gray-300">({quantity}장)</span>
-        </div>
-      </div>
-      <>
+      <div className="mt-10">
         <Button
           onClick={handlePurchaseButtonClick}
           disabled={localRemaining === 0 || isPending}
@@ -164,12 +168,13 @@ export default function CardBuyer({
           {localRemaining === 0
             ? "품절되었습니다"
             : isPending
-            ? "구매 중..."
-            : "포토카드 구매하기"}
+              ? "구매 중..."
+              : "포토카드 구매하기"}
         </Button>
         <NotiModal />
         <StateModal />
-      </>
+      </div>
+
     </div>
   );
 }

@@ -92,18 +92,16 @@ export default function MyTradeCard({
 
   return (
     <div
-      className={`fixed inset-0 z-50 backdrop-brightness-30 ${
-        isDesktop ? "flex items-center justify-center" : "flex items-end"
-      }`}
+      className={`fixed inset-0 z-50 backdrop-brightness-30 ${isDesktop ? "flex items-center justify-center" : "flex items-end"
+        }`}
       onClick={handleBackgroundClick}
     >
       <div
         className={`relative
-    ${
-      isDesktop
-        ? "rounded-sm w-[1160px] max-h-[920px]"
-        : "w-full h-[90%] rounded-t-sm"
-    }
+    ${isDesktop
+            ? "rounded-sm w-[1160px] max-h-[920px]"
+            : "w-full h-[90%] rounded-t-sm"
+          }
     bg-my-black p-4 md:p-6 lg:px-30 lg:pb-20 lg:pt-13
     ${isDesktop ? "" : isClosing ? "animate-slide-down" : "animate-slide-up"}
     flex flex-col
@@ -150,9 +148,8 @@ export default function MyTradeCard({
 
             {/* 카드 리스트 */}
             <div
-              className={`grid grid-cols-2 gap-4 ${
-                isDesktop ? "overflow-y-auto" : "overflow-y-auto h-[75%]"
-              } pb-10 flex-1`}
+              className={`grid grid-cols-2 gap-4 ${isDesktop ? "overflow-y-auto" : "overflow-y-auto h-[75%]"
+                } pb-10 flex-1`}
             >
               {isLoading ? (
                 <div className="text-white">로딩 중...</div>

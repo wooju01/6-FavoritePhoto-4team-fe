@@ -50,12 +50,12 @@ export const Title = ({
   }[buttonColor];
 
   return (
-    <div className="flex justify-between items-center border-b border-white pb-3 mb-3">
-      <h1 className={fontClass}>{title}</h1>
+    <div className="relative md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 py-2.5 md:py-4 after:contrast-[''] after:absolute after:bottom-0 after:w-full after:h-0.5 after:bg-white  ">
+      <h1 className={`${fontClass} lg:col-span-2`}>{title}</h1>
       {buttonText && (
         <button
           onClick={onButtonClick}
-          className={`${buttonClass} w-[342px] h-[60px] text-700-16 md:w-[440px] md:h-[60px] md:text-700-18 px-4 py-2 rounded cursor-pointer `}
+          className={`${buttonClass} h-16 text-700-16 rounded-xs`}
         >
           {buttonText}
         </button>
@@ -63,3 +63,4 @@ export const Title = ({
     </div>
   );
 };
+

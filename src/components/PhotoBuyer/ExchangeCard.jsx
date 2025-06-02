@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 import GradeTag from "../tag/GradeTag";
 import MyTradeCard from "../CardTrade/MyTradeCard";
+import { FiDivideCircle } from "react-icons/fi";
 
 function ExchangeCard({
   desiredDescription,
@@ -33,18 +34,29 @@ function ExchangeCard({
   const genreText = genreMap[cardGenreId] || "알 수 없음";
 
   return (
-    <div>
+    <div className="mt-20 md:mt-32">
       <Title
         title="교환 희망 정보"
         buttonText={isMd ? "포토카드 교환하기" : undefined}
         font="titleLg_Noto"
         onButtonClick={() => setIsOpen(true)}
       />
-      <p className="mt-2 text-sm text-gray-700">{desiredDescription}</p>
-      <p className="mt-1 text-sm text-gray-500">
-        카드 등급: <GradeTag grade={cardGradeId} />
-      </p>
-      <p className="mt-1 text-sm text-gray-500">카드 장르: {genreText}</p>
+      <div className="py-7 flex flex-col gap-4">
+        <p className="text-white text-700-18 lg:text-700-22">{desiredDescription}</p>
+        <div className="flex items-center gap-2.5">
+          <p className=" text-sm text-gray-500 lg:[&>span]:text-700-22">
+            <GradeTag grade={cardGradeId} />
+          </p>
+          <span className="text-gray-300 lg:text-700-22">|</span>
+          <p className=" text-gray-300 text-700-18 lg:text-700-22">{genreText}</p>
+        </div>
+        <button
+        onClick={() => setIsOpen(true)}
+        className="md:hidden w-full h-14 text-700-16 bg-main text-my-black rounded-xs"
+        >
+          포토카드 교환하기
+        </button>
+      </div>
 
       <MyTradeCard
         isOpen={isOpen}
