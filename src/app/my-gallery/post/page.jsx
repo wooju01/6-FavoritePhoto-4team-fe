@@ -4,26 +4,22 @@ import React from "react";
 import PostForm from "./_components/PostForm";
 import PostTitle from "./_components/PostTitle";
 import StateModal from "@/components/modal/StateModal";
-import { useQuery } from "@tanstack/react-query";
-import { getCardMeta, getMonthlyCardCount } from "@/lib/api/api-users";
 import Noti from "./_components/Noti";
+import usePostForm from "@/hooks/usePostForm";
 
 export default function CardPostPage() {
   const {
-    data: meta,
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["cardMeta"],
-    queryFn: getCardMeta,
-  });
+    meta, // 등급/장르
+    data, // 카드 생성 횟수
+    isPostPending,
+    isMetaPending,
+    isCountPending,
+    isPostError,
+    isMetaError,
+    isCountError,
+  } = usePostForm();
 
-  const { data } = useQuery({
-    queryKey: ["creationCardCount"],
-    queryFn: getMonthlyCardCount,
-  });
-
-  if (isPending)
+  if (isPostPending || isMetaPending || isCountPending)
     return (
       <div className="flex justify-center items-center h-screen">
         <p>로딩 중입니다...</p>
@@ -41,7 +37,8 @@ export default function CardPostPage() {
         </svg>
       </div>
     );
-  if (isError) return <p>데이터를 불러오는 데 실패했습니다.</p>;
+  if (isPostError || isMetaError || isCountError)
+    return <p>데이터를 불러오는 데 실패했습니다.</p>;
 
   return (
     <>

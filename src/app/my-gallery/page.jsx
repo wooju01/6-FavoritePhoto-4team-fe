@@ -6,7 +6,7 @@ import GalleryTitle from "./_components/GalleryTitle";
 import OwnedCards from "./_components/OwnedCards";
 
 import { use2Filter } from "@/hooks/useFilter";
-import { useMyPage } from "@/hooks/useMyPage";
+import { useMyGallery } from "@/hooks/useMyGallery";
 
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import Pagination from "@/components/ui/Pagination";
@@ -23,7 +23,7 @@ export default function MyPage() {
     page,
     onFilterChange,
     onPageChange,
-  } = useMyPage();
+  } = useMyGallery();
 
   // ✅ 필터 관련 정보 가져옴
   const { isOpen, toggle, close, filterOptions } = use2Filter();
@@ -51,17 +51,24 @@ export default function MyPage() {
 
   return (
     <>
+      {/* title */}
       <GalleryTitle />
+      {/* 보유 포토카드 */}
       <OwnedCards
         totalCards={count?.active.total}
         countsByGrade={count?.active.byGrade}
       />
+
+      {/* 검색창 ~ 페이지네이션 전(=카드)까지 */}
       <section className="mb-15">
+        {/* 검색창, 등급/장르 필터 */}
         <div className="flex items-center mb-5 md:mb-10 lg:mb-12 gap-7 lg:gap-10">
+          {/* search */}
           <div className="order-2 md:order-1 w-full md:w-52 lg:w-[320px]">
             <Search />
           </div>
-          {/* filter */}
+
+          {/* pc filter */}
           <div className="hidden md:flex items-center gap-6 flex-1 order-1 md:order-2">
             {Object.values(filterOptions).map((option) => (
               <FilterDropdown
@@ -74,9 +81,10 @@ export default function MyPage() {
               />
             ))}
           </div>
-          {/* 모바일 filter 버튼 */}
+          {/* mobile filter */}
           <MyGalleryFilter />
         </div>
+
         {/* 카드 렌더링 ↓ */}
         <section className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 lg:gap-5">
           {data?.items.map((card) => (
@@ -91,8 +99,12 @@ export default function MyPage() {
               totalQuantity={card.userCards?.length}
             />
           ))}
+          {/* 카드를 하나도 안 만들었을 때 */}
+          {data?.items.length === 0 && <p>보유한 포토카드가 없습니다.</p>}
         </section>
       </section>
+
+      {/* 페이지네이션 */}
       <div className="flex justify-center mb-20">
         <Pagination
           totalPages={data?.pagination.totalPages}

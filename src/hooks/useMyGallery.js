@@ -3,27 +3,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCardsCount, getMyCards } from "@/lib/api/api-users";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import parseParams from "@/lib/utils/parse-params";
 
-export function useMyPage() {
+export function useMyGallery() {
   // ✅ hook 가져옴
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  // ✅ 쿼리 문자열 처리
-  const grade = Number(searchParams.get("grade")) || 0;
-  const genre = Number(searchParams.get("genre")) || 0;
-  const keyword = searchParams.get("keyword") || "";
-  const page = Number(searchParams.get("page") || 1);
-  const size = searchParams.get("size") || "md";
+  // ✅ 쿼리 부분 가져옴
+  const { grade, genre, keyword, page, size } = parseParams(searchParams);
 
-  // 데이터 가져오기
+  // ☑️ 데이터 가져오기
   const { data, isPending, isError } = useQuery({
-    queryKey: ["myGalleryCards_v8", grade, genre, keyword, page, size],
+    queryKey: ["myGalleryCards_v8", { grade, genre, keyword, page, size }],
     queryFn: () => getMyCards({ grade, genre, keyword, page, size }),
   });
 
-  // 카드 개수 가져오기 (전체 + 등급별)
+  // ☑️ 카드 개수 가져오기 (전체 + 등급별)
   const { data: count } = useQuery({
     queryKey: ["countedCards"],
     queryFn: getCardsCount,
@@ -35,6 +32,9 @@ export function useMyPage() {
 
     // 전체 선택 시 필터 제거
     value === 0 ? params.delete(type) : params.set(type, value.toString());
+    params.set("page", "1"); // 페이지 1로 초기화
+
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   // ✅ 페이지 변경 함수

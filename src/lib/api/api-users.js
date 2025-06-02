@@ -29,23 +29,21 @@ export async function getCardsCount() {
 }
 
 // ✅ GET: 마이 갤러리
-export async function getMyCards({
-  grade,
-  genre,
-  keyword,
-  page = 1,
-  size = "md",
-}) {
-  const queryParams = new URLSearchParams();
+export async function getMyCards(query) {
+  // 쿼리 문자열 처리
+  const params = new URLSearchParams();
 
-  if (grade && grade !== 0) queryParams.append("grade", grade.toString());
-  if (genre && genre !== 0) queryParams.append("genre", genre.toString());
-  if (keyword) queryParams.append("keyword", keyword);
-  if (page) queryParams.append("page", page.toString() || "1");
-  if (size) queryParams.append("size", size || "md");
-  queryParams.append("withCounts", "true");
+  // refactor: 객체 구조로 받게 함
+  const cleaned = { ...query, withCounts: true }; // 쿼리를 그대로 넣되, mobile 크기일 때는 count를 넣음
 
-  const queryString = queryParams.toString();
+  Object.entries(cleaned).forEach(([key, value]) => {
+    if (value && value !== 0 && value !== "") {
+      params.set(key, String(value));
+    }
+  });
+
+  // 반환
+  const queryString = params.toString();
   return await cookieFetch(
     `/api/users/gallery${queryString && `?${queryString}`}`
   );
