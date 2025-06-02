@@ -41,10 +41,12 @@ export default function File({ label, error, onChange }) {
           className={clsx(
             fileName === "사진 업로드" ? "text-gray-200" : "text-white",
             error ? "border-my-red" : "border-gray-200",
-            "h-full w-[230px] md:w-[310px] lg:w-[390px] outline-none text-300-14 lg:text-300-16 border  rounded-[2px] flex items-center px-5 py-[18px] justify-between"
+            "h-full w-[230px] md:w-[310px] lg:w-[390px] outline-none text-300-14 lg:text-300-16 border rounded-[2px] flex items-center px-5 py-[18px] justify-between"
           )}
         >
-          <span>{fileName}</span>
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-full block">
+            {fileName}
+          </span>
           <FiX
             onClick={handleFileRemove}
             className="w-[14px] h-[14px] stroke-2"
