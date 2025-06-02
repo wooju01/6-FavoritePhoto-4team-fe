@@ -77,8 +77,8 @@ export default function ForMySales() {
         countsByGrade={count?.active.byGrade}
       />
       <section className="mb-15">
-        <div className="flex items-center gap-2.5 md:gap-10">
-          <div className="order-2 flex-1 md:flex-0">
+        <div className="flex items-center mb-5 md:mb-10 lg:mb-12 gap-7 lg:gap-10">
+          <div className="order-2 md:order-1">
             <Search />
           </div>
           {/* filter */}
