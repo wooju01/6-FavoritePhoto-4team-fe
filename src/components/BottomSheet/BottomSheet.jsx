@@ -36,17 +36,21 @@ export default function BottomSheet({
   const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
   const [selectedGenre, setSelectedGenre] = useState(getInitialValues("genre"));
   const [selectedSale, setSelectedSale] = useState(getInitialValues("sale"));
-  const [selectedSaleTypes, setSelectedSaleTypes] = useState(getInitialValues("saleType"));
+  const [selectedSaleTypes, setSelectedSaleTypes] = useState(
+    getInitialValues("saleType")
+  );
 
   useEffect(() => {
-    const filters = {};
-    if (selectedGrade.length) filters.grade = selectedGrade.join(",");
-    if (selectedGenre.length) filters.genre = selectedGenre.join(",");
-    if (selectedSale.length) filters.sale = selectedSale.join(",");
-    if (selectedSaleTypes.length) filters.saleType = selectedSaleTypes.join(",");
+    const filterParams = {};
+    if (selectedGrade.length) filterParams.grade = selectedGrade.join(",");
+    if (selectedGenre.length) filterParams.genre = selectedGenre.join(",");
+    if (selectedSale.length) filterParams.sale = selectedSale.join(",");
+    if (selectedSaleTypes.length)
+      filterParams.saleType = selectedSaleTypes.join(",");
 
+    console.log("필터 요청값:", filterParams); 
     if (onFilterChange) {
-      onFilterChange(filters);
+      onFilterChange(filterParams);
     }
   }, [selectedGrade, selectedGenre, selectedSale, selectedSaleTypes]);
 
@@ -60,9 +64,15 @@ export default function BottomSheet({
   const handleApply = () => {
     const params = new URLSearchParams(searchParams);
 
-    selectedGrade.length ? params.set("grade", selectedGrade.join(",")) : params.delete("grade");
-    selectedGenre.length ? params.set("genre", selectedGenre.join(",")) : params.delete("genre");
-    selectedSale.length ? params.set("sale", selectedSale.join(",")) : params.delete("sale");
+    selectedGrade.length
+      ? params.set("grade", selectedGrade.join(","))
+      : params.delete("grade");
+    selectedGenre.length
+      ? params.set("genre", selectedGenre.join(","))
+      : params.delete("genre");
+    selectedSale.length
+      ? params.set("sale", selectedSale.join(","))
+      : params.delete("sale");
     selectedSaleTypes.length
       ? params.set("saleType", selectedSaleTypes.join(","))
       : params.delete("saleType");
@@ -128,7 +138,11 @@ export default function BottomSheet({
           </button>
         </div>
 
-        <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
+        <FilterTab
+          selected={selectedTab}
+          onChange={setSelectedTab}
+          filters={filters}
+        />
 
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
