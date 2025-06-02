@@ -67,8 +67,8 @@ export default function MyPage() {
         countsByGrade={count?.active.byGrade}
       />
       <section className="mb-15">
-        <div className="flex items-center mb-5 gap-7 lg:gap-10">
-          <div className="order-2 md:order-1">
+        <div className="flex items-center gap-2.5 md:gap-10">
+          <div className="order-2 flex-1 md:flex-0">
             <Search />
           </div>
           {/* filter */}
@@ -83,12 +83,12 @@ export default function MyPage() {
                 onSelect={(value) => onFilterChange(option.key, value)}
               />
             ))}
-          </div>
+          </div> 
           {/* 모바일 filter 버튼 */}
       <MyGalleryFilter/>
         </div>
         {/* 카드 렌더링 ↓ */}
-        <section className="grid grid-cols-2 lg:grid-cols-3">
+        <section className="py-4 md:py-6 lg:py-8 grid grid-cols-2 gap-2 md:gap-4 lg:gap-14 lg:grid-cols-3">
           {data?.items.map((card) => (
             <MyCard
               key={card.id}
