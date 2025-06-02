@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { useFilterSheet } from "@/hooks/useFilterSheet";
 import { getMyCards } from "@/lib/api/api-users";
 import BottomSheet from "./BottomSheet";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
-export default function MyGalleryFilter() {
+export default function MyGalleryFilter({ buttonSize = "w-9 h-9" }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -22,6 +22,7 @@ export default function MyGalleryFilter() {
       fetchCounts();
     }
   }, [isOpen]);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 744 && isOpen) {
@@ -30,16 +31,16 @@ export default function MyGalleryFilter() {
     };
 
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [isOpen]);
+
   return (
     <>
       {!isOpen && (
         <button
-          className="md:hidden h-9 w-9 flex justify-center items-center border rounded-xs"
+          className={`md:hidden ${buttonSize} flex justify-center items-center border rounded-xs`}
           onClick={() => setIsOpen(true)}
           aria-label="필터 열기"
         >
