@@ -68,7 +68,7 @@ export default function ForMySales() {
   if (isError) console.error(error);
 
   return (
-    <>
+    <div className="my-5">
       <header className="hidden md:block my-10">
         <Title title="나의 판매 포토카드" font="titleLg_Bk" />
       </header>
@@ -123,6 +123,6 @@ export default function ForMySales() {
           onPageChange={onPageChange}
         />
       </div>
-    </>
+    </div>
   );
 }

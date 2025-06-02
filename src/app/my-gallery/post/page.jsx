@@ -41,7 +41,7 @@ export default function CardPostPage() {
     return <p>데이터를 불러오는 데 실패했습니다.</p>;
 
   return (
-    <>
+    <div className="my-5">
       {data?.count >= 3 && <Noti />}
       <PostTitle creationNumber={data?.count ?? 0} />
       <PostForm
@@ -50,6 +50,6 @@ export default function CardPostPage() {
         disabled={data?.count >= 3}
       />
       <StateModal />
-    </>
+    </div>
   );
 }

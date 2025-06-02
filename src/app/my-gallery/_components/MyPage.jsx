@@ -50,7 +50,7 @@ export default function MyPage() {
   if (isError) return <p>데이터를 불러오는 데 실패했습니다.</p>;
 
   return (
-    <>
+    <div className="my-5">
       {/* title */}
       <GalleryTitle />
       {/* 보유 포토카드 */}
@@ -112,6 +112,6 @@ export default function MyPage() {
           onPageChange={onPageChange}
         />
       </div>
-    </>
+    </div>
   );
 }
