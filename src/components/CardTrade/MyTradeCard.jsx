@@ -11,6 +11,7 @@ import CardTrade from "./CardTrade.jsx";
 import closeIcon from "@/assets/close.svg";
 import { getMyCards } from "@/lib/api/api-users";
 import { use2Filter } from "@/hooks/useFilter";
+import MyGalleryFilter from "../BottomSheet/Mygalleryfilter";
 
 export default function MyTradeCard({
   isOpen,
@@ -170,13 +171,15 @@ export default function MyTradeCard({
             <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
 
             {/* 검색 및 필터 */}
-            <div className="mb-4 space-y-4 md:flex md:items-center md:gap-4 md:space-y-0">
+            <div className="flex items-center mb-4 gap-4 space-y-4 md:flex md:items-center md:gap-4 md:space-y-0">
+              <MyGalleryFilter buttonSize="w-[45px] h-[45px]"/>
               <Search
                 value={keyword}
                 onChange={(e) => onFilterChange("keyword", e.target.value)}
                 placeholder="검색어 입력"
               />
               {Object.values(filterOptions).map((option) => (
+                <div className="hidden md:flex ">
                 <FilterDropdown
                   key={option.key}
                   option={option}
@@ -184,6 +187,7 @@ export default function MyTradeCard({
                   onToggle={() => toggle(option.key)}
                   onClose={close}
                 />
+                </div>
               ))}
             </div>
 
