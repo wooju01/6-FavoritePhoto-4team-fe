@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { authService } from "@/lib/api/api-auth.js";
 import { userService } from "@/lib/api/api-users.js";
 import {
@@ -29,6 +30,7 @@ export const useAuth = () => {
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
 
   const getUser = useCallback(async () => {
     setIsLoading(true);
@@ -86,19 +88,9 @@ export default function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     getUser();
-  }, [getUser]);
-
-  useEffect(() => {
-    const handleClick = () => {
-      getUser();
-    };
-
-    window.addEventListener("click", handleClick);
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, [getUser]);
+  }, [pathname, getUser]);
 
   const value = {
     user,
