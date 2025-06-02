@@ -108,7 +108,7 @@ export default function StateModal() {
       </div>
 
       {/* mobile일 때 > 아이콘 보임 */}
-      <button onClick={closeModal} className="absolute left-2 top-2">
+      <button onClick={closeModal} className="md:hidden absolute left-2 top-2">
         <IoIosArrowBack className="w-6 h-6" />
       </button>
     </div>
