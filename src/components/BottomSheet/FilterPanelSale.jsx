@@ -5,14 +5,14 @@ const saleOptions = [
 
 export default function FilterPanelSale({
   sales = {},
-  selectedSale = [],
+  selectedSale = null,
   onSelectSale,
 }) {
   const handleClick = (value) => {
-    if (selectedSale.includes(value)) {
-      onSelectSale(selectedSale.filter((v) => v !== value));
+    if (selectedSale === value) {
+      onSelectSale(null);
     } else {
-      onSelectSale([...selectedSale, value]);
+      onSelectSale(value);
     }
   };
 
@@ -20,7 +20,7 @@ export default function FilterPanelSale({
     <ul>
       {saleOptions.map(({ label, value }) => {
         const count = sales[value] || 0;
-        const isSelected = selectedSale.includes(value);
+        const isSelected = selectedSale === value;
         return (
           <li
             key={label}

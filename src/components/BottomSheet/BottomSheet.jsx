@@ -9,7 +9,7 @@ import FilterTab from "./FilterTab";
 import FilterPanelGrade from "./FilterPanelGrade";
 import FilterPanelGenre from "./FilterPanelGenre";
 import FilterPanelSale from "./FilterPanelSale";
-import FilterPanelSaleType from "./FilterPanelSaleType"; // ⬅️ 새로 만든 컴포넌트
+import FilterPanelSaleType from "./FilterPanelSaleType";
 
 export default function BottomSheet({
   filters = ["grade", "genre", "saleType", "sale"],
@@ -25,57 +25,54 @@ export default function BottomSheet({
 
   const [selectedTab, setSelectedTab] = useState("grade");
 
-  const getInitialValues = (key) => {
+  // 단일 선택용 초기값 추출 함수
+  const getInitialValue = (key) => {
     const val = searchParams.get(key);
-    if (!val) return [];
-    return val
-      .split(",")
-      .map((v) => (key === "sale" || key === "saleType" ? v : Number(v)));
+    if (!val) return null;
+    // sale, saleType 는 문자열로 유지, 나머지는 숫자로 변환
+    if (key === "sale" || key === "saleType") return val;
+    return Number(val);
   };
 
-  const [selectedGrade, setSelectedGrade] = useState(getInitialValues("grade"));
-  const [selectedGenre, setSelectedGenre] = useState(getInitialValues("genre"));
-  const [selectedSale, setSelectedSale] = useState(getInitialValues("sale"));
-  const [selectedSaleTypes, setSelectedSaleTypes] = useState(
-    getInitialValues("saleType")
-  );
+  // 단일값 상태
+  const [selectedGrade, setSelectedGrade] = useState(getInitialValue("grade"));
+  const [selectedGenre, setSelectedGenre] = useState(getInitialValue("genre"));
+  const [selectedSale, setSelectedSale] = useState(getInitialValue("sale"));
+  const [selectedSaleTypes, setSelectedSaleTypes] = useState(getInitialValue("saleType"));
 
   useEffect(() => {
-    const filterParams = {};
-    if (selectedGrade.length) filterParams.grade = selectedGrade.join(",");
-    if (selectedGenre.length) filterParams.genre = selectedGenre.join(",");
-    if (selectedSale.length) filterParams.sale = selectedSale.join(",");
-    if (selectedSaleTypes.length)
-      filterParams.saleType = selectedSaleTypes.join(",");
+    const filtersObj = {};
+    if (selectedGrade !== null) filtersObj.grade = String(selectedGrade);
+    if (selectedGenre !== null) filtersObj.genre = String(selectedGenre);
+    if (selectedSale !== null) filtersObj.sale = selectedSale;
+    if (selectedSaleTypes !== null) filtersObj.saleType = selectedSaleTypes;
 
-    console.log("필터 요청값:", filterParams); 
     if (onFilterChange) {
-      onFilterChange(filterParams);
+      onFilterChange(filtersObj);
     }
   }, [selectedGrade, selectedGenre, selectedSale, selectedSaleTypes]);
 
   const handleReset = () => {
-    setSelectedGrade([]);
-    setSelectedGenre([]);
-    setSelectedSale([]);
-    setSelectedSaleTypes([]);
+    setSelectedGrade(null);
+    setSelectedGenre(null);
+    setSelectedSale(null);
+    setSelectedSaleTypes(null);
   };
 
   const handleApply = () => {
     const params = new URLSearchParams(searchParams);
 
-    selectedGrade.length
-      ? params.set("grade", selectedGrade.join(","))
-      : params.delete("grade");
-    selectedGenre.length
-      ? params.set("genre", selectedGenre.join(","))
-      : params.delete("genre");
-    selectedSale.length
-      ? params.set("sale", selectedSale.join(","))
-      : params.delete("sale");
-    selectedSaleTypes.length
-      ? params.set("saleType", selectedSaleTypes.join(","))
-      : params.delete("saleType");
+    if (selectedGrade !== null) params.set("grade", String(selectedGrade));
+    else params.delete("grade");
+
+    if (selectedGenre !== null) params.set("genre", String(selectedGenre));
+    else params.delete("genre");
+
+    if (selectedSale !== null) params.set("sale", selectedSale);
+    else params.delete("sale");
+
+    if (selectedSaleTypes !== null) params.set("saleType", selectedSaleTypes);
+    else params.delete("saleType");
 
     router.push(`${pathname}?${params.toString()}`);
     if (onClose) onClose();
@@ -138,11 +135,7 @@ export default function BottomSheet({
           </button>
         </div>
 
-        <FilterTab
-          selected={selectedTab}
-          onChange={setSelectedTab}
-          filters={filters}
-        />
+        <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
 
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
@@ -155,8 +148,8 @@ export default function BottomSheet({
         {selectedTab === "genre" && filters.includes("genre") && (
           <FilterPanelGenre
             counts={normalizedGenres}
-            selectedGenres={selectedGenre}
-            onSelectGenres={setSelectedGenre}
+            selectedGenre={selectedGenre}
+            onSelectGenre={setSelectedGenre}
           />
         )}
 
@@ -171,8 +164,8 @@ export default function BottomSheet({
         {selectedTab === "saleType" && filters.includes("saleType") && (
           <FilterPanelSaleType
             saleTypes={normalizedSaleTypes}
-            selectedSaleTypes={selectedSaleTypes}
-            onSelectSaleTypes={setSelectedSaleTypes}
+            selectedSaleType={selectedSaleTypes}
+            onSelectSaleType={setSelectedSaleTypes}
           />
         )}
       </div>
@@ -192,10 +185,10 @@ export default function BottomSheet({
         >
           {loading
             ? "불러오는 중..."
-            : selectedGrade.length ||
-              selectedGenre.length ||
-              selectedSale.length ||
-              selectedSaleTypes.length
+            : selectedGrade !== null ||
+              selectedGenre !== null ||
+              selectedSale !== null ||
+              selectedSaleTypes !== null
             ? `${filteredCount}개 포토보기`
             : "포토보기"}
         </button>

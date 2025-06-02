@@ -5,14 +5,14 @@ const saleTypeOptions = [
 
 export default function FilterPanelSaleType({
   saleTypes = {},
-  selectedSaleTypes = [],
-  onSelectSaleTypes,
+  selectedSaleType = null,
+  onSelectSaleType,
 }) {
   const handleClick = (value) => {
-    if (selectedSaleTypes.includes(value)) {
-      onSelectSaleTypes(selectedSaleTypes.filter((v) => v !== value));
+    if (selectedSaleType === value) {
+      onSelectSaleType(null);
     } else {
-      onSelectSaleTypes([...selectedSaleTypes, value]);
+      onSelectSaleType(value);
     }
   };
 
@@ -20,7 +20,7 @@ export default function FilterPanelSaleType({
     <ul>
       {saleTypeOptions.map(({ label, value }) => {
         const count = saleTypes[value] || 0;
-        const isSelected = selectedSaleTypes.includes(value);
+        const isSelected = selectedSaleType === value;
         return (
           <li
             key={value}

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Title } from "../ui/Title";
 import GradeTag from "../tag/GradeTag";
 import MyTradeCard from "../CardTrade/MyTradeCard";
-import { FiDivideCircle } from "react-icons/fi";
 
 function ExchangeCard({
   desiredDescription,
