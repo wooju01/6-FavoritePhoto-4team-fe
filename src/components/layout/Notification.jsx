@@ -4,10 +4,13 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { getSocket, disconnectSocket } from "@/lib/socket";
 
+// 알림 UI 관련 상수 분리
+const NOTI_HEIGHT = 107;
+const NOTI_MAX_HEIGHT = 535;
+
 function Notification({ className = "" }) {
   const [open, setOpen] = React.useState(false);
   const [notifications, setNotifications] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
   const hasUnread = notifications.some((n) => !n.read);
   const router = useRouter();
   const pathname = usePathname();
@@ -23,7 +26,6 @@ function Notification({ className = "" }) {
 
   // 알림 전체 조회
   const fetchNotifications = async () => {
-    setLoading(true);
     try {
       const res = await fetch(
         "https://six-favoritephoto-4team-be.onrender.com/api/notifications",
@@ -44,8 +46,6 @@ function Notification({ className = "" }) {
     } catch (e) {
       setNotifications([]);
       console.error("알림 fetch 에러:", e);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -73,27 +73,30 @@ function Notification({ className = "" }) {
     const token = getToken();
     if (!token) return;
     let userId = null;
-    let socket;
-    let reconnectTimeout;
-    // 토큰에서 userId 추출 (JWT decode)
+    // JWT 파싱 실패 시 경고 추가
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       userId = payload.userId || payload.user_id || payload.id || payload.sub;
-    } catch {}
+    } catch (e) {
+      console.warn("JWT 파싱 실패", e);
+    }
     if (!userId) return;
+    // socket, reconnectTimeout useRef로 관리
+    const socketRef = { current: null };
+    const reconnectTimeoutRef = { current: null };
     const connectSocket = () => {
-      socket = getSocket(
+      socketRef.current = getSocket(
         token,
         "https://six-favoritephoto-4team-be.onrender.com"
       );
-      socket.on("connect", () => {
-        socket.emit("join", userId);
+      socketRef.current.on("connect", () => {
+        socketRef.current.emit("join", userId);
       });
-      socket.on("notification", (data) => {
+      socketRef.current.on("notification", (data) => {
         setNotifications((prev) => [data, ...prev]);
       });
-      socket.on("disconnect", () => {
-        reconnectTimeout = setTimeout(() => {
+      socketRef.current.on("disconnect", () => {
+        reconnectTimeoutRef.current = setTimeout(() => {
           connectSocket();
         }, 1000);
       });
@@ -101,13 +104,14 @@ function Notification({ className = "" }) {
     connectSocket();
     fetchNotifications();
     return () => {
-      if (socket) {
-        socket.off("notification");
-        socket.off("disconnect");
-        socket.off("connect");
+      if (socketRef.current) {
+        socketRef.current.off("notification");
+        socketRef.current.off("disconnect");
+        socketRef.current.off("connect");
         disconnectSocket();
       }
-      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      if (reconnectTimeoutRef.current)
+        clearTimeout(reconnectTimeoutRef.current);
     };
   }, [pathname]);
 
@@ -123,8 +127,17 @@ function Notification({ className = "" }) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  // 모바일 환경 감지
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 744;
+  // 모바일 환경 감지 (resize 이벤트로 반응형 처리)
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" && window.innerWidth < 744
+  );
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 744);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleIconClick = () => {
     if (isMobile) {
@@ -159,14 +172,14 @@ function Notification({ className = "" }) {
         <div
           className="hidden md:block absolute top-full right-0 mt-0 w-[300px] rounded-xs z-20 bg-black text-white"
           style={{
-            minHeight: notifications.length === 0 ? 107 : undefined,
-            maxHeight: 535,
+            minHeight: notifications.length === 0 ? NOTI_HEIGHT : undefined,
+            maxHeight: NOTI_MAX_HEIGHT,
             height:
               notifications.length === 0
-                ? 107
-                : notifications.length * 107 > 535
-                ? 535
-                : notifications.length * 107,
+                ? NOTI_HEIGHT
+                : notifications.length * NOTI_HEIGHT > NOTI_MAX_HEIGHT
+                ? NOTI_MAX_HEIGHT
+                : notifications.length * NOTI_HEIGHT,
           }}
         >
           <ul
@@ -184,7 +197,7 @@ function Notification({ className = "" }) {
               notifications.map((n) => (
                 <li
                   key={n.id}
-                  className={`w-full h-[107px] p-5 text-sm ${
+                  className={`w-full h-[${NOTI_HEIGHT}px] p-5 text-sm ${
                     n.read ? "bg-gray-500" : "bg-[#242424] text-white"
                   } cursor-pointer`}
                   onClick={() => {
@@ -246,3 +259,10 @@ function getTimeAgo(dateString) {
 }
 
 export default Notification;
+
+// 개선 사항
+// 1. loading 제거
+// 2. 반복되는 숫자(107, 535) 상수(NOTI_HEIGHT, NOTI_MAX_HEIGHT)로 분리
+// 3. JWT 파싱 실패 시 콘솔 경고
+// 4. socket, reconnectTimeout을 useRef로 관리
+// 5. 모바일 감지를 resize 이벤트로 반응형 처리
