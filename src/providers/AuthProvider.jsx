@@ -89,6 +89,17 @@ export default function AuthProvider({ children }) {
     getUser();
   }, [getUser]);
 
+  useEffect(() => {
+    const handleClick = () => {
+      getUser();
+    };
+
+    window.addEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, [getUser]);
+
   const value = {
     user,
     isLoading,
