@@ -39,7 +39,7 @@ export default function MyCardDetail({
   };
 
   return (
-    <div className="w-full bg-my-black text-white py-1 border-none text-sm lg:text-base">
+    <div className="w-full bg-gray-500 text-white py-1 border-none text-sm lg:text-base">
       {/* 상단 정보 */}
       <div className="flex items-center gap-2 text-sm lg:text-[16px] mb-3">
         <span className="[&_*]:text-700-18">
@@ -56,11 +56,11 @@ export default function MyCardDetail({
 
       <div className="flex flex-col gap-5">
         {/* 총 판매 수량 */}
-        <div className="flex items-center gap-12.5">
+        <div className="flex items-center gap-6">
           <span className="text-400-18 lg:text-base">총 판매 수량</span>
 
-          <div className="flex items-center gap-4.5 flex-1">
-            <div className="flex items-center justify-between w-full max-w-[144px] h-[45px] border border-white px-4">
+          <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center justify-between w-full ml-auto max-w-[144px] h-[45px] border border-white px-4">
               <button onClick={handleDecrease} className="text-xl">
                 -
               </button>
@@ -79,10 +79,10 @@ export default function MyCardDetail({
         </div>
 
         {/* 장당 가격 */}
-        <div className="flex items-center gap-18">
+        <div className="flex items-center gap-7">
           <span className="text-400-18 lg:text-base">장당 가격</span>
 
-          <div className="relative flex-1 w-full max-w-[200px] h-[45px] border border-white flex items-center px-4">
+          <div className="relative w-full ml-auto max-w-[190px] h-[45px] border border-white flex items-center px-4">
             <input
               type="text"
               placeholder="숫자만 입력"

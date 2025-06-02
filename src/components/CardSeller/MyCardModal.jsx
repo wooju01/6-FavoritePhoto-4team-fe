@@ -81,110 +81,119 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
   if (!isOpen && !isVisible) return null;
 
   return (
-    <div
-      className={`fixed inset-0 z-50 backdrop-brightness-30 ${
-        isDesktop ? "flex items-center justify-center" : "flex items-end"
-      }`}
-      onClick={handleBackgroundClick}
-    >
+    <>
+      {/* 헤더 포함 전체를 덮는 배경 클릭 레이어 */}
       <div
-        className={`relative
+        className="fixed inset-0 bg-black/40 backdrop-brightness-75 z-[8000]"
+        onClick={handleBackgroundClick}
+      />
+
+      {/* 실제 모달 컨테이너 */}
+      <div
+        className={`fixed inset-0 z-[8001] ${
+          isDesktop ? "flex items-center justify-center" : "flex items-end"
+        }`}
+      >
+        <div
+          className={`relative
     ${
       isDesktop
         ? "rounded-sm w-[1160px] max-h-[920px]"
         : "w-full h-[90%] rounded-t-sm"
     }
-    bg-my-black p-4 md:p-6 lg:px-30 lg:pb-20 lg:pt-13
+    bg-gray-500 p-4 md:p-6 lg:px-30 lg:pb-20 lg:pt-13
     ${isDesktop ? "" : isClosing ? "animate-slide-down" : "animate-slide-up"}
     flex flex-col
   `}
-        onClick={stopPropagation}
-      >
-        <button
-          onClick={handleClose}
-          className="hidden lg:block absolute top-8 right-8 z-50 "
+          onClick={stopPropagation}
         >
-          <Image src={closeIcon} alt="닫기" width={17} height={17} />
-        </button>
+          <button
+            onClick={handleClose}
+            className="hidden lg:block absolute top-8 right-8 z-50 "
+          >
+            <Image src={closeIcon} alt="닫기" width={17} height={17} />
+          </button>
 
-        {/* 슬라이드 바 */}
-        {!isDesktop && (
-          <div
-            className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3"
-            onClick={handleSlideBarClick}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-          />
-        )}
-
-        {showDetail && selectedCard ? (
-          <CardSellDetail
-            card={selectedCard}
-            availableCards={
-              data?.items?.find((c) => c.id === selectedCard.photoCard.id)
-                ?.userCards || []
-            }
-            onClose={() => {
-              setSelectedCard(null);
-              setShowDetail(false);
-            }}
-          />
-        ) : (
-          <>
-            <div className="text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">
-              마이갤러리
-            </div>
-
-            {/* Title */}
-            <div className="text-start text-white mb-4 title-24 md:title-40-1 lg:title-46-1">
-              나의 포토카드 판매하기
-            </div>
-
-            {/* md 이상일 때만 보이는 구분선 */}
-            <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
-
-            {/* 카드 리스트 */}
+          {/* 슬라이드 바 */}
+          {!isDesktop && (
             <div
-              className={`grid grid-cols-2 gap-4 ${
-                isDesktop ? "overflow-y-auto" : "overflow-y-auto h-[75%]"
-              } pb-10 flex-1`}
-            >
-              {isLoading ? (
-                <div className="text-white">잠시만 기다려주세요</div>
-              ) : (
-                data?.items?.map((card) => {
-                  const representativeUserCard = card.userCards[0];
+              className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3"
+              onClick={handleSlideBarClick}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+            />
+          )}
 
-                  return (
-                    <div
-                      key={card.id}
-                      onClick={() => {
-                        setSelectedCard({
-                          photoCard: card,
-                          userCard: representativeUserCard,
-                        });
-                        setShowDetail(true);
-                      }}
-                    >
-                      <MyCard
-                        name={card.name}
-                        image={card.imageUrl}
-                        gradeId={card.grade?.id}
-                        genre={card.genre?.name}
-                        nickname={
-                          representativeUserCard?.owner?.nickname || "Unknown"
-                        }
-                        totalQuantity={card.userCards?.length}
-                        initialPrice={representativeUserCard?.price}
-                      />
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </>
-        )}
+          {showDetail && selectedCard ? (
+            <CardSellDetail
+              card={selectedCard}
+              availableCards={
+                data?.items?.find((c) => c.id === selectedCard.photoCard.id)
+                  ?.userCards || []
+              }
+              onCloseDetail={() => {
+                setSelectedCard(null);
+                setShowDetail(false);
+              }} // CardSellDetail만 닫는 함수
+              {...(isDesktop && { onCloseModal: handleClose })}
+            />
+          ) : (
+            <>
+              <div className="text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">
+                마이갤러리
+              </div>
+
+              {/* Title */}
+              <div className="text-start text-white mb-4 title-24 md:title-40-1 lg:title-46-1">
+                나의 포토카드 판매하기
+              </div>
+
+              {/* md 이상일 때만 보이는 구분선 */}
+              <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
+
+              {/* 카드 리스트 */}
+              <div
+                className={`grid grid-cols-2 gap-4 ${
+                  isDesktop ? "overflow-y-auto" : "overflow-y-auto h-[75%]"
+                } pb-10 flex-1`}
+              >
+                {isLoading ? (
+                  <div className="text-white">잠시만 기다려주세요</div>
+                ) : (
+                  data?.items?.map((card) => {
+                    const representativeUserCard = card.userCards[0];
+
+                    return (
+                      <div
+                        key={card.id}
+                        onClick={() => {
+                          setSelectedCard({
+                            photoCard: card,
+                            userCard: representativeUserCard,
+                          });
+                          setShowDetail(true);
+                        }}
+                      >
+                        <MyCard
+                          name={card.name}
+                          image={card.imageUrl}
+                          gradeId={card.grade?.id}
+                          genre={card.genre?.name}
+                          nickname={
+                            representativeUserCard?.owner?.nickname || "Unknown"
+                          }
+                          totalQuantity={card.userCards?.length}
+                          initialPrice={representativeUserCard?.price}
+                        />
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
