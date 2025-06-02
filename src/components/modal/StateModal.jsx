@@ -6,6 +6,7 @@ import { useStateModal } from "@/providers/StateModalProvider";
 import Button from "../ui/Button";
 import clsx from "clsx";
 import { FiX } from "react-icons/fi";
+import { IoIosArrowBack } from "react-icons/io";
 
 export default function StateModal() {
   const router = useRouter();
@@ -68,8 +69,9 @@ export default function StateModal() {
    * 내용
    */
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-my-black">
+    <div className="fixed inset-0 z-99999 md:z-50 flex justify-center items-center bg-my-black">
       <div className="relative bg-my-black w-[230px] md:w-[600px] h-[212px]">
+        {/* tablet 이상일 때 x 아이콘 보임 */}
         <button
           onClick={closeModal}
           className="hidden md:inline-block absolute right-0"
@@ -104,6 +106,11 @@ export default function StateModal() {
           </Button>
         </div>
       </div>
+
+      {/* mobile일 때 > 아이콘 보임 */}
+      <button onClick={closeModal} className="absolute left-2 top-2">
+        <IoIosArrowBack className="w-6 h-6" />
+      </button>
     </div>
   );
 }
