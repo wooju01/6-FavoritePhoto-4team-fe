@@ -10,7 +10,7 @@ export async function getMonthlyCardCount() {
   return await cookieFetch("/api/users/monthly-post-count");
 }
 
-// 예시: /lib/api/api-users.js
+// 카드 생성
 export async function postCard(data) {
   return await cookieFetch("/api/users/post", {
     method: "POST",
