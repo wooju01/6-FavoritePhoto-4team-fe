@@ -32,7 +32,7 @@ export default function ExchangeCancel({
   console.log("모달 열기", { grade: gradeId, name });
 
   return (
-    <div className="flex flex-col justify-between bg-gray-500  border-1 w-full px-2 py-2  border-gray-800 text-white mt-5">
+    <div className="flex flex-col justify-between bg-gray-500  border-1 w-full p-2 md:p-5 lg:p-10  border-gray-800 text-white ">
       {/* 이미지 */}
       <div className=" relative mb-3 ">
         <img
