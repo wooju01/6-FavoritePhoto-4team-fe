@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useQuery } from "@tanstack/react-query";
 import { getCardsCount, getMyCardsOnSale } from "@/lib/api/api-users";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
