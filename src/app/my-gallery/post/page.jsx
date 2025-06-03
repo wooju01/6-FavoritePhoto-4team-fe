@@ -41,6 +41,7 @@ export const metadata = {
     creator: "코드잇 4팀",
     images: ["https://6-favorite-photo-4team-fe.vercel.app/contents.png"], // 동일 이미지 써도 됨
   },
+  metadataBase: new URL("https://github.com/afafmmm/6-FavoritePhoto-4team-fe"), // 절대 경로 기준 URL
 };
 
 export default function CardPostPage() {
