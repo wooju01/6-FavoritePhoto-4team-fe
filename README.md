@@ -1,6 +1,7 @@
-![최애의 포토](https://github.com/user-attachments/assets/894ce755-7f15-4e5a-8c86-01c7f86eb727)
+![최애의 포토1](https://github.com/user-attachments/assets/8edeaded-c705-45d5-9334-a232067d7092)
 
 ## 📝 목차
+
 
 1. [프로젝트 소개](#intro)
 2. [기능 구현 영상](#사용-방법)
