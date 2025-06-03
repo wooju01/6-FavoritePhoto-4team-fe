@@ -53,7 +53,7 @@ export default function PhotoBuyerDetail({ sale }) {
         refetchTradeRequests={loadTradeRequests}
       />
       <Title title="내가 제시한 교환 목록" font="titleLg_Noto" />
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5 lg:gap-10 py-4 md:py-6 lg:py-8">
         {tradeRequests.length === 0 ? (
           <p>거래 요청이 없습니다.</p>
         ) : (

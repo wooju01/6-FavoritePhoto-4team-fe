@@ -1,16 +1,21 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import GradeTag from "../tag/GradeTag";
-import example from "@/assets/example.svg";
 import Button from "../ui/Button";
+import { useAlertModal } from "@/providers/AlertModalProvider";
 
 const genreMap = {
   1: "여행",
   2: "풍경",
   3: "인물",
   4: "사물",
+};
+const gradeMap = {
+  1: "COMMON",
+  2: "RARE",
+  3: "SUPER RARE",
+  4: "LEGENDARY",
 };
 
 export default function ExchangeCancel({
@@ -21,14 +26,20 @@ export default function ExchangeCancel({
   nickname,
   price,
   description,
-  onApprove,
   onCancel,
 }) {
+  const { openModal } = useAlertModal();
+  console.log("모달 열기", { grade: gradeId, name });
+
   return (
-    <div className="flex flex-col justify-between bg-gray-500  border-1 w-full px-2 py-2  border-gray-800 text-white mt-5">
+    <div className="flex flex-col justify-between bg-gray-500  border-1 w-full p-2 md:p-5 lg:p-10  border-gray-800 text-white ">
       {/* 이미지 */}
       <div className=" relative mb-3 ">
-        <img src={image} alt={name} className="object-cover w-full h-full aspect-square" />
+        <img
+          src={image}
+          alt={name}
+          className="object-cover w-full h-full aspect-square"
+        />
       </div>
 
       {/* 제목 */}
@@ -68,7 +79,15 @@ export default function ExchangeCancel({
       </div>
       {/* 버튼들 */}
       <div className="w-full">
-        <Button type="reject" onClick={onCancel}>
+        <Button
+          type="reject"
+          onClick={() =>
+            openModal("교환 취소", {
+              grade: gradeMap[gradeId],
+              name,
+            }, onCancel)
+          }
+        >
           취소하기
         </Button>
       </div>

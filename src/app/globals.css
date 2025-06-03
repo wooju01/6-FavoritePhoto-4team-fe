@@ -102,6 +102,30 @@ body {
   }
 }
 
+
+@utility flex-row-center {
+  display : flex;
+  flex-direction : row;
+  align-items: center;
+}
+
+@utility flex-col {
+  display : flex;
+  flex-direction : column;
+}
+
+@utility flex-between-center {
+  display: flex;
+  justify-content : space-between;
+  align-items: center;
+}
+
+.test {
+  display: flex;
+  align-items: center;
+  justify-content : space-between;  
+}
+
 @utility animate-slide-up {
   animation: slide-up 0.3s ease-out forwards;
 }

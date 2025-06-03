@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { storeService } from "@/lib/api/api-store";
 import MyCard from "../PhotoCard/MyCard";
 import { Title } from "../ui/Title";
+import { useStateModal } from "@/providers/StateModalProvider";
 
 export default function CardTrade({
   selectedCard,
@@ -13,8 +14,7 @@ export default function CardTrade({
   refetchTradeRequests,
 }) {
   const [message, setMessage] = useState("");
-  const queryClient = useQueryClient();
-
+  const { openModal } = useStateModal();
   if (!selectedCard) {
     return <div className="text-white p-4">선택된 카드가 없습니다.</div>;
   }
@@ -25,15 +25,20 @@ export default function CardTrade({
     mutationFn: ({ saleId, offeredUserCardId, message }) =>
       storeService.createTradeRequest(saleId, [offeredUserCardId], message),
 
-    onSuccess: () => {
-      alert("교환 요청이 성공적으로 전송되었습니다!");
+    onSuccess: (data, variables) => {
+      openModal(200, "교환", {
+        grade: photoCard.grade?.name || "등급없음",
+        name: photoCard.name,
+      });
       if (refetchTradeRequests) refetchTradeRequests();
       if (onClose) onClose();
     },
 
-    onError: (error) => {
-      console.error("교환 요청 실패:", error);
-      alert("교환 요청에 실패했습니다. 다시 시도해주세요.");
+    onError: (error, variables) => {
+      openModal(error?.response?.status || 500, "교환 제시", {
+        grade: photoCard.grade?.name || "등급없음",
+        name: photoCard.name,
+      });
     },
   });
 

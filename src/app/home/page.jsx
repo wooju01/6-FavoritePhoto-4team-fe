@@ -4,6 +4,25 @@ import RandomPoint from "@/components/RandomPoint";
 import RandomPointHomeTrigger from "@/components/RandomPointHomeTrigger";
 import NotiModal from "@/components/modal/NotiModal";
 
+export const metadata = {
+  title: "최악의 포토",
+  description: "포토카드를 확인하세요",
+  openGraph: {
+    title: "최애의 포토",
+    description: "사진을 만들고 공유할 수 있는 커뮤니티입니다.",
+    type: "website",
+    images: ["https://6-favorite-photo-4team-fe.vercel.app/contents.png"],
+  },
+    twitter: {
+    card: "summary_large_image",
+    title: "최악의 포토",
+    description: "가장 이상한 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
+    site: "@your_twitter", 
+    creator: "나야 나~",
+    images: ["https://6-favorite-photo-4team-fe.vercel.app/contents.png"], 
+  },
+};
+
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
 

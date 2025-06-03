@@ -57,6 +57,17 @@ export default function StateModal() {
         path = "/my-gallery";
       }
       break;
+
+    case "교환":
+      title = "교환 제시";
+      textOrCount = "포토카드 교환 제시";
+      if (isSuccess) {
+        buttonText = "나의 판매 포토카드에서 확인하기";
+        path = "/for-my-sales";
+      } else {
+        buttonText = "마켓플레이스로로 돌아가기";
+        path = "/home";
+      }
   }
 
   // 이동
