@@ -1,4 +1,3 @@
-import { delay } from "@/delay";
 import BaseCardList from "./BaseCardList";
 
 export default async function BaseCards({ searchParams }) {
@@ -6,15 +5,12 @@ export default async function BaseCards({ searchParams }) {
   const genreFilter = searchParams.genre;
   const saleFilter = searchParams.sale;
 
-  const hasInitialParams = gradeFilter || genreFilter || saleFilter;
-
-  if (!hasInitialParams) {
-    // await delay(1000); //일단 여기는 나중에 처리하겠습니다.
-  } 
-
-  const res = await fetch("https://6-favorite-photo-4team-fe.vercel.app/data/cards.json", {
-        cache : "no-store"
-      });
+  const res = await fetch(
+    "https://6-favorite-photo-4team-fe.vercel.app/data/cards.json",
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) return null;
 
@@ -28,5 +24,5 @@ export default async function BaseCards({ searchParams }) {
     return matchGrade && matchGenre && matchSale;
   });
 
-  return <BaseCardList cards={filtered} />
+  return <BaseCardList cards={filtered} />;
 }
