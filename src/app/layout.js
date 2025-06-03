@@ -38,7 +38,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className="w-full">
-        <div className="mx-auto min-h-screen px-4 md:px-5 max-w-[1480px]">
+        <div
+          id="modal-root"
+          className="mx-auto min-h-screen px-4 md:px-5 max-w-[1480px]"
+        >
           <Providers>
             <Header />
             <main className="pb-20 md:pb-0">{children}</main>

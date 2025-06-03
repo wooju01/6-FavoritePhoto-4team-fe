@@ -16,6 +16,7 @@ export default function SellerPage({ sale }) {
   const router = useRouter();
   const { photoCard } = sale;
   const { imageUrl, name } = photoCard;
+  const isSoldOut = sale.saleQuantity === 0;
 
   const [tradeRequests, setTradeRequests] = useState([]);
 
@@ -38,7 +39,7 @@ export default function SellerPage({ sale }) {
     try {
       await approveTradeRequest(tradeId);
       alert("교환이 승인되었습니다.");
-      fetchTradeRequests(); // 리스트 갱신
+      router.push("/my-gallery");
     } catch (err) {
       console.error("승인 실패:", err);
       const msg = err.message.includes("사용 가능한 카드가 없습니다")
@@ -62,8 +63,8 @@ export default function SellerPage({ sale }) {
 
   return (
     <div className="bg-my-black text-white min-h-screen">
-      {/* 헤더
-      <div className="flex items-center mb-4">
+      {/* 헤더 */}
+      {/* <div className="flex items-center mb-4">
         <button
           onClick={() => router.back()}
           className="w-10 h-10 flex items-center"
@@ -76,9 +77,10 @@ export default function SellerPage({ sale }) {
       </div> */}
 
       {/* 카드 제목 */}
-      <div className="text-700-24 mb-2 md:text-700-32 lg:text-700-40">{photoCard.name}</div>
+      <div className="text-700-24 mb-2 md:text-700-32 lg:text-700-40">
+        {photoCard.name}
+      </div>
       <div className="w-full h-[1.5px] bg-gray-200" />
-
 
       {/* 카드 이미지 */}
       <div className="md:grid grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 py-3 md:py-5 lg:py-7">
@@ -99,7 +101,9 @@ export default function SellerPage({ sale }) {
       </div>
 
       {/* 교환 제시 목록 */}
-      <div className="text-700-24 md:text-700-32 lg:text-700-40">교환 제시 목록</div>
+      <div className="text-700-24 md:text-700-32 lg:text-700-40">
+        교환 제시 목록
+      </div>
       <div className="w-full h-[1.5px] bg-gray-200 mb-10" />
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5 lg:gap-10">
         {tradeRequests.map((trade) => {
@@ -114,6 +118,7 @@ export default function SellerPage({ sale }) {
               trade={trade}
               onApprove={handleApprove}
               onReject={handleReject}
+              isSoldOut={isSoldOut}
             />
           );
         })}

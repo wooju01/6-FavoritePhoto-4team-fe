@@ -12,7 +12,7 @@ const genreMap = {
   4: "사물",
 };
 
-export default function Exchange({ trade, onApprove, onReject }) {
+export default function Exchange({ trade, onApprove, onReject, isSoldOut }) {
   const userCard = trade.tradeRequestUserCards[0]?.userCard;
   const photoCard = userCard?.photoCard;
 
@@ -34,8 +34,10 @@ export default function Exchange({ trade, onApprove, onReject }) {
         />
       </div>
 
-      {/* 제목 */}  
-      <h3 className="text-700-14 md:text-700-22 truncate mb-1">{photoCard?.name}</h3>
+      {/* 제목 */}
+      <h3 className="text-700-14 md:text-700-22 truncate mb-1">
+        {photoCard?.name}
+      </h3>
 
       {/* 등급 · 장르 · 작성자 */}
       <div className="flex justify-between items-center text-400-10">
@@ -44,7 +46,9 @@ export default function Exchange({ trade, onApprove, onReject }) {
             <GradeTag grade={photoCard?.gradeId} />
           </p>
           <span className="text-gray-400 md:text-400-16">|</span>
-          <span className="text-gray-300 md:text-400-16">{genreMap[photoCard?.genreId]}</span>
+          <span className="text-gray-300 md:text-400-16">
+            {genreMap[photoCard?.genreId]}
+          </span>
         </div>
       </div>
 
@@ -71,24 +75,24 @@ export default function Exchange({ trade, onApprove, onReject }) {
 
       {/* 버튼들 */}
       <div className="flex justify-between gap-2 md:gap-5 md:[&>button]:h-14">
-        <Button
-          type="reject"
-          onClick={() => {
-            onReject(trade.id); // SellerPage에서 reject 실행
-          }}
-        >
-          <span className="text-700-12 md:hidden">거절</span>
-          <span className="hidden md:block text-400-16 font-medium">거절하기</span>
-        </Button>
-        <Button
-          type="approve"
-          onClick={() => {
-            onApprove(trade.id); // SellerPage에서 approve 실행
-          }}
-        >
-          <span className="text-700-12 md:hidden">승인</span>
-          <span className="hidden md:block text-700-16">승인하기</span>
-        </Button>
+        {isSoldOut ? (
+          <Button type="exchangeGreen" disabled={true} className="w-full">
+            거절 및 승인 불가
+          </Button>
+        ) : (
+          <>
+            <Button type="reject" onClick={() => onReject(trade.id)}>
+              <span className="text-700-12 md:hidden">거절</span>
+              <span className="hidden md:block text-400-16 font-medium">
+                거절하기
+              </span>
+            </Button>
+            <Button type="approve" onClick={() => onApprove(trade.id)}>
+              <span className="text-700-12 md:hidden">승인</span>
+              <span className="hidden md:block text-700-16">승인하기</span>
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

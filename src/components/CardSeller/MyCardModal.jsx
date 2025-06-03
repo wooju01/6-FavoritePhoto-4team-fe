@@ -1,36 +1,41 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Search from "../ui/Search";
-import closeIcon from "@/assets/close.svg";
 import Image from "next/image";
-
-import CardSellDetail from "./CardSellDetail";
-import MyCard from "../PhotoCard/MyCard";
 import { useQuery } from "@tanstack/react-query";
+import MyCard from "../PhotoCard/MyCard";
+import CardSellDetail from "./CardSellDetail";
+import closeIcon from "@/assets/close.svg";
 import { getMyCards } from "@/lib/api/api-users";
+import SearchModalOnly from "../ModalOnly/SearchModalOnly";
+import FilterControlsModalOnly from "../ModalOnly/FilterControlsModalOnly";
+import MyGalleryFilter from "../BottomSheet/Mygalleryfilter";
+import { createPortal } from "react-dom";
 
-export default function MyCardModal({ isOpen, onClose, currentUserId }) {
+export default function MyCardModal({ isOpen, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-
   const startY = useRef(null);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["myGalleryForModal"],
-    queryFn: getMyCards,
+  const [keyword, setKeyword] = useState("");
+  const [grade, setGrade] = useState("");
+  const [genre, setGenre] = useState("");
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["myGalleryForModal", grade, genre, keyword],
+    queryFn: () => getMyCards({ grade, genre, keyword, size: "sm" }),
     enabled: isOpen,
-    onSuccess: (res) => {
-      console.log("myGallery 응답:", res);
-    },
+    keepPreviousData: true,
   });
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
+      setShowDetail(false);
+      setSelectedCard(null);
       if (typeof window !== "undefined") {
         setIsDesktop(window.innerWidth >= 1024);
       }
@@ -77,6 +82,18 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
     }
     startY.current = null;
   };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!mounted) return null;
+
+  const modalRoot = document.getElementById("modal-root");
+  if (!modalRoot) return null;
 
   if (!isOpen && !isVisible) return null;
 
@@ -150,6 +167,24 @@ export default function MyCardModal({ isOpen, onClose, currentUserId }) {
 
               {/* md 이상일 때만 보이는 구분선 */}
               <div className="hidden md:block w-full h-[2px] bg-gray-200 mb-4" />
+
+              <div className="flex items-center gap-3 mb-2 space-y-4 md:flex md:items-center md:gap-7 lg:gap-15 md:space-y-0">
+                <MyGalleryFilter buttonSize="w-[55px] h-[44px]" />
+                <SearchModalOnly
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onSearch={() => refetch()}
+                  placeholder="검색어 입력"
+                />
+                <div className="gap-7 hidden md:flex">
+                  <FilterControlsModalOnly
+                    onChange={(key, id) => {
+                      if (key === "grade") setGrade(id);
+                      if (key === "genre") setGenre(id);
+                    }}
+                  />
+                </div>
+              </div>
 
               {/* 카드 리스트 */}
               <div

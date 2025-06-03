@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { FiRefreshCw } from "react-icons/fi";
-import { cancelSaleById } from "@/lib/api/api-sale";
-import { getMyCards } from "@/lib/api/api-users";
-import GradeTag from "../tag/GradeTag";
+import exchangeIcon from "@/assets/exchange.svg";
 import Button from "./Button";
+import GradeTag from "../tag/GradeTag";
+import { useRouter } from "next/navigation";
+import { cancelSaleById, getSaleDetail } from "@/lib/api/api-sale";
+import { getMyCards } from "@/lib/api/api-users";
+import EditCardModal from "../CardSeller/EditCardModal";
+import { FiRefreshCw } from "react-icons/fi";
 
 const genreMap = {
   1: "여행",
@@ -15,12 +17,12 @@ const genreMap = {
   4: "사물",
 };
 
-export default function CardSeller({ sale }) {
+export default function CardSeller({ sale: initialSale }) {
   const router = useRouter();
-
-  const [editModeOpen, setEditModeOpen] = useState(false);
-
+  const [sale, setSale] = useState(initialSale); // 내부에서 sale 관리
   const [availableCards, setAvailableCards] = useState([]);
+
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // 수정하기 모드에서도 현 보유수량 데이터 호출
   useEffect(() => {
@@ -32,8 +34,18 @@ export default function CardSeller({ sale }) {
       setAvailableCards(matchedCard?.userCards || []);
     }
 
-    if (editModeOpen) fetchAvailableCards();
-  }, [editModeOpen, sale.photoCard.id]);
+    if (showEditModal) fetchAvailableCards();
+  }, [showEditModal, sale.photoCard.id]);
+
+  const handleEditSuccess = async () => {
+    try {
+      const updatedSale = await getSaleDetail(sale.id);
+      setSale(updatedSale); // 최신 sale로 교체
+      setShowEditModal(false); // 모달 닫기
+    } catch (err) {
+      console.error("판매 상세 정보 재요청 실패:", err);
+    }
+  };
 
   const handleCancelSale = async () => {
     const confirmCancel = window.confirm("정말로 판매를 중단하시겠습니까?");
@@ -59,15 +71,17 @@ export default function CardSeller({ sale }) {
   } = sale;
 
   return (
-    <div>
-      {/* 카드 정보 */}
-      <div className="flex-col gap-7">
-        <div className="flex-row-center gap-2.5 [&_*]:text-700-18 lg:[&_*]:text-700-24">
+    <>
+      <div>
+        {/* 카드 정보 */}
+        <div className="flex-col gap-7">
+          <div className="flex-row-center gap-2.5 [&_*]:text-700-18 lg:[&_*]:text-700-24"></div>
           <GradeTag grade={photoCard.gradeId} />
           <span className="text-gray-300">|</span>
           <span className="text-gray-300">{genreMap[photoCard.genreId]}</span>
           <p className="flex-1 text-end underline">{seller.nickname}</p>
         </div>
+
         <h3 className="w-full h-[1px] bg-gray-400"></h3>
         <div>
           <p className="lg:text-400-18">{photoCard.description}</p>
@@ -86,33 +100,61 @@ export default function CardSeller({ sale }) {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 교환 희망 정보 */}
-      <div className="py-24 flex-col gap-7 lg:gap-10">
-        <div className="">
-          <div className="flex-row-center gap-2.5 mb-2">
-            <FiRefreshCw className="w-6 h-6 lg:w-7 lg:h-7"/>
-            <h2 className="text-700-22 lg:text-700-28">교환 희망 정보</h2>
+        {/* 교환 희망 정보 */}
+        <div className="py-24 flex-col gap-7 lg:gap-10">
+          <div className="">
+            <div className="flex-row-center gap-2.5 mb-2">
+              <FiRefreshCw className="w-6 h-6 lg:w-7 lg:h-7" />
+              <h2 className="text-700-22 lg:text-700-28">교환 희망 정보</h2>
+            </div>
+            <h3 className="w-full h-[1.5px] bg-gray-200"></h3>
           </div>
-          <h3 className="w-full h-[1.5px] bg-gray-200"></h3>
-        </div>
-        <div className="flex-row-center gap-2.5 lg:gap-3.5 [&>span]:text-700-18 lg:[&>span]:text-700-24">
-          <GradeTag grade={photoCard.gradeId} />
-          <span className="text-gray-300">|</span>
-          <span className="text-gray-300">{genreMap[cardGenreId]}</span>
-        </div>
-        <h3 className="w-full h-[1px] bg-gray-400"></h3>
-        <div>
-          <p className="text-400-16 lg:text-400-18">{desiredDescription}</p>
-        </div>
-        <div className="flex-col gap-5">
-          <Button type="purchase" onClick={() => setEditModeOpen(true)}>
-            수정하기
-          </Button>
-          <Button type="sellDown" onClick={handleCancelSale} />
+          <div className="flex-row-center gap-2.5 lg:gap-3.5 [&>span]:text-700-18 lg:[&>span]:text-700-24">
+            <GradeTag grade={photoCard.gradeId} />
+            <span className="text-gray-300">|</span>
+            <span className="text-gray-300">{genreMap[cardGenreId]}</span>
+          </div>
+
+          <h3 className="w-full h-[1px] bg-gray-400"></h3>
+          <div>
+            <p className="text-400-16 lg:text-400-18">{desiredDescription}</p>
+          </div>
+          <div className="flex-col gap-5">
+            {saleQuantity > 0 ? (
+              <>
+                <Button type="purchase" onClick={() => setShowEditModal(true)}>
+                  수정하기
+                </Button>
+                <Button type="sellDown" onClick={handleCancelSale} />
+              </>
+            ) : (
+              <Button type="purchase" disabled={true}>
+                품절되었습니다
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      {showEditModal && (
+        <EditCardModal
+          card={{
+            ...sale,
+            photoCard: {
+              ...sale.photoCard,
+              userCards: availableCards || [], // sale 데이터 이외의 데이터 연결
+            },
+          }}
+          availableCards={availableCards}
+          onCloseModal={() => setShowEditModal(false)}
+          onCloseDetail={() => setShowEditModal(false)}
+          isEditMode={true}
+          onEditSuccess={() => {
+            setShowEditModal(false);
+            handleEditSuccess;
+          }}
+        />
+      )}
+    </>
   );
 }

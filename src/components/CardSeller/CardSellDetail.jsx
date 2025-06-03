@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useStateModal } from "@/providers/StateModalProvider";
 import StateModal from "../modal/StateModal";
 import { useRouter } from "next/navigation";
-import closeIcon from "@/assets/close.svg";
+import clsx from "clsx";
 
 const grades = [
   { id: 1, name: "COMMON" },
@@ -33,6 +33,7 @@ export default function CardSellDetail({
   onCloseDetail,
   onCloseModal,
   isEditMode = false,
+  onEditSuccess,
 }) {
   const router = useRouter();
 
@@ -101,7 +102,7 @@ export default function CardSellDetail({
     }
 
     const actualCardGradeName =
-      grades.find((g) => g.id === card?.photoCard?.gradeId)?.name ||
+      grades.find((g) => g.id === card?.photoCard?.grade?.id)?.name ||
       "등급 정보 없음"; // 백엔드 바뀌면서 안되니까 수정필요요
     const stateModalCardInfo = {
       grade: actualCardGradeName,
@@ -121,7 +122,11 @@ export default function CardSellDetail({
         });
 
         queryClient.invalidateQueries(["storeMainList"]);
-        router.push("/for-my-sales");
+
+        alert("수정이 완료되었습니다.");
+
+        onEditSuccess?.();
+        return;
       } else {
         // 판매 등록 API 호출
         await postCardSale({
@@ -145,40 +150,61 @@ export default function CardSellDetail({
     }
   };
 
+  // 유효성 검사
+  const isFormValid =
+    Number(price) > 0 &&
+    selectedGrade &&
+    selectedGenre &&
+    description.trim().length > 0;
+
   return (
     <div
       className={`
-        relative bg-my-black md:bg-gray-500 text-white overflow-y-auto
-        px-4 pt-4 pb-8 
-        ${isClosing ? "animate-slide-down" : "animate-slide-up"}
+         w-full left-0 top-[-60px] overflow-y-auto p-4 min-h-screen md:min-h-[100%] h-full bg-gray-500
+        fixed
+        inset-0 z-[10000]  text-white 
         lg:animate-none
-        
-        md:rounded-t-sm md:h-[90%]
-        
-        lg:rounded-md
-        lg:max-w-[1160px] lg:w-full lg:max-h-[920px]
+        md:rounded-t-sm md:inset-x-0 md:inset-y-0 md:top-0
+
+        lg:static lg:z-0 lg:rounded-md lg:max-w-[1160px] lg:w-full lg:max-h-[920px]
         lg:px-0 lg:pt-0 lg:pb-0 lg:pr-8
-        `}
+
+        ${
+          isEditMode
+            ? isClosing
+              ? "animate-slide-down"
+              : "animate-slide-up"
+            : ""
+        }
+      `}
     >
+      <div className="hidden md:block lg:hidden fixed inset-0 z-[10001] bg-transparent pointer-events-none" />
       {/* 슬라이드바 (md만) */}
-      <div
-        className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3 mt-2 hidden md:block lg:hidden"
-        onClick={handleSlideBarClick}
-      />
+      {isEditMode && (
+        <div
+          className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3 mt-2 hidden md:block lg:hidden"
+          onClick={handleSlideBarClick}
+        />
+      )}
 
       {/* 헤더 (모바일 전용) */}
-      <div className="flex items-center mb-4 md:hidden">
-        <button onClick={onCloseDetail} className="w-10 h-10 flex items-center">
-          <Image src={back} alt="뒤로가기" width={24} height={24} />
-        </button>
-        <div className="flex-1 text-center title-20">
-          {isEditMode ? "수정하기" : "나의 포토카드 판매하기"}
+      <div className="absolute top-0 left-0 right-0 h-[48px] z-[10001] md:z-[8001] bg-my-black md:hidden">
+        <div className="flex items-center h-full px-4">
+          <button
+            onClick={onCloseDetail}
+            className="w-10 h-10 flex items-center"
+          >
+            <Image src={back} alt="뒤로가기" width={24} height={24} />
+          </button>
+          <div className="flex-1 text-center title-20">
+            {isEditMode ? "수정하기" : "나의 포토카드 판매하기"}
+          </div>
         </div>
       </div>
 
       {/* 모달명 (md, lg 전용) */}
       <div className="hidden md:block text-start text-gray-300 mb-2 md:mb-8 md:mt-6 lg:mt-0.5 title-14 md:title-18 lg:title-24">
-        나의 포토카드 판매하기
+        {isEditMode ? "수정하기" : "나의 포토카드 판매하기"}
       </div>
 
       {/* 카드 제목 */}
@@ -320,6 +346,7 @@ export default function CardSellDetail({
           type="exchangeGreen"
           className="w-full h-[55px]"
           onClick={handleAction}
+          disabled={!isFormValid}
         >
           {isEditMode ? "수정하기" : "판매하기"}
         </Button>
