@@ -1,70 +1,51 @@
 "use client";
 
 import React from "react";
-import { getCardsCount, getMyCardsOnSale } from "@/lib/api/api-users";
-import { useQuery } from "@tanstack/react-query";
 import { Title } from "@/components/ui/Title";
 import ForSale from "@/components/PhotoCard/ForSale";
 import OwnedCards from "../my-gallery/_components/OwnedCards";
 import Search from "@/components/ui/Search";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { use4Filter } from "@/hooks/useFilter";
 import Pagination from "@/components/ui/Pagination";
 import FilterDropdown from "@/components/FllterDropdown/FilterDropdown";
 import SaleGalleryFilter from "@/components/BottomSheet/SaleGaileryFilter";
+import useMySales from "@/hooks/useMySales";
+import { use4Filter } from "@/hooks/useFilter";
 
 export default function ForMySales() {
-  // 쿼리 문자열 처리
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  // ✅ 페이지 관련 함수, 상태 등
+  const {
+    data,
+    count,
+    isPending,
+    isError,
+    error,
+    page, // 다른 건 data로 받으면 되는데 page는 따로 계산해야 함
+    onFilterChange,
+    onPageChange,
+  } = useMySales();
 
+  // ✅ 필터 관련 정보 가져옴
   const { isOpen, toggle, close, filterOptions } = use4Filter();
 
-  const grade = Number(searchParams.get("grade")) || 0;
-  const genre = Number(searchParams.get("genre")) || 0;
-  const keyword = searchParams.get("keyword") || "";
-  const page = Number(searchParams.get("page") || 1);
-  const size = searchParams.get("size") || "md";
-  const saleType = searchParams.get("saleType") || "";
-  const sale = searchParams.get("sale") || "";
-
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ["mysales_v2", grade, genre, keyword, saleType, sale, page, size],
-    queryFn: () =>
-      getMyCardsOnSale({
-        grade,
-        genre,
-        keyword,
-        saleType,
-        sale,
-        page,
-        size,
-      }),
-  });
-
-  // 필터 변경
-  const onFilterChange = (type, value) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    // 전체 선택: 필터 제거
-    value === 0 ? params.delete(type) : params.set(type, value.toString());
-  };
-
-  // 카드 개수 불러오기 (전체 + 등급별)
-  const { data: count } = useQuery({
-    queryKey: ["countedCards"],
-    queryFn: getCardsCount,
-  });
-
-  // 페이지 바꾸는 함수
-  const onPageChange = (newPage) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  if (isPending) return <p>로딩 중...</p>;
+  // ✅ 로딩 중 + 오류 났을 때 디자인
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>로딩 중입니다...</p>
+        <svg
+          className="ml-3 size-5 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          ></path>
+        </svg>
+      </div>
+    );
   if (isError) console.error(error);
 
   return (

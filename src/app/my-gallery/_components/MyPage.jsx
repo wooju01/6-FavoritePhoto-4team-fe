@@ -14,7 +14,7 @@ import Search from "@/components/ui/Search";
 import MyGalleryFilter from "@/components/BottomSheet/Mygalleryfilter";
 
 export default function MyPage() {
-  // ✅ 쿼리 문자열 처리
+  // ✅ 페이지 관련 함수, 상태 등
   const {
     data,
     count,
