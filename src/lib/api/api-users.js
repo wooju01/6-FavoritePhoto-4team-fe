@@ -50,26 +50,20 @@ export async function getMyCards(query) {
 }
 
 // ✅ GET: 나의 판매 포토카드
-export async function getMyCardsOnSale({
-  grade,
-  genre,
-  keyword,
-  saleType, // 판매, 교환 (품절x)
-  sale, // '판매 중', '판매 완료' (교환x)
-  page = 1,
-  size = "md",
-}) {
-  const queryParams = new URLSearchParams();
+export async function getMyCardsOnSale(query) {
+  const params = new URLSearchParams();
 
-  if (grade && grade !== 0) queryParams.append("grade", grade.toString());
-  if (genre && genre !== 0) queryParams.append("genre", genre.toString());
-  if (keyword) queryParams.append("keyword", keyword);
-  if (saleType) queryParams.append("saleType", saleType);
-  if (sale) queryParams.append("sale", sale);
-  if (page) queryParams.append("page", page.toString() || "1");
-  if (size) queryParams.append("size", size || "md");
-  queryParams.append("withCounts", "true"); // 우주: 필터 카운트 포함 요청
-  const queryString = queryParams.toString();
+  // refactor: 객체 구조로 받게 함
+  const cleaned = { ...query, withCounts: true }; // 쿼리를 그대로 넣되, mobile 크기일 때는 count를 넣음
+
+  Object.entries(cleaned).forEach(([key, value]) => {
+    if (value && value !== 0 && value !== "") {
+      params.set(key, String(value));
+    }
+  });
+
+  // 반환
+  const queryString = params.toString();
   return await cookieFetch(
     `/api/users/cards-on-sale${queryString && `?${queryString}`}`
   );

@@ -6,5 +6,7 @@ export default function parseParams(searchParams) {
     keyword: searchParams.get("keyword") || "",
     page: Number(searchParams.get("page")) || 1,
     size: searchParams.get("size") || "md",
+    saleType: searchParams.get("saleType") || "",
+    sale: searchParams.get("sale") || "",
   };
 }
