@@ -58,9 +58,9 @@ export default function StateModal() {
       }
       break;
 
-      case "교환":
-            title = "교환 제시";
-      textOrCount = "포토카드 교환 제시시" ;
+    case "교환":
+      title = "교환 제시";
+      textOrCount = "포토카드 교환 제시";
       if (isSuccess) {
         buttonText = "나의 판매 포토카드에서 확인하기";
         path = "/for-my-sales";
