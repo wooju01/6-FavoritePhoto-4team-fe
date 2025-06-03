@@ -1,12 +1,12 @@
-import { delay } from '@/delay';
-import BaseCard from './BaseCard';
+"use client";
 
-export default async function BaseCardList({ cards }) {
-  await delay(500)
+import BaseCard from "./BaseCard";
+
+export default function BaseCardList({ cards }) {
   return (
     <>
       {cards.map((card, index) => (
-        <BaseCard key={index} {...card}  />
+        <BaseCard key={index} {...card} />
       ))}
     </>
   );
