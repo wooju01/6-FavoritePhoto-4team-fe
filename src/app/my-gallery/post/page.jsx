@@ -8,21 +8,26 @@ import Noti from "./_components/Noti";
 import usePostForm from "@/hooks/usePostForm";
 
 export const metadata = {
-  title: "최악의 포토 - 랜딩 페이지",
-  description: "세상에서 가장 황당한 포토카드 거래 플랫폼",
-  keywords: ["포토카드", "최악의 포토", "포카 거래", "포카마켓"],
-  authors: [{ name: "최악의 포토팀", url: "https://yourdomain.com/" }],
+  title: "최애의 포토",
+  description: "나만의 카드를 생성하고 거래할 수 있는 커뮤니티입니다.",
+  keywords: ["포토카드", "포카 거래", "사진"],
+  authors: [
+    {
+      name: "코드잇 4팀",
+      url: "https://github.com/afafmmm/6-FavoritePhoto-4team-fe",
+    },
+  ],
   openGraph: {
-    title: "최악의 포토 - 웃음 폭발 포카 거래소",
-    description: "가장 이상한 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
-    url: "https://yourdomain.com/", // 실제 서비스 도메인으로 바꿔야 함
-    siteName: "최악의 포토",
+    title: "최애의 포토",
+    description: "나만의 카드를 생성하고 거래할 수 있는 커뮤니티입니다.",
+    url: "https://6-favorite-photo-4team-fe.vercel.app/",
+    siteName: "최애의 포토",
     images: [
       {
-        url: "https://yourdomain.com/og-image.png", // 썸네일 이미지 URL
+        url: "https://6-favorite-photo-4team-fe.vercel.app/contents.png",
         width: 1200,
         height: 630,
-        alt: "최악의 포토 대표 이미지",
+        alt: "최애의 포토 대표 이미지",
       },
     ],
     locale: "ko_KR",
@@ -30,13 +35,12 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "최악의 포토 - 웃음 폭발 포카 거래소",
-    description: "가장 이상한 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
-    site: "@your_twitter", // 있으면 넣고, 없으면 생략 가능
-    creator: "@your_twitter",
-    images: ["https://yourdomain.com/og-image.png"], // 동일 이미지 써도 됨
+    title: "최애의 포토",
+    description: "나만의 카드를 생성하고 거래할 수 있는 커뮤니티입니다.",
+    site: "https://6-favorite-photo-4team-fe.vercel.app/", // 있으면 넣고, 없으면 생략 가능
+    creator: "코드잇 4팀",
+    images: ["https://6-favorite-photo-4team-fe.vercel.app/contents.png"], // 동일 이미지 써도 됨
   },
-  metadataBase: new URL("https://yourdomain.com"), // 절대 경로 기준 URL
 };
 
 export default function CardPostPage() {
