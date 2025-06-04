@@ -41,6 +41,7 @@ export default function PhotoBuyerSection({ photo }) {
         </div>
 
         <CardBuyer
+          cardName={photo.photoCard?.name}
           cardId={photo.id}
           tier={photo?.photoCard?.gradeId}
           subLabel={genreMap[photo?.photoCard?.genreId]}

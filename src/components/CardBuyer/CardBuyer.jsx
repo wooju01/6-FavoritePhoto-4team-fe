@@ -82,6 +82,7 @@ export default function CardBuyer({
 
   const handlePurchaseButtonClick = () => {
     const gradeName = tierToGradeName[tier];
+    console.log(cardName)
     openNotiModal(
       "구매",
       { grade: gradeName, name: cardName, count: quantity },
