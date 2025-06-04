@@ -14,7 +14,7 @@
 ## 📑 프로젝트 소개
 https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
-최애의포토는 당신의 ‘최애’ 순간들을 사진으로 담아 간직하고 공유할 수 있는 감성 기반의 포토 기록 플랫폼입니다.
+  최애의포토는 당신의 ‘최애’ 순간들을 사진으로 담아 간직하고 공유할 수 있는 감성 기반의 포토 기록 플랫폼입니다.
 ‘가장 좋아하는 것’을 뜻하는 ‘최애’와 소중한 ‘사진’을 모은다는 의미에서 탄생했습니다.
 일상 속에서 놓치고 싶지 않은 순간들, 나만의 취향과 감정을 표현하고 싶은 사진들,
 최애의포토에 담아보세요.
@@ -34,6 +34,63 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 6️⃣ 다양한 필터 기능: 상황에 따라 검색, 정렬, 필터링 기능을 제공합니다.
 
+## 👨‍👩‍👧‍👦 Team Members
+<table align="center">
+  <tbody>
+    <tr>
+      <th>Team Leader</th>
+      <th>Deputy Team Leader</th>
+      <th>Team Member</th>
+      <th>Team Member</th>
+      <th>Team Member</th>
+      <th>Team Member</th>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://github.com/afafmmm">
+          <img src="https://github.com/afafmmm.png?size=100" width="100px" alt="이지수 GitHub"/>
+          <br />
+          <sub><b>이지수</b></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/fs6-kde">
+          <img src="https://github.com/fs6-kde.png?size=100" width="100px" alt="김다은 GitHub"/>
+          <br />
+          <sub><b>김다은</b></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/wooju01">
+          <img src="https://github.com/wooju01.png?size=100" width="100px" alt="김우주 GitHub"/>
+          <br />
+          <sub><b>김우주</b></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/writing-sky">
+          <img src="https://github.com/writing-sky.png?size=100" width="100px" alt="양성경 GitHub"/>
+          <br />
+          <sub><b>양성경</b></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/xdnjs7">
+          <img src="https://github.com/xdnjs7.png?size=100" width="100px" alt="장원빈 GitHub"/>
+          <br />
+          <sub><b>장원빈</b></sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/az0319h">
+          <img src="https://github.com/az0319h.png?size=100" width="100px" alt="홍성훈 GitHub"/>
+          <br />
+          <sub><b>홍성훈</b></sub>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 
 
