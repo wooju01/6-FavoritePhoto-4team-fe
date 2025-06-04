@@ -98,7 +98,8 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 <br></br>
 <a name="system-architecture"></a>
 ## 🚧 시스템 아키텍쳐
-![303575be4ab91162](https://github.com/user-attachments/assets/32add0c8-1e37-4ef0-bd7d-661b8898cc0d)
+![코드잇 중간 프로젝트 - 프론트](https://github.com/user-attachments/assets/10130013-1dbe-4e25-a599-44d26a0e57cd)
+
 
 <br></br>
 <a name="tech-stack"></a>
