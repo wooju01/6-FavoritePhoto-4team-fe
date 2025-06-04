@@ -54,6 +54,10 @@ export default function CardSeller({ sale: initialSale, onEditSuccess }) {
         onEditSuccess(updatedSale); // 상위 컴포넌트에 알림
       }
       setShowEditModal(false); // 모달 닫기
+
+      if (onEditSuccess) {
+        onEditSuccess(updatedSale); // 상위 컴포넌트에 알림
+      }
     } catch (err) {
       console.error("판매 상세 정보 재요청 실패:", err);
     }
