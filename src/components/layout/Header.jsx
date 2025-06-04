@@ -190,7 +190,11 @@ const Navbar = () => {
             <div className="flex items-center gap-7 ">
               {/* User정보가 있는 경우 */}
               <span className="hidden md:block text-700-14 text-gray-200">
-                {pointError ? "-" : point !== null ? `${point} P` : "-"}
+                {pointError
+                  ? "-"
+                  : point !== null
+                  ? `${point.toLocaleString()} P`
+                  : "-"}
               </span>
               {!(special && windowWidth !== null && windowWidth < 768) && (
                 <Notification />
