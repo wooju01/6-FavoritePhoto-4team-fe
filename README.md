@@ -95,7 +95,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 <br></br>
 ## 🚧 시스템 아키텍쳐
-<img src="https://github.com/user-attachments/assets/83b75b9b-cd88-4f9c-bba2-b9f8ae05c1ee" alt="로고"/>
+![303575be4ab91162](https://github.com/user-attachments/assets/32add0c8-1e37-4ef0-bd7d-661b8898cc0d)
 
 <br></br>
 ## ⚙️ 기술 스택
