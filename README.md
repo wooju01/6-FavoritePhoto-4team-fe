@@ -162,7 +162,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 #### 판매 중인 포토카드 [/for-my-sales]
 <ul>
-  <li>해당 사용자의 판매중인 포토카드 내역 확인</li>
+  <li>사용자의 판매중인 포토카드 내역 확인</li>
 </ul>
 
 
