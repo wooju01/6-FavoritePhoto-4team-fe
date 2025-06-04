@@ -16,7 +16,7 @@ const genreMap = {
   4: "사물",
 };
 
-export default function CardSeller({ sale: initialSale }) {
+export default function CardSeller({ sale: initialSale, onEditSuccess }) {
   const router = useRouter();
   const [sale, setSale] = useState(initialSale); // 내부에서 sale 관리
   const [availableCards, setAvailableCards] = useState([]);
@@ -41,6 +41,10 @@ export default function CardSeller({ sale: initialSale }) {
       const updatedSale = await getSaleDetail(sale.id);
       setSale(updatedSale); // 최신 sale로 교체
       setShowEditModal(false); // 모달 닫기
+
+      if (onEditSuccess) {
+        onEditSuccess(updatedSale); // 상위 컴포넌트에 알림
+      }
     } catch (err) {
       console.error("판매 상세 정보 재요청 실패:", err);
     }
@@ -151,10 +155,7 @@ export default function CardSeller({ sale: initialSale }) {
           onCloseModal={() => setShowEditModal(false)}
           onCloseDetail={() => setShowEditModal(false)}
           isEditMode={true}
-          onEditSuccess={() => {
-            setShowEditModal(false);
-            handleEditSuccess;
-          }}
+          onEditSuccess={handleEditSuccess}
         />
       )}
     </>
