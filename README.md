@@ -167,7 +167,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 #### 🔔 알림 [`/notification`]
 <ul>
-  <li>구매/읽은 알림 확인</li>
+  <li>이전/신규 알림 확인</li>
 </ul>
 
 <br></br>
@@ -206,6 +206,5 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 - 거래 완료 처리 및 거래 히스토리 열람
 
 #### 🔔 알림 [`/notification`]
-- 구매 관련 알림 확인
+- 구매 관련 알림 및 신규 알림 확인
 - 읽은 / 안 읽은 알림 구분 및 상태 처리
-- 알림 클릭 시 관련 포토카드 상세 페이지로 이동
