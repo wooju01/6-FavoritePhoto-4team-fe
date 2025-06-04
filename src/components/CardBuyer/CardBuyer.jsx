@@ -91,7 +91,7 @@ export default function CardBuyer({
   };
 
   return (
-     <div className="flex flex-col gap-7 md:">
+    <div className="flex flex-col gap-7 md:">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <span className="lg:[&>span]:text-700-24">{isLargeScreen !== null && <GradeTag grade={tier} size={gradeSize} />}</span>
@@ -114,7 +114,9 @@ export default function CardBuyer({
       <div className="flex flex-col gap-2.5 ">
         <div className="flex items-center justify-between">
           <span className="text-gray-300 text-400-18 lg:text-400-20">가격</span>
-          <span className="text-700-20 lg:text-700-24">{pricePerCard} P</span>
+          <span className="text-700-20 lg:text-700-24">
+            {(pricePerCard ?? 0).toLocaleString()} P
+          </span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-gray-300 text-400-18 lg:text-400-20">잔여</span>
@@ -154,7 +156,9 @@ export default function CardBuyer({
         <div className="flex items-center justify-between">
           <span className="text-400-18 lg:text-400-20">총 가격</span>
           <div className="flex items-center gap-2.5">
-            <strong className="text-700-20 lg:text-700-24">{totalPrice} P</strong>
+            <strong className="text-700-20 lg:text-700-24">
+              {(totalPrice ?? 0).toLocaleString()} P
+            </strong>
             <span className="text-400-18 text-gray-300 lg:text-400-20">({quantity}장)</span>
           </div>
         </div>
