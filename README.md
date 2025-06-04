@@ -1,16 +1,16 @@
 ![최애의 포토1](https://github.com/user-attachments/assets/8edeaded-c705-45d5-9334-a232067d7092)
 <br></br>
 ## 📝 목차
-1. [프로젝트 소개](#intro)
-2. [기능 구현 영상](#사용-방법)
-3. [팀원 소개](#팀원-소개)
-4. [시스템 아키텍쳐](#기술-스택)
-5. [기술 스택](#기술-스택)
-6. [프로젝트 기능](#기술-스택)
-7. [트러블 슈팅](#기술-스택)
+1. [프로젝트 소개](#project-introduction)
+2. [기능 구현 영상](#feature-demo-video)
+3. [팀원 소개](#team-members)
+4. [시스템 아키텍쳐](#system-architecture)
+5. [기술 스택](#tech-stack)
+6. [프로젝트 기능](#project-features)
+7. [트러블 슈팅](#troubleshooting)
 
 <br></br>
-<a name="intro"></a>
+<a name="project-introduction"></a>
 ## 📑 프로젝트 소개
 https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
@@ -35,6 +35,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 6️⃣ 다양한 필터 기능: 상황에 따라 검색, 정렬, 필터링 기능을 제공합니다.
 
 <br></br>
+<a name="team-members"></a>
 ## 👨‍👩‍👧‍👦 Team Members
 <table align="center">
   <tbody>
@@ -94,10 +95,12 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 </table>
 
 <br></br>
+<a name="system-architecture"></a>
 ## 🚧 시스템 아키텍쳐
 ![303575be4ab91162](https://github.com/user-attachments/assets/32add0c8-1e37-4ef0-bd7d-661b8898cc0d)
 
 <br></br>
+<a name="tech-stack"></a>
 ## ⚙️ 기술 스택
 
 #### ✔️ 언어
@@ -128,6 +131,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 ![Static Badge](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=Vercel&color=black)
 
 <br></br>
+<a name="project-features"></a>
 ## 🕹️ 프로젝트 기능
 ### 1. 페이지 구성
 #### 👋 랜딩페이지 [`/`]
@@ -211,6 +215,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 <br></br>
 ## 💣 트러블 슈팅
+<a name="troubleshooting"></a>
 <details>
 <summary>🖼️ 이미지 업로드 방식 변경 (Multer → Cloudinary)</summary>
 
