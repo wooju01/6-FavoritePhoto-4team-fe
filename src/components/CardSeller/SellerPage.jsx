@@ -34,7 +34,6 @@ export default function SellerPage({ sale: initialSale }) {
   }, [sale.id]);
 
   const handleApprove = async (tradeId) => {
-    if (!confirm("이 교환 제시를 승인하시겠습니까?")) return;
     try {
       await approveTradeRequest(tradeId);
       alert("교환이 승인되었습니다.");
@@ -49,7 +48,6 @@ export default function SellerPage({ sale: initialSale }) {
   };
 
   const handleReject = async (tradeId) => {
-    if (!confirm("이 교환 제시를 거절하시겠습니까?")) return;
     try {
       await rejectTradeRequest(tradeId);
       alert("교환이 거절되었습니다.");
