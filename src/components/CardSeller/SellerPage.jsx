@@ -10,8 +10,9 @@ import {
   rejectTradeRequest,
 } from "@/lib/api/api-trade";
 
-export default function SellerPage({ sale }) {
+export default function SellerPage({ sale: initialSale }) {
   const router = useRouter();
+  const [sale, setSale] = useState(initialSale);
   const { photoCard } = sale;
   const { imageUrl, name } = photoCard;
   const isSoldOut = sale.saleQuantity === 0;
@@ -59,6 +60,10 @@ export default function SellerPage({ sale }) {
     }
   };
 
+  const handleEditSuccess = (updatedSale) => {
+    setSale(updatedSale); // CardSeller에서 넘겨준 최신 sale 데이터로 반영
+  };
+
   return (
     <div className="bg-my-black text-white min-h-screen">
       {/* 카드 제목 */}
@@ -84,7 +89,7 @@ export default function SellerPage({ sale }) {
         </div>
 
         {/* 카드 상세 정보 */}
-        <CardSeller sale={sale} onSellDown={() => console.log("판매 중단")} />
+        <CardSeller sale={initialSale} onEditSuccess={handleEditSuccess} />
       </div>
 
       {/* 교환 제시 목록 */}
