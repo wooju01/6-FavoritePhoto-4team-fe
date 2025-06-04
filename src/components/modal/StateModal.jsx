@@ -80,7 +80,7 @@ export default function StateModal() {
    * 내용
    */
   return (
-    <div className="fixed inset-0 z-99999 md:z-50 flex justify-center items-center bg-my-black">
+    <div className="fixed inset-0 z-99999 md:z-50 flex justify-center items-center bg-my-black w-full h-full">
       <div className="relative bg-my-black w-[230px] md:w-[600px] h-[212px]">
         {/* tablet 이상일 때 x 아이콘 보임 */}
         <button
