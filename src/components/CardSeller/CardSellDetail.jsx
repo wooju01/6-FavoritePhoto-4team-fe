@@ -70,6 +70,18 @@ export default function CardSellDetail({
     }, 300);
   };
 
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onCloseModal?.(); // 모달 닫기
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (gradeRef.current && !gradeRef.current.contains(e.target)) {
@@ -155,6 +167,7 @@ export default function CardSellDetail({
 
   return (
     <div
+      ref={modalRef}
       className={`
          w-full left-0 top-[-60px] overflow-y-auto p-4 min-h-screen md:min-h-[100%] h-full bg-gray-500
         fixed
