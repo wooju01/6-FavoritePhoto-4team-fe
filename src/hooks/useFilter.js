@@ -31,8 +31,8 @@ export function use2Filter() {
       label: "장르",
       options: [
         { id: 0, label: "전체" },
-        { id: 1, label: "풍경" },
-        { id: 2, label: "여행" },
+        { id: 1, label: "여행" },
+        { id: 2, label: "풍경" },
         { id: 3, label: "인물" },
         { id: 4, label: "사물" },
       ],
@@ -69,8 +69,8 @@ export function use4Filter() {
       label: "장르",
       options: [
         { id: 0, label: "전체" },
-        { id: 1, label: "풍경" },
-        { id: 2, label: "여행" },
+        { id: 1, label: "여행" },
+        { id: 2, label: "풍경" },
         { id: 3, label: "인물" },
         { id: 4, label: "사물" },
       ],
