@@ -62,9 +62,7 @@ const fetchFilteredCount = async (rawFilters) => {
     if (filters.sale.length) query.sale = filters.sale.join(",");
     if (filters.saleType.length) query.saleType = filters.saleType.join(",");
 
-    console.log("query sent to fetcher:", query);
     const data = await fetcher(query, true);
-    console.log("response from fetcher:", data);
 
     // filteredCount 설정 로직
     if (Array.isArray(data.sales)) {

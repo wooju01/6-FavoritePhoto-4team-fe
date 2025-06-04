@@ -102,17 +102,14 @@ const Navbar = () => {
         "https://six-favoritephoto-4team-be.onrender.com"
       );
       socket.on("connect", () => {
-        console.log("[Socket] Connected", socket.id);
         if (user.id) {
           socket.emit("join", user.id);
-          console.log("[Socket] join room:", user.id);
         }
       });
       socket.on("connect_error", (err) => {
         console.error("[Socket] Connection error:", err);
       });
       socket.on("disconnect", (reason) => {
-        console.log("[Socket] Disconnected:", reason);
         // 페이지 이동 등으로 소켓이 끊기면 1초 후 재연결
         reconnectTimeout = setTimeout(() => {
           connectSocket();
@@ -120,7 +117,6 @@ const Navbar = () => {
       });
       // 서버에서 'pointUpdate' 전달
       const handlePointUpdate = (data) => {
-        console.log("[Socket] pointUpdate event received:", data);
         if (data && typeof data.totalPoints === "number") {
           setPoint(data.totalPoints);
         }

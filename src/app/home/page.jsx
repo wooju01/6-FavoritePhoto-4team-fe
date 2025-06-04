@@ -5,7 +5,7 @@ import RandomPointHomeTrigger from "@/components/point/RandomPointHomeTrigger";
 import NotiModal from "@/components/modal/NotiModal";
 
 export const metadata = {
-  title: "최악의 포토",
+  title: "최애의 포토",
   description: "포토카드를 확인하세요",
   openGraph: {
     title: "최애의 포토",
@@ -15,7 +15,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "최악의 포토",
+    title: "최애의 포토",
     description: "가장 이상한 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
     site: "@your_twitter",
     creator: "나야 나~",

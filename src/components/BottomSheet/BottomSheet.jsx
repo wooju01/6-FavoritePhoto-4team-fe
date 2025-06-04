@@ -38,7 +38,9 @@ export default function BottomSheet({
   const [selectedGrade, setSelectedGrade] = useState(getInitialValue("grade"));
   const [selectedGenre, setSelectedGenre] = useState(getInitialValue("genre"));
   const [selectedSale, setSelectedSale] = useState(getInitialValue("sale"));
-  const [selectedSaleTypes, setSelectedSaleTypes] = useState(getInitialValue("saleType"));
+  const [selectedSaleTypes, setSelectedSaleTypes] = useState(
+    getInitialValue("saleType")
+  );
 
   useEffect(() => {
     const filtersObj = {};
@@ -117,7 +119,7 @@ export default function BottomSheet({
 
   const normalizedSaleTypes = Array.isArray(counts.saleType)
     ? counts.saleType.reduce((acc, item) => {
-        acc[item.status] = item.count;
+        acc[item.saleType] = item.count;
         return acc;
       }, {})
     : counts.saleType;
@@ -135,7 +137,11 @@ export default function BottomSheet({
           </button>
         </div>
 
-        <FilterTab selected={selectedTab} onChange={setSelectedTab} filters={filters} />
+        <FilterTab
+          selected={selectedTab}
+          onChange={setSelectedTab}
+          filters={filters}
+        />
 
         {selectedTab === "grade" && filters.includes("grade") && (
           <FilterPanelGrade
