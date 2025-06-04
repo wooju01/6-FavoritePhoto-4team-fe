@@ -118,7 +118,7 @@ export default function MyCardModal({ isOpen, onClose }) {
         >
           <button
             onClick={handleClose}
-            className="hidden lg:block absolute top-8 right-8 z-50 "
+            className="hidden lg:block absolute top-8 right-8"
           >
             <Image src={closeIcon} alt="닫기" width={17} height={17} />
           </button>

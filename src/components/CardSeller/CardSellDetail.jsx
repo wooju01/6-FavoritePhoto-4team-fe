@@ -171,7 +171,7 @@ export default function CardSellDetail({
       className={`
          w-full left-0 top-[-60px] overflow-y-auto p-4 min-h-screen md:min-h-[100%] h-full bg-gray-500
         fixed
-        inset-0 z-[10000]  text-white 
+        inset-0 z-[9000]  text-white 
         lg:animate-none
         md:rounded-t-sm md:inset-x-0 md:inset-y-0 md:top-0
 
@@ -187,7 +187,7 @@ export default function CardSellDetail({
         }
       `}
     >
-      <div className="hidden md:block lg:hidden fixed inset-0 z-[10001] bg-transparent pointer-events-none" />
+      <div className="hidden md:block lg:hidden fixed inset-0 z-[9001] bg-transparent pointer-events-none" />
       {/* 슬라이드바 (md만) */}
 
       <div
