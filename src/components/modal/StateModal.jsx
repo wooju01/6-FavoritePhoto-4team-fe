@@ -80,8 +80,8 @@ export default function StateModal() {
    * 내용
    */
   return (
-    <div className="fixed inset-0 z-99999 md:z-50 flex justify-center items-center bg-my-black w-full h-full">
-      <div className="relative bg-my-black w-[230px] md:w-[600px] h-[212px]">
+    <div className="fixed inset-0 z-[9999] flex justify-center items-center bg-my-black w-full h-full">
+      <div className="relative bg-my-black px-2.5 md:w-[600px] h-[212px]">
         {/* tablet 이상일 때 x 아이콘 보임 */}
         <button
           onClick={closeModal}
@@ -90,7 +90,7 @@ export default function StateModal() {
           <FiX className="w-9 h-9 stroke-2" />
         </button>
 
-        <div className="md:p-20 bg-inherit">
+        <div className="md:p-20  w-full ">
           <h3 className="title-30 mb-8 mt-1 text-center">
             <span>{title}&nbsp;</span>
             <span className={clsx(isSuccess ? "text-main" : "text-gray-300")}>
