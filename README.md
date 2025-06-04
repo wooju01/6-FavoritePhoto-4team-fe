@@ -6,7 +6,8 @@
 3. [팀원 소개](#팀원-소개)
 4. [시스템 아키텍쳐](#기술-스택)
 5. [기술 스택](#기술-스택)
-6. [트러블 슈팅](#기술-스택)
+6. [프로젝트 기능](#기술-스택)
+7. [트러블 슈팅](#기술-스택)
 
 <br></br>
 <a name="intro"></a>
@@ -94,6 +95,37 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 <br></br>
 ## 🚧 시스템 아키텍쳐
-![f0c9b690a6b7357a](https://github.com/user-attachments/assets/83b75b9b-cd88-4f9c-bba2-b9f8ae05c1ee)
+<img src="https://github.com/user-attachments/assets/83b75b9b-cd88-4f9c-bba2-b9f8ae05c1ee" alt="로고"/>
+
+<br></br>
+## ⚙️ 기술 스택
+
+#### ✔️ 언어
+![Static Badge](https://img.shields.io/badge/HTML-black?style=for-the-badge&logo=html5&color=black)
+![Static Badge](https://img.shields.io/badge/JavaScript-black?style=for-the-badge&logo=JavaScript&color=black)
+![Static Badge](https://img.shields.io/badge/CSS3-black?style=for-the-badge&logo=CSS3&color=black)
+
+#### ✔️ 외부 서비스(API)
+![Static Badge](https://img.shields.io/badge/Cloudinary-black?style=for-the-badge&logo=Cloudinary&color=black)
+
+#### ✔️ 프레임워크 & 라이브러리
+![Static Badge](https://img.shields.io/badge/Tailwind%20CSS-black?style=for-the-badge&logo=Tailwind%20CSS&color=black)
+![Static Badge](https://img.shields.io/badge/React-black?style=for-the-badge&logo=React&color=black)
+![Static Badge](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=Next.js&color=black)
+![Static Badge](https://img.shields.io/badge/React%20Query-black?style=for-the-badge&logo=React%20Query&color=black)
+![Static Badge](https://img.shields.io/badge/socket.io%20Client-black?style=for-the-badge&logo=socket.io&color=black)
+
+#### ✔️ 버전 관리 외
+![Static Badge](https://img.shields.io/badge/GitHub-black?style=for-the-badge&logo=GitHub&color=black)
+![Static Badge](https://img.shields.io/badge/ESLint-black?style=for-the-badge&logo=ESLint&color=black)
+![Static Badge](https://img.shields.io/badge/clsx-black?style=for-the-badge&logo=clsx&color=black)
+![Static Badge](https://img.shields.io/badge/react--icons-black?style=for-the-badge&logo=react&color=black)
+![Static Badge](https://img.shields.io/badge/uuid-black?style=for-the-badge&logo=Node.js&color=black)
+![Static Badge](https://img.shields.io/badge/NPM-black?style=for-the-badge&logo=NPM&color=black)
+
+
+#### ✔️ 배포
+![Static Badge](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=Vercel&color=black)
+
 
 
