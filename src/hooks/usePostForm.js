@@ -35,7 +35,7 @@ export default function usePostForm() {
     description: false,
   }); // 입력 여부(오류 검사 때문에 만듦22) - 관행적으로 "입력된 상태"를 "dirty"라고 함.
 
-  const { openModal } = useStateModal(); // 모달 provider
+  const { openModal, isOpen } = useStateModal(); // 모달 provider
   const queryClient = useQueryClient();
 
   // ✅ 버튼 누르면 초기화
@@ -55,10 +55,18 @@ export default function usePostForm() {
       genre: false,
       price: false,
       volumn: false,
+      image: false,
       description: false,
     });
     setIsSubmitted(false);
   };
+
+  // ✅ 모달 닫히면 상태 초기화
+  useEffect(() => {
+    if (!isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   // ✅ 입력 상태 감지하는 함수
   const handleChange = (e) => {
