@@ -1,14 +1,15 @@
 ![최애의 포토1](https://github.com/user-attachments/assets/8edeaded-c705-45d5-9334-a232067d7092)
 <br></br>
 ## 📝 목차
-1. [프로젝트 소개](#project-introduction)
-2. [기능 구현 영상](#feature-demo-video)
-3. [팀원 소개](#team-members)
-4. [시스템 아키텍쳐](#system-architecture)
-5. [기술 스택](#tech-stack)
-6. [프로젝트 기능](#project-features)
-7. [트러블 슈팅](#troubleshooting)
 
+### 📌 Quick Navigation
+- 🔹 [**프로젝트 소개**](#project-introduction)
+- 🔹 [**기능 구현 영상**](#feature-demo-video)
+- 🔹 [**팀원 소개**](#team-members)
+- 🔹 [**시스템 아키텍쳐**](#system-architecture)
+- 🔹 [**기술 스택**](#tech-stack)
+- 🔹 [**프로젝트 기능**](#project-features)
+- 🔹 [**트러블 슈팅**](#troubleshooting)
 <br></br>
 <a name="project-introduction"></a>
 ## 📑 프로젝트 소개
