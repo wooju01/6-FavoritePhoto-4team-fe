@@ -42,9 +42,8 @@ export default function ForSale({
           src={image || example}
           alt="나의 판매 카드 이미지"
           fill
-          className={`object-cover transition-all duration-300 ${
-            isSoldOut ? "brightness-[0.4]" : ""
-          }`}
+          className={`object-cover transition-all duration-300 ${isSoldOut ? "brightness-[0.4]" : ""
+            }`}
         />
         {/* 상태 태그 (AVAILABLE, PENDING)*/}
         {statusType && (
@@ -99,7 +98,9 @@ export default function ForSale({
       <div className="space-y-1">
         <div className="flex justify-between">
           <span className="text-gray-300 text-300-10 md:text-300-16">가격</span>
-          <span className="text-400-10 md:text-400-18">{initialPrice} P</span>
+          <span className="text-400-10 md:text-400-18">
+            {(initialPrice ?? 0).toLocaleString()} P
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-300 text-300-10 md:text-300-16">잔여</span>

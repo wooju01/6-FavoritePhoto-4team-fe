@@ -70,7 +70,9 @@ export default function MyCard({
       <div className="space-y-1">
         <div className="flex justify-between">
           <span className="text-gray-300 text-300-10 md:text-300-16">가격</span>
-          <span className="text-400-10 md:text-400-18">{initialPrice} P</span>
+          <span className="text-400-10 md:text-400-18">
+            {(initialPrice ?? 0).toLocaleString()} P
+          </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-300 text-300-10 md:text-300-16">수량</span>

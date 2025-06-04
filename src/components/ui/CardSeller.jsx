@@ -117,7 +117,7 @@ export default function CardSeller({ sale: initialSale, onEditSuccess }) {
         <div className="flex-col gap-2.5">
           <div className="flex-between-center [&_*]:text-400-18 lg:[&_*]:text-400-20">
             <span className="text-gray-300">가격</span>
-            <span>{price} P</span>
+            <span>{price?.toLocaleString()} P</span>
           </div>
           <div className="flex-between-center [&_*]:text-400-18 lg:[&_*]:text-400-20">
             <span className="text-gray-300">잔여</span>
