@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import backIcon from "@/assets/back.svg";
 import CardSeller from "../ui/CardSeller";
 import Exchange from "../PhotoCard/Exchange";
 import {
@@ -63,37 +61,26 @@ export default function SellerPage({ sale }) {
 
   return (
     <div className="bg-my-black text-white min-h-screen">
-      {/* 헤더 */}
-      {/* <div className="flex items-center mb-4">
-        <button
-          onClick={() => router.back()}
-          className="w-10 h-10 flex items-center"
-        >
-          <Image src={backIcon} alt="뒤로가기" width={24} height={24} />
-        </button>
-        <div className="flex-1 text-center title-16 font-bold">
-          마켓플레이스
-        </div>
-      </div> */}
-
       {/* 카드 제목 */}
       <div className="text-700-24 mb-2 md:text-700-32 lg:text-700-40">
         {photoCard.name}
       </div>
-      <div className="w-full h-[1.5px] bg-gray-200" />
+      <div className="w-full h-[1.5px] bg-gray-200 mb-5" />
 
       {/* 카드 이미지 */}
       <div className="md:grid grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10 py-3 md:py-5 lg:py-7">
-        <div className="lg:col-span-2 relative mb-4">
-          <img
-            src={
-              imageUrl?.startsWith("http")
-                ? imageUrl
-                : `https://six-favoritephoto-4team-be.onrender.com${imageUrl}`
-            }
-            alt={name}
-            className="object-cover w-full h-full aspect-square"
-          />
+        <div className="lg:col-span-2 mb-4 w-full">
+          <div className="relative w-full h-auto aspect-[4/3] md:aspect-[4/3] lg:aspect-[3/2] max-w-full">
+            <img
+              src={
+                imageUrl?.startsWith("http")
+                  ? imageUrl
+                  : `https://six-favoritephoto-4team-be.onrender.com${imageUrl}`
+              }
+              alt={name}
+              className="object-cover w-full h-full"
+            />
+          </div>
         </div>
 
         {/* 카드 상세 정보 */}
@@ -101,10 +88,10 @@ export default function SellerPage({ sale }) {
       </div>
 
       {/* 교환 제시 목록 */}
-      <div className="text-700-24 md:text-700-32 lg:text-700-40">
+      <div className="text-700-24 mb-3 md:text-700-32 lg:text-700-40">
         교환 제시 목록
       </div>
-      <div className="w-full h-[1.5px] bg-gray-200 mb-10" />
+      <div className="w-full h-[2px] bg-gray-200 mb-10" />
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-5 lg:gap-10">
         {tradeRequests.map((trade) => {
           const userCard = trade.tradeRequestUserCards[0]?.userCard;

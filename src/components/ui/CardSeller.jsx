@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import exchangeIcon from "@/assets/exchange.svg";
 import Button from "./Button";
 import GradeTag from "../tag/GradeTag";
 import { useRouter } from "next/navigation";
@@ -74,19 +73,22 @@ export default function CardSeller({ sale: initialSale }) {
     <>
       <div>
         {/* 카드 정보 */}
-        <div className="flex-col gap-7">
-          <div className="flex-row-center gap-2.5 [&_*]:text-700-18 lg:[&_*]:text-700-24"></div>
-          <GradeTag grade={photoCard.gradeId} />
-          <span className="text-gray-300">|</span>
-          <span className="text-gray-300">{genreMap[photoCard.genreId]}</span>
-          <p className="flex-1 text-end underline">{seller.nickname}</p>
+        <div className="flex flex-col">
+          <div className="flex-row-center gap-2.5 [&_*]:text-700-18 lg:[&_*]:text-700-24">
+            <GradeTag grade={photoCard.gradeId} />
+            <span className="text-gray-300">|</span>
+            <span className="text-gray-300">{genreMap[photoCard.genreId]}</span>
+            <p className="flex-1 text-end underline ml-auto">
+              {seller.nickname}
+            </p>
+          </div>
         </div>
 
-        <h3 className="w-full h-[1px] bg-gray-400"></h3>
+        <h3 className="w-full h-[1px] bg-gray-400 my-5"></h3>
         <div>
-          <p className="lg:text-400-18">{photoCard.description}</p>
+          <p className="text-400-16 lg:text-400-18">{photoCard.description}</p>
         </div>
-        <h3 className="w-full h-[1px] bg-gray-400"></h3>
+        <h3 className="w-full h-[1px] bg-gray-400 my-5"></h3>
         <div className="flex-col gap-2.5">
           <div className="flex-between-center [&_*]:text-400-18 lg:[&_*]:text-400-20">
             <span className="text-gray-300">가격</span>
