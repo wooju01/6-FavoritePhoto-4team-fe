@@ -66,11 +66,7 @@ export default function CardSellDetail({
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
-      if (typeof onCloseModal === "function") {
-        onCloseModal(); // lg에서만 닫기 실행
-      } else {
-        onCloseDetail(); // md/모바일에서는 CardSellDetail 자체만 닫기
-      }
+      onCloseModal();
     }, 300);
   };
 
@@ -180,12 +176,11 @@ export default function CardSellDetail({
     >
       <div className="hidden md:block lg:hidden fixed inset-0 z-[10001] bg-transparent pointer-events-none" />
       {/* 슬라이드바 (md만) */}
-      {isEditMode && (
-        <div
-          className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3 mt-2 hidden md:block lg:hidden"
-          onClick={handleSlideBarClick}
-        />
-      )}
+
+      <div
+        className="w-10 h-1 bg-gray-600 rounded-full mx-auto mb-3 mt-2 hidden md:block lg:hidden"
+        onClick={handleSlideBarClick}
+      />
 
       {/* 헤더 (모바일 전용) */}
       <div className="absolute top-0 left-0 right-0 h-[48px] z-[10001] md:z-[8001] bg-my-black md:hidden">
@@ -208,7 +203,7 @@ export default function CardSellDetail({
       </div>
 
       {/* 카드 제목 */}
-      <div className="text-700-24 md:text-700-32 mb-3">
+      <div className="text-700-24 md:text-700-32 mt-[48px] md:mt-0 mb-3">
         {card?.photoCard?.name || "카드 이름"}
       </div>
 
