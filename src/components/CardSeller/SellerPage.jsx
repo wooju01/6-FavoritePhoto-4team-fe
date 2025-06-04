@@ -10,8 +10,9 @@ import {
   rejectTradeRequest,
 } from "@/lib/api/api-trade";
 
-export default function SellerPage({ sale }) {
+export default function SellerPage({ sale: initialSale }) {
   const router = useRouter();
+  const [sale, setSale] = useState(initialSale);
   const { photoCard } = sale;
   const { imageUrl, name } = photoCard;
   const isSoldOut = sale.saleQuantity === 0;
@@ -33,7 +34,6 @@ export default function SellerPage({ sale }) {
   }, [sale.id]);
 
   const handleApprove = async (tradeId) => {
-    if (!confirm("이 교환 제시를 승인하시겠습니까?")) return;
     try {
       await approveTradeRequest(tradeId);
       alert("교환이 승인되었습니다.");
@@ -48,7 +48,6 @@ export default function SellerPage({ sale }) {
   };
 
   const handleReject = async (tradeId) => {
-    if (!confirm("이 교환 제시를 거절하시겠습니까?")) return;
     try {
       await rejectTradeRequest(tradeId);
       alert("교환이 거절되었습니다.");
@@ -57,6 +56,10 @@ export default function SellerPage({ sale }) {
       console.error("거절 실패:", err);
       alert("교환 거절에 실패했습니다.");
     }
+  };
+
+  const handleEditSuccess = (updatedSale) => {
+    setSale(updatedSale); // CardSeller에서 넘겨준 최신 sale 데이터로 반영
   };
 
   return (
@@ -84,7 +87,7 @@ export default function SellerPage({ sale }) {
         </div>
 
         {/* 카드 상세 정보 */}
-        <CardSeller sale={sale} onSellDown={() => console.log("판매 중단")} />
+        <CardSeller sale={initialSale} onEditSuccess={handleEditSuccess} />
       </div>
 
       {/* 교환 제시 목록 */}

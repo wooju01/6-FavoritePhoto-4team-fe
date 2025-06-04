@@ -8,6 +8,7 @@ import { cancelSaleById, getSaleDetail } from "@/lib/api/api-sale";
 import { getMyCards } from "@/lib/api/api-users";
 import EditCardModal from "../CardSeller/EditCardModal";
 import { FiRefreshCw } from "react-icons/fi";
+import { useAlertModal } from "@/providers/AlertModalProvider";
 
 const genreMap = {
   1: "여행",
@@ -16,10 +17,19 @@ const genreMap = {
   4: "사물",
 };
 
-export default function CardSeller({ sale: initialSale }) {
+const tierToGradeName = {
+  1: "COMMON",
+  2: "RARE",
+  3: "SUPER RARE",
+  4: "LEGENDARY",
+};
+
+export default function CardSeller({ sale: initialSale, onEditSuccess }) {
   const router = useRouter();
   const [sale, setSale] = useState(initialSale); // 내부에서 sale 관리
   const [availableCards, setAvailableCards] = useState([]);
+
+  const { openModal: openNotiModal } = useAlertModal();
 
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -40,23 +50,34 @@ export default function CardSeller({ sale: initialSale }) {
     try {
       const updatedSale = await getSaleDetail(sale.id);
       setSale(updatedSale); // 최신 sale로 교체
+      if (onEditSuccess) {
+        onEditSuccess(updatedSale); // 상위 컴포넌트에 알림
+      }
       setShowEditModal(false); // 모달 닫기
     } catch (err) {
       console.error("판매 상세 정보 재요청 실패:", err);
     }
   };
 
-  const handleCancelSale = async () => {
-    const confirmCancel = window.confirm("정말로 판매를 중단하시겠습니까?");
-    if (!confirmCancel) return;
-
+  const performCancelSale = async () => {
     try {
       await cancelSaleById(sale.id);
       alert("판매가 성공적으로 중단되었습니다.");
       router.push("/home");
     } catch (err) {
+      console.error("판매 중단 실패:", err);
       alert(err.message || "판매 중단에 실패했습니다.");
     }
+  };
+
+  const handleCancelSaleClick = () => {
+    const gradeName = tierToGradeName[sale.photoCard.gradeId];
+    const cardName = sale.photoCard.name;
+    openNotiModal(
+      "판매 내리기",
+      { grade: gradeName, name: cardName },
+      performCancelSale
+    );
   };
 
   const {
@@ -113,7 +134,7 @@ export default function CardSeller({ sale: initialSale }) {
             <h3 className="w-full h-[1.5px] bg-gray-200"></h3>
           </div>
           <div className="flex-row-center gap-2.5 lg:gap-3.5 [&>span]:text-700-18 lg:[&>span]:text-700-24">
-            <GradeTag grade={photoCard.gradeId} />
+            <GradeTag grade={cardGradeId} />
             <span className="text-gray-300">|</span>
             <span className="text-gray-300">{genreMap[cardGenreId]}</span>
           </div>
@@ -128,7 +149,7 @@ export default function CardSeller({ sale: initialSale }) {
                 <Button type="purchase" onClick={() => setShowEditModal(true)}>
                   수정하기
                 </Button>
-                <Button type="sellDown" onClick={handleCancelSale} />
+                <Button type="sellDown" onClick={handleCancelSaleClick} />
               </>
             ) : (
               <Button type="purchase" disabled={true}>
@@ -151,10 +172,7 @@ export default function CardSeller({ sale: initialSale }) {
           onCloseModal={() => setShowEditModal(false)}
           onCloseDetail={() => setShowEditModal(false)}
           isEditMode={true}
-          onEditSuccess={() => {
-            setShowEditModal(false);
-            handleEditSuccess;
-          }}
+          onEditSuccess={handleEditSuccess}
         />
       )}
     </>

@@ -66,7 +66,7 @@ export default function EditCardModal({
             availableCards={availableCards}
             onCloseModal={handleClose}
             onCloseDetail={handleClose}
-            isEditMode={true}
+            isEditMode={isEditMode}
             onEditSuccess={onEditSuccess}
           />
         </div>

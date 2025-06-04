@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import GradeTag from "../tag/GradeTag";
 import Button from "../ui/Button";
+import { useAlertModal } from "@/providers/AlertModalProvider";
 
 const genreMap = {
   1: "여행",
@@ -12,9 +13,19 @@ const genreMap = {
   4: "사물",
 };
 
+const tierToGradeName = {
+  1: "COMMON",
+  2: "RARE",
+  3: "SUPER RARE",
+  4: "LEGENDARY",
+};
+
 export default function Exchange({ trade, onApprove, onReject, isSoldOut }) {
   const userCard = trade.tradeRequestUserCards[0]?.userCard;
   const photoCard = userCard?.photoCard;
+  const { openModal: openNotiModal } = useAlertModal();
+  const cardGradeName = tierToGradeName[photoCard?.gradeId];
+  const cardName = photoCard?.name;
 
   return (
     <div className="bg-gray-500 w-full p-2 md:p-5 lg:p-10 border border-gray-800 text-white rounded-xs">
@@ -81,13 +92,31 @@ export default function Exchange({ trade, onApprove, onReject, isSoldOut }) {
           </Button>
         ) : (
           <>
-            <Button type="reject" onClick={() => onReject(trade.id)}>
+            <Button
+              type="reject"
+              onClick={() =>
+                openNotiModal(
+                  "교환 거절",
+                  { grade: cardGradeName, name: cardName },
+                  () => onReject(trade.id)
+                )
+              }
+            >
               <span className="text-700-12 md:hidden">거절</span>
               <span className="hidden md:block text-400-16 font-medium">
                 거절하기
               </span>
             </Button>
-            <Button type="approve" onClick={() => onApprove(trade.id)}>
+            <Button
+              type="approve"
+              onClick={() =>
+                openNotiModal(
+                  "교환 승인",
+                  { grade: cardGradeName, name: cardName },
+                  () => onApprove(trade.id)
+                )
+              }
+            >
               <span className="text-700-12 md:hidden">승인</span>
               <span className="hidden md:block text-700-16">승인하기</span>
             </Button>

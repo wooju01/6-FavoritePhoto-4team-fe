@@ -6,6 +6,7 @@ import { getSaleDetail } from "@/lib/api/api-sale";
 import { getMe } from "@/lib/api/api-users";
 import SellerPage from "@/components/CardSeller/SellerPage";
 import PhotoBuyerDetail from "@/components/PhotoBuyer/PhotoBuyerDetail";
+import NotiModal from "@/components/modal/NotiModal";
 
 export default function PhotoDetailPage() {
   const { id: saleId } = useParams();
@@ -36,9 +37,11 @@ export default function PhotoDetailPage() {
 
   const isSeller = sale?.seller?.id === currentUser?.id;
 
-  return isSeller ? (
-    <SellerPage sale={sale} />
-  ) : (
-    <PhotoBuyerDetail sale={sale} />
+  return (
+    <>
+      {isSeller ? <SellerPage sale={sale} /> : <PhotoBuyerDetail sale={sale} />}
+
+      <NotiModal />
+    </>
   );
 }
