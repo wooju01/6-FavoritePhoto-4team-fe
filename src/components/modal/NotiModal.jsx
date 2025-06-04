@@ -50,6 +50,12 @@ export default function NotiModal() {
       content2 = "카드와의 교환을 승인하시겠습니까?";
       buttonText = "승인하기";
       break;
+    case "판매 내리기":
+      title = "포토카드 판매 내리기";
+      content1 = "정말로 판매를 중단하시겠습니까?";
+      content2 = "";
+      buttonText = "판매 내리기";
+      break;
   }
 
   // 버튼 연동 함수
