@@ -1,8 +1,6 @@
 ![최애의 포토1](https://github.com/user-attachments/assets/8edeaded-c705-45d5-9334-a232067d7092)
-
+<br></br>
 ## 📝 목차
-
-
 1. [프로젝트 소개](#intro)
 2. [기능 구현 영상](#사용-방법)
 3. [팀원 소개](#팀원-소개)
@@ -10,6 +8,7 @@
 5. [기술 스택](#기술-스택)
 6. [트러블 슈팅](#기술-스택)
 
+<br></br>
 <a name="intro"></a>
 ## 📑 프로젝트 소개
 https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
@@ -34,6 +33,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 6️⃣ 다양한 필터 기능: 상황에 따라 검색, 정렬, 필터링 기능을 제공합니다.
 
+<br></br>
 ## 👨‍👩‍👧‍👦 Team Members
 <table align="center">
   <tbody>
@@ -92,6 +92,8 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
   </tbody>
 </table>
 
-
+<br></br>
+## 🚧 시스템 아키텍쳐
+![f0c9b690a6b7357a](https://github.com/user-attachments/assets/83b75b9b-cd88-4f9c-bba2-b9f8ae05c1ee)
 
 
