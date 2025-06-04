@@ -127,5 +127,42 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 #### ✔️ 배포
 ![Static Badge](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=Vercel&color=black)
 
+<br></br>
+## 🕹️ 프로젝트 기능
+### 1. 페이지 구성
+#### 랜딩페이지 [/]
+<ul>
+  <li>초기 접속 시 진입</li>
+</ul>
+
+#### 홈 [/home]
+<ul>
+  <li>판매 등록된 포토카드 목록</li>
+</ul>
+
+#### 판매 및 교환 신청 [/home:id]
+<ul>
+  <li>포토카드의 상세 정보 확인</li>
+</ul>
+
+#### 로그인/회원가입 [/login,/signup]
+<ul>
+  <li>소셜 로그인 기능, 소셜 로그인 간편 회원가입</li>
+</ul>
+
+#### 마이갤러리 [/my-gallery]
+<ul>
+  <li>내가 보유한 포토카드 확인</li>
+</ul>
+
+#### 카드 업로드 [/my-gallery/post]
+<ul>
+  <li>포토카드 업로드</li>
+</ul>
+
+#### 판매 중인 포토카드 [/for-my-sales]
+<ul>
+  <li>해당 사용자의 판매중인 포토카드 내역 확인</li>
+</ul>
 
 
