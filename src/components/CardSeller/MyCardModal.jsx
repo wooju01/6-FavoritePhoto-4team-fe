@@ -10,6 +10,7 @@ import { getMyCards } from "@/lib/api/api-users";
 import SearchModalOnly from "../ModalOnly/SearchModalOnly";
 import FilterControlsModalOnly from "../ModalOnly/FilterControlsModalOnly";
 import MyGalleryFilter from "../BottomSheet/Mygalleryfilter";
+import { createPortal } from "react-dom";
 
 export default function MyCardModal({ isOpen, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -125,7 +126,7 @@ export default function MyCardModal({ isOpen, onClose }) {
         >
           <button
             onClick={handleClose}
-            className="hidden lg:block absolute top-8 right-8 z-50 "
+            className="hidden lg:block absolute top-8 right-8  "
           >
             <Image src={closeIcon} alt="닫기" width={17} height={17} />
           </button>
@@ -152,7 +153,6 @@ export default function MyCardModal({ isOpen, onClose }) {
                 setShowDetail(false);
               }} // CardSellDetail만 닫는 함수
               {...(isDesktop && { onCloseModal: handleClose })}
-              onCloseModal={handleClose}
             />
           ) : (
             <>
