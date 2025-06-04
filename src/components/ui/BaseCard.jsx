@@ -82,7 +82,7 @@ export default function BaseCard({
             >
               <div>
                 <p>가격</p>
-                <span>{price} P</span>
+                <span>{price.toLocaleString()} P</span>
               </div>
               <div>
                 <p>잔여</p>
