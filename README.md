@@ -140,9 +140,9 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
   <li>판매 등록된 포토카드 목록</li>
 </ul>
 
-#### 판매 및 교환 신청 [/home:id]
+#### 포토카드 관리 [/home:id]
 <ul>
-  <li>포토카드의 상세 정보 확인</li>
+  <li>포토카드 구매, 교환, 수정, 삭제 </li>
 </ul>
 
 #### 로그인/회원가입 [/login,/signup]
@@ -157,7 +157,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 #### 카드 업로드 [/my-gallery/post]
 <ul>
-  <li>포토카드 업로드</li>
+  <li>나의 최애의 포토카드 업로드</li>
 </ul>
 
 #### 판매 중인 포토카드 [/for-my-sales]
