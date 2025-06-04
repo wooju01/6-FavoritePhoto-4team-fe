@@ -241,5 +241,32 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 - `gif`, `jpg`, `png` 등 다양한 이미지 포맷 업로드 가능.
 - 이미지 로딩 속도 및 품질 최적화도 **Cloudinary에서 자동 처리**됨.
 
-</details>
+### 💻 문제 해결 방법 CODE
+
+Cloudinary 이미지 업로드 문제를 해결한 코드입니다:
+
+```ts
+export async function upLoadImage(file) {
+  const url = 'https://api.cloudinary.com/v1_1/[yourId]/image/upload';
+  const data = new FormData();
+  data.append('file', file);
+  data.append('upload_preset', 'primary-key');
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: data,
+    });
+
+    if (!res.ok) {
+      throw new Error('Image Upload Failed!');
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
