@@ -44,6 +44,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 🔧 [GitHub Repository 보러가기](https://github.com/afafmmm/6-FavoritePhoto-4team-be)
 
 <br></br>
+<a name="feature-demo-video"></a>
 ## 📱 기능 구현 영상
 <table>
   <thead>
