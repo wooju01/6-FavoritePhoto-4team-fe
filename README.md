@@ -277,4 +277,50 @@ export async function upLoadImage(file) {
     return null;
   }
 }
+```
+</details>
+<details> <summary>🛍️ 구매 후 UI 즉각 반영 문제 (useEffect → React Query `useMutation`)</summary> <br>
+  
+### 🔧문제 상황
+- 구매자가 ‘구매하기’ 버튼을 누르면 서버에 구매 요청이 전송되고, 잔여 수량(remaining)이 즉시 반영되어야 했음.
+- 처음에는 useEffect를 통해 서버 데이터 변화를 감지하여 잔여 수량을 업데이트하려 했으나:
+  - 구매 직후 UI에 잔여 수량이나 총 가격이 즉시 반영되지 않는 문제 발생.
+  - 네트워크 지연 등으로 인해 UI가 한 템포 느리게 갱신되어 UX가 부자연스러움.
 
+### 📌 원인 파악
+- useEffect는 상태나 props 변화에 따라 동작하지만:
+  - 외부 API 응답이 완료되는 시점과 React 렌더링 타이밍이 어긋남.
+  - 서버 데이터가 갱신되어도, 반영된 데이터를 받아오기까지 지연이 발생.
+- 사용자 입장에서는 즉각적인 시각 피드백이 필요하지만, 기존 구조에서는 이를 구현하기 어려웠음.
+
+### 🛠️ 해결 방법: React Query useMutation 활용
+- useMutation을 통해 구매 요청과 로컬 상태 변경을 하나의 흐름으로 통합.
+- 다음과 같은 장점이 있음:
+  - 비동기 요청 수행 중 로딩 상태 표시 (isPending) 가능
+  - 요청 성공 시 로컬 상태(localRemaining)를 즉시 갱신 → UI 즉각 반영
+  - 실패 시 에러 처리 및 사용자 알림(UI 모달 등)이 간편
+
+### 💻 개선된 코드 예시
+```ts
+const { mutate, isPending } = useMutation({
+  mutationFn: () => storeService.purchaseCard(cardId, quantity),
+  onSuccess: (data) => {
+    setLocalRemaining((prev) => prev - quantity); // 즉시 UI 반영
+    if (onSuccess) onSuccess(data);
+    openStateModal(200, "구매", { grade, name: cardName, count: quantity });
+  },
+  onError: (err) => {
+    openStateModal(err.status || 400, "구매", { grade, name: cardName, count: quantity });
+  },
+});
+```
+- `mutate()` 호출 시 비동기 요청 실행
+- 성공 시 localRemaining을 직접 갱신하여 화면이 즉시 반응
+- 실패 시 적절한 에러 모달로 사용자에게 피드백 제공
+
+### ✅ 전환 결과
+- UI 반응 속도 개선 → 구매 직후 잔여 수량과 총 가격 즉시 반영
+- useEffect에 의존하지 않아 렌더링 타이밍과 상관없이 안정적인 반응
+- 비동기 요청과 상태 변경을 한 곳에서 처리함으로써 코드 가독성과 유지보수성 향상
+
+</details>
