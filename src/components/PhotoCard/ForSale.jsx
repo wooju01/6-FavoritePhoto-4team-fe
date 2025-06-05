@@ -18,7 +18,6 @@ const genreMap = {
 
 export default function ForSale({
   name,
-  id,
   image,
   gradeId,
   genre,
@@ -37,7 +36,6 @@ export default function ForSale({
   const statusType = getStatusType(status);
 
   return (
-    <Link href={`home/${id}`}>
       <div className="bg-gray-500 w-full px-2 py-2 md:px-4 md:py-4 lg:px-10 lg:py-10 border border-gray-800 rounded-xs">
         {/* 이미지 */}
         <div className="w-full aspect-[4/3] relative mb-3 md:mb-5">
@@ -118,6 +116,5 @@ export default function ForSale({
           <Image src={favicon} alt="최애" width={85} height={85} />
         </div>
       </div>
-    </Link>
   );
 }

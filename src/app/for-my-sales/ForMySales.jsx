@@ -83,7 +83,6 @@ export default function ForMySales() {
           {data?.items.map((card) => (
             <ForSale
               key={card.id}
-              id={card.id}
               name={card?.photoCard.name}
               image={card?.photoCard.imageUrl}
               nickname={card?.photoCard.creator?.nickname || "나"}
