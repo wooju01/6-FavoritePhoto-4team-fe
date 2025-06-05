@@ -204,6 +204,7 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 #### 🖼️ 마이갤러리 [`/my-gallery`]
 - 현재 보유한 포토카드 목록 확인
+- 현재 보유한 포토카드 개수 확인
 - 검색 및 정렬 (키워드, 장르, 등급 필터)
 
 #### ⬆️ 포토카드 업로드 [`/my-gallery/post`]
