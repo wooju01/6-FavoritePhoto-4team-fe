@@ -58,20 +58,76 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
   <tbody>
     <tr>
       <td align="center">
-        <img src="https://github.com/user-attachments/assets/0fd8cbad-fcb1-4ef8-80c3-1f1890872548" alt="로그인 및 로그아웃">
+        <img src="https://github.com/user-attachments/assets/0fd8cbad-fcb1-4ef8-80c3-1f1890872548" alt="로그인및로그아웃">
       </td>
       <td align="center">
-        <img src="https://github.com/user-attachments/assets/0fd51b67-6e94-4edc-8a4b-78f71a0319c4" alt="랜덤인트">
+        <img src="https://github.com/user-attachments/assets/0fd51b67-6e94-4edc-8a4b-78f71a0319c4" alt="랜덤포인트">
       </td>
       <td align="center">
         <img src="https://github.com/user-attachments/assets/c69f5edc-e626-4c41-9c80-c4669cd7f5df" alt="포토카드생성">
       </td>
       <td align="center">
-        <img src="https://github.com/user-attachments/assets/eb7fb19e-308b-49d4-9848-e54a34c9e9f4" alt="필터 무한스크롤">
+        <img src="https://github.com/user-attachments/assets/eb7fb19e-308b-49d4-9848-e54a34c9e9f4" alt="필터무한스크롤">
       </td>
     </tr>
   </tbody>
 </table>
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">포토카드 판매</th>
+      <th align="center">포토카드 수정</th>
+      <th align="center">포토카드 판매 내리기</th>
+      <th align="center">포토카드 구매</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/7746a772-e58f-4ae6-9935-2e3312ae3647" alt="포토카드 판매">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/5dbc3427-2def-4205-b05a-c6230767d6fa" alt="포토카드 수정">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/dd3f1d2e-54f2-4765-9a42-d72c9672908c" alt="포토카드 판매 내리기">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/392dda2b-aa79-4715-a9e7-e4ebc360dc10" alt="포토카드 구매">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">알림 확인</th>
+      <th align="center">교환 요청</th>
+      <th align="center">구매자의 교환 요청 취소</th>
+      <th align="center">판매자의 교환 승인 및 취소</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/741a866e-f4cc-4fc3-9eba-54d511b05117" alt="알림 확인">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/67c8d1a3-545f-4d07-86c7-cd688d03678f" alt="교환 요청">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/f51510c9-ad11-451b-89f4-ea125f667d5a" alt="구매자의 교환 요청 취소">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/1ae2e3f3-a830-46c5-8ea9-b1737db5f74f" alt="판매자의 교환 승인 및 취소">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 
 
 <br></br>
