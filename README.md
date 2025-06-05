@@ -35,12 +35,43 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 6️⃣ 다양한 필터 기능: 상황에 따라 검색, 정렬, 필터링 기능을 제공합니다.
 
+
 <br></br>
 ### 🔗 팀 문서 보기  
 👉 [Notion 링크 바로가기](https://www.notion.so/4-1f388b3cb86180888609db626a03fb0a)  
 
 ➡️ 다음은 백엔드 Git 저장소입니다.  
 🔧 [GitHub Repository 보러가기](https://github.com/afafmmm/6-FavoritePhoto-4team-be)
+
+<br></br>
+## 📱 기능 구현 영상
+<table>
+  <thead>
+    <tr>
+      <th align="center">로그인 및 로그아웃</th>
+      <th align="center">랜덤 포인트</th>
+      <th align="center">포토카드 생성</th>
+      <th align="center">필터, 무한스크롤</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/0fd8cbad-fcb1-4ef8-80c3-1f1890872548" alt="로그인 및 로그아웃">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/0fd51b67-6e94-4edc-8a4b-78f71a0319c4" alt="랜덤인트">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/c69f5edc-e626-4c41-9c80-c4669cd7f5df" alt="포토카드생성">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/eb7fb19e-308b-49d4-9848-e54a34c9e9f4" alt="필터 무한스크롤">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 
 <br></br>
 <a name="team-members"></a>
