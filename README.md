@@ -36,8 +36,11 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 6️⃣ 다양한 필터 기능: 상황에 따라 검색, 정렬, 필터링 기능을 제공합니다.
 
 <br></br>
-### 🔗 **팀 문서 보기**  
-👉 [Notion 링크 바로가기](https://www.notion.so/4-1f388b3cb86180888609db626a03fb0a)
+### 🔗 팀 문서 보기  
+👉 [Notion 링크 바로가기](https://www.notion.so/4-1f388b3cb86180888609db626a03fb0a)  
+
+➡️ 다음은 백엔드 Git 저장소입니다.  
+🔧 [GitHub Repository 보러가기](https://github.com/afafmmm/6-FavoritePhoto-4team-be)
 
 <br></br>
 <a name="team-members"></a>
@@ -101,9 +104,8 @@ https://github.com/user-attachments/assets/20c3e346-5d42-486d-8de4-a9c2e8f49e68
 
 <br></br>
 <a name="system-architecture"></a>
-## 🚧 시스템 아키텍쳐
+## 🚧 프론트엔드 시스템 아키텍쳐
 ![코드잇 중간 프로젝트 - 프론트](https://github.com/user-attachments/assets/10130013-1dbe-4e25-a599-44d26a0e57cd)
-
 
 <br></br>
 <a name="tech-stack"></a>
