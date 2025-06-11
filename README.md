@@ -412,3 +412,26 @@ const { mutate, isPending } = useMutation({
 - 비동기 요청과 상태 변경을 한 곳에서 처리함으로써 코드 가독성과 유지보수성 향상
 
 </details>
+<details>
+## 개인 개발 리포트
+
+### 이지수
+- [개인 리포트 링크](https://sage-jonquil-a5b.notion.site/1e3ad69e00578093a96ef0f6a83b7589)
+
+### 김다은
+- [개인 리포트 링크](https://rain-quartz-d59.notion.site/1e733256dfa48011ab33e1dec69374cc?pvs=4)
+
+### 장원빈
+- [개인 리포트 링크](https://www.notion.so/1e40da7be30d80909678cec4570d1d6b?pvs=4)
+
+### 양성경
+- [개인 리포트 링크](https://www.notion.so/2-1e488b3cb86180259881ebd7d3c8b7b1)
+
+### 김우주
+- [개인 리포트 링크](https://www.notion.so/3-1e78a05139c480a69a0df2b4cb820db9?pvs=4)
+
+### 홍성훈
+- [개인 리포트 링크](https://www.notion.so/1f33fde0e19480d79374c667a5785c10?pvs=4)
+
+
+</details>
