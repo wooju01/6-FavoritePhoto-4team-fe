@@ -426,7 +426,7 @@ const { mutate, isPending } = useMutation({
 - [개인 리포트 링크](https://www.notion.so/1e40da7be30d80909678cec4570d1d6b?pvs=4)
 
 **양성경**
-- [개인 리포트 링크](https://www.notion.so/2-1e488b3cb86180259881ebd7d3c8b7b1)
+- [개인 리포트 링크](https://zenith-roast-ebc.notion.site/2-1e488b3cb86180259881ebd7d3c8b7b1?pvs=74)
 
 **김우주**
 - [개인 리포트 링크](https://www.notion.so/3-1e78a05139c480a69a0df2b4cb820db9?pvs=4)
