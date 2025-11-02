@@ -19,7 +19,7 @@ export default function GoogleAuthButton({
     }
     window.location.href =
       process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL ||
-      "https://six-favoritephoto-4team-be.onrender.com/api/auth/google";
+      "https://six-favoritephoto-4team-be-distribute.onrender.com/api/auth/google";
   };
 
   return (

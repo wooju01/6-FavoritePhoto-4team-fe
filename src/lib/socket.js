@@ -5,11 +5,11 @@ let socket = null;
 //로컬 개발 시에는 아래 URL을 사용하세요.
 //http://localhost:3002
 // 배포된 서버에서는 아래 URL을 사용하세요.
-//https://six-favoritephoto-4team-be.onrender.com
+//https://six-favoritephoto-4team-be-distribute.onrender.com
 
 export const getSocket = (token) => {
   if (!socket) {
-    socket = io("https://six-favoritephoto-4team-be.onrender.com", {
+    socket = io("https://six-favoritephoto-4team-be-distribute.onrender.com", {
       auth: { token },
       transports: ["websocket"],
     });

@@ -59,7 +59,7 @@ const Navbar = () => {
     setPointError("");
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/points/me",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -99,7 +99,7 @@ const Navbar = () => {
       if (!token) return;
       socket = getSocket(
         token,
-        "https://six-favoritephoto-4team-be.onrender.com"
+        "https://six-favoritephoto-4team-be-distribute.onrender.com"
       );
       socket.on("connect", () => {
         if (user.id) {

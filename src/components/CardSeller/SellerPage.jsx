@@ -78,7 +78,7 @@ export default function SellerPage({ sale: initialSale }) {
               src={
                 imageUrl?.startsWith("http")
                   ? imageUrl
-                  : `https://six-favoritephoto-4team-be.onrender.com${imageUrl}`
+                  : `https://six-favoritephoto-4team-be-distribute.onrender.com${imageUrl}`
               }
               alt={name}
               className="object-cover w-full h-full"

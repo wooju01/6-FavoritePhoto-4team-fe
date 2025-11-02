@@ -27,7 +27,7 @@ export default function RandomPointHomeTrigger({ children }) {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/points/me",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,

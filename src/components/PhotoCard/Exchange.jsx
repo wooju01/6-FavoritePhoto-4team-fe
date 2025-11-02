@@ -36,7 +36,7 @@ export default function Exchange({ trade, onApprove, onReject, isSoldOut }) {
           src={
             photoCard?.imageUrl?.startsWith("http")
               ? photoCard.imageUrl
-              : `https://six-favoritephoto-4team-be.onrender.com${
+              : `https://six-favoritephoto-4team-be-distribute.onrender.com${
                   photoCard?.imageUrl || ""
                 }`
           }

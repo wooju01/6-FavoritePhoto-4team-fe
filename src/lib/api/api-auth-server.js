@@ -1,6 +1,6 @@
 // 서버컴포전용 getMe (안쓴다면 지울 예정)
 import { cookies } from "next/headers";
-const API_BASE_URL = "https://six-favoritephoto-4team-be.onrender.com";
+const API_BASE_URL = "https://six-favoritephoto-4team-be-distribute.onrender.com";
 
 export async function getMe() {
   const cookieStore = cookies();

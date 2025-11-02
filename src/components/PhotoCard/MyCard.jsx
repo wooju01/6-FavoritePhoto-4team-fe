@@ -8,7 +8,7 @@ import favicon from "@/assets/favicon.svg";
 
 const baseUrls = {
   local: "http://localhost:3002",
-  production: "https://six-favoritephoto-4team-be.onrender.com",
+  production: "https://six-favoritephoto-4team-be-distribute.onrender.com",
 };
 
 const baseUrl =

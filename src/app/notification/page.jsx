@@ -51,7 +51,7 @@ export default function NotificationPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/notifications",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/notifications",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -81,7 +81,7 @@ export default function NotificationPage() {
     );
     try {
       await fetch(
-        `https://six-favoritephoto-4team-be.onrender.com/api/notifications/${id}/read`,
+        `https://six-favoritephoto-4team-be-distribute.onrender.com/api/notifications/${id}/read`,
         {
           method: "PATCH",
           headers: {

@@ -28,7 +28,7 @@ function Notification({ className = "" }) {
   const fetchNotifications = async () => {
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/notifications",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/notifications",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -56,7 +56,7 @@ function Notification({ className = "" }) {
     );
     try {
       await fetch(
-        `https://six-favoritephoto-4team-be.onrender.com/api/notifications/${id}/read`,
+        `https://six-favoritephoto-4team-be-distribute.onrender.com/api/notifications/${id}/read`,
         {
           method: "PATCH",
           headers: {
@@ -87,7 +87,7 @@ function Notification({ className = "" }) {
     const connectSocket = () => {
       socketRef.current = getSocket(
         token,
-        "https://six-favoritephoto-4team-be.onrender.com"
+        "https://six-favoritephoto-4team-be-distribute.onrender.com"
       );
       socketRef.current.on("connect", () => {
         socketRef.current.emit("join", userId);

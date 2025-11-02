@@ -48,7 +48,7 @@ export default function RandomPoint({ onClose }) {
     setErrorMsg("");
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/me",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/points/me",
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -101,7 +101,7 @@ export default function RandomPoint({ onClose }) {
     setErrorMsg("");
     try {
       const res = await fetch(
-        "https://six-favoritephoto-4team-be.onrender.com/api/points/random-box",
+        "https://six-favoritephoto-4team-be-distribute.onrender.com/api/points/random-box",
         {
           method: "POST",
           headers: {
@@ -110,16 +110,26 @@ export default function RandomPoint({ onClose }) {
           },
         }
       );
-      const data = await res.json();
-      if (res.ok) {
-        setResult(data);
-        setActive(true);
-        fetchMyPoints();
-      } else {
-        setErrorMsg(data.message || "뽑기에 실패했습니다.");
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        let errorMessage = "뽑기에 실패했습니다.";
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = `서버 오류가 발생했습니다. (${res.status})`;
+        }
+        setErrorMsg(errorMessage);
+        return;
       }
+      
+      const data = await res.json();
+      setResult(data);
+      setActive(true);
+      fetchMyPoints();
     } catch (e) {
-      setErrorMsg(e.message);
+      setErrorMsg(e.message || "네트워크 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
