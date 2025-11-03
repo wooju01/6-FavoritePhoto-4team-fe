@@ -97,10 +97,7 @@ const Navbar = () => {
     const connectSocket = () => {
       const token = getToken();
       if (!token) return;
-      socket = getSocket(
-        token,
-        "https://six-favoritephoto-4team-be-distribute.onrender.com"
-      );
+      socket = getSocket(token);
       socket.on("connect", () => {
         if (user.id) {
           socket.emit("join", user.id);

@@ -85,10 +85,7 @@ function Notification({ className = "" }) {
     const socketRef = { current: null };
     const reconnectTimeoutRef = { current: null };
     const connectSocket = () => {
-      socketRef.current = getSocket(
-        token,
-        "https://six-favoritephoto-4team-be-distribute.onrender.com"
-      );
+      socketRef.current = getSocket(token);
       socketRef.current.on("connect", () => {
         socketRef.current.emit("join", userId);
       });
