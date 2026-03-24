@@ -16,7 +16,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "최애의 포토",
-    description: "가장 이상한 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
+    description: "가장 아름다운운 포토카드를 사고파는 곳, 지금 바로 시작해보세요!",
     site: "@your_twitter",
     creator: "나야 나~",
     images: ["https://6-favorite-photo-4team-fe.vercel.app/contents.png"],
