@@ -47,7 +47,7 @@ export default function NotiModal() {
     case "교환 승인":
       title = "교환 제시 승인";
       content1 = `[${grade} | ${name}]`;
-      content2 = "카드와의 교환을 승인하시겠습니까?";z
+      content2 = "카드와의 교환을 승인하시겠습니까?";
       buttonText = "승인하기";
       break;
     case "판매 내리기":
